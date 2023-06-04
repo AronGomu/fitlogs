@@ -1,0 +1,1 @@
+<a href="/Workout" class="btn">New Workout</a>

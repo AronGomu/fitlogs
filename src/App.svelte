@@ -1,0 +1,12 @@
+<script>
+    import { Router, Route } from 'svelte-routing';
+    import Home from './routes/Home.svelte';
+    import WorkoutMenu from './routes/WorkoutMenu.svelte';
+    import Workout from './routes/Workout.svelte';
+  </script>
+  
+  <Router>
+    <Route path="/" component={Home} />
+    <Route path="/WorkoutMenu" component={WorkoutMenu} />
+    <Route path="/Workout" component={Workout} />
+  </Router>
