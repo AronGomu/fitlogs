@@ -1,7 +1,7 @@
 <AutoCompleteInput label="Exercice Name" suggestions={enSuggestions} focusOnMount={true}/>
 
 <script lang="ts">
-    import { LocalStorageKeys } from "../shared/enums/LocalStorageKeys";
+    import { LocalStorageKeys } from "../shared/enum/LocalStorageKeys";
     import AutoCompleteInput from "./AutoCompleteInput.svelte";
 
     const exercicesPresets: string[] = ["Bench Press", "Squats"] ;

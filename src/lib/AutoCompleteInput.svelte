@@ -18,7 +18,7 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { LocalStorageKeys } from "../shared/enums/LocalStorageKeys";
+    import { LocalStorageKeys } from "../shared/enum/LocalStorageKeys";
 
     /** Text for the label of the input. */
     export let label: string;
