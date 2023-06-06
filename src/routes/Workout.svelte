@@ -1,7 +1,15 @@
+<!-- TODO:
+  MAKE TITLE EXERCICE INPUT MORE SEAMLESS AND THINNER
+  CHANGE VISIBILITY ON CHEVRON CLICK
+  PUT SOME PADDING RIGHT ON CHEVRON
+  PUT CHEVRON MORE IN CORNER AND BIGGER
+  DESACTIVATE TOGGLING OF INPUT COLLAPSE COMPONENT
+-->
+
 <div class="flex flex-col items-center">
     {#each eas as ea}
     <div class="collapse bg-base-300 my-2 w-5/6 override-collapse w-full">
-      <!-- <input type="checkbox" checked={ea.isOpen}/>  -->
+      <input type="checkbox" checked={ea.isOpen} class="override-input"/>
       <div class="collapse-title text-xl font-medium cursor-pointer text-primary w-full mx-2 override-collapse-title">
         <div class="flex flex-row justify-between w-full">
           <input type="text" value="{ea.name}" placeholder="Exercice Name" class="input input-bordered input-md w-2/3 max-w-xs text-primary" />
@@ -68,6 +76,10 @@
 </script>
 
 <style>
+  .override-input {
+    height: 0px;
+  }
+
   .override-collapse {
     width: 90%;
   }
