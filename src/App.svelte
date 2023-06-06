@@ -7,9 +7,11 @@
   import HamburgerMenu from './lib/HamburgerMenu.svelte';
 </script>
   
-<HamburgerMenu />
+<div class="relative">
+  <HamburgerMenu/>
+</div>
   
-<div class="container">
+<div class="relative">
   <Router>
     <Route path="/" component={Home} />
     <Route path="/WorkoutMenu" component={WorkoutMenu} />

@@ -1,7 +1,7 @@
 {#each eas as ea}
-<div class="collapse bg-base-300">
-  <input type="radio" checked={ea.isOpen} /> 
-  <div class="collapse-title text-xl font-medium">
+<div class="collapse bg-base-300 my-2">
+  <input type="checkbox" checked={ea.isOpen}/> 
+  <div class="collapse-title text-xl font-medium cursor-pointer">
       {`${ea.name} - ${ea.sets.length} Sets - ${ea.getMaxWeight(weightMetric)}${getReducedStringMetric(weightMetric)} - ${ea.isOpen}`}
   </div>
   <div class="collapse-content">
@@ -39,8 +39,13 @@
     ]
 
     eas = [
-      new ExerciceAccordeon("Bench Press", defaultSets, true),
+      new ExerciceAccordeon("Bench Press", defaultSets, false),
       new ExerciceAccordeon("Squat", defaultSets, true),
     ]
   })
+
+  function toggleExerciceSetAccordeon(ea: ExerciceAccordeon) {
+    ea.isOpen = !ea.isOpen;
+    eas = eas;
+  }
 </script>
