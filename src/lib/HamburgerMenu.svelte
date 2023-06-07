@@ -7,7 +7,7 @@
 </div>
 
 <!-- content here -->
-<ul class={`z-10 fixed left-0 h-full menu bg-base-200 p-0 w-4/5 [&_li>*]:rounded-none menu`} class:menu-expanded={showMenu}>
+<ul class={`z-20 fixed left-0 h-full menu bg-base-200 p-0 w-4/5 [&_li>*]:rounded-none menu`} class:menu-expanded={showMenu}>
     <li><a>Item 1</a></li>
     <li><a>Item 2</a></li>
     <li><a>Item 3</a></li>

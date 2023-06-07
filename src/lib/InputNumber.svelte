@@ -23,7 +23,7 @@ bind:value={value} on:keypress={onKeyPress}
     /** Text to put next to the number in the template. */
     export let metric: WeightMetrics = null;
 
-    let value;
+    export let value: number;
 
     onMount(() => {
         className += " base-override";
