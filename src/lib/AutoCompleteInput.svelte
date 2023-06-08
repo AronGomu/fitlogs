@@ -1,32 +1,32 @@
-<div class="form-control w-full max-w-xs">
-    <label class="label">
-        <span class="label-text">{label}</span>
-    </label>
-    <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs"
-    bind:this={inputElement} bind:value={exerciceName} on:input={enHandleInput} on:focus={() => isFocused = true} on:blur={() => setTimeout(() => isFocused = false, 50) } />
-    
-    {#if isFocused && validSuggestions.length > 0}
-    <ul class="menu bg-base-200 w-56 rounded-box">
-        {#each validSuggestions as suggestion}
-            <li><button on:click={() => {
-                console.log(suggestion);
-                exerciceName = suggestion;}}>{suggestion}</button></li>
-        {/each}
-    </ul>
-    {/if}
-</div>
+<input use:setType placeholder={placeholder} class="{$$restProps.class}"
+bind:this={inputElement} bind:value={value} on:input={enHandleInput} on:focus={selectWholeTextOnFocus} on:blur={() => setTimeout(() => isFocused = false, 50) } />
+
+{#if isFocused && validSuggestions.length > 0}
+<ul class="menu bg-base-200 w-56 rounded-box">
+    {#each validSuggestions as suggestion}
+        <li><button on:click={() => {
+            console.log(suggestion);
+            value = suggestion;}}>{suggestion}</button></li>
+    {/each}
+</ul>
+{/if}
+
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { LocalStorageKeys } from "../shared/enum/LocalStorageKeys";
+    import { selectWholeTextOnFocus } from "../shared/functions/Utilitary";
 
-    /** Text for the label of the input. */
-    export let label: string;
+    /** Value of the input. */
+    export let type: string = "text";
+    /** Value of the input. */
+    export let value: string;
+    /** Placeholder of the input. */
+    export let placeholder: string;
     /** All the exercices stored that can be shown as suggestions. */
     export let suggestions: string[] = [];
+    /** Indicate of the the input will autofocus on initialisation.*/
     export let focusOnMount: boolean = false;
 
-    let exerciceName: string;
     /** All the exercices that match what's inputed in the Exercice Name input. */
     let validSuggestions: string[];
     /** Input Element for Exercice Name*/
@@ -39,6 +39,10 @@
         if (focusOnMount) inputElement.focus();
     })
 
+    function setType(node) {
+        node.type = type;
+    }
+
     /** Handle Input function for the Exercice Name Input. */
     function enHandleInput() {
         validSuggestions = getValidSuggestions(suggestions);
@@ -48,7 +52,7 @@
     function getValidSuggestions(allSuggestions: string[]) {
         let validSuggestions: string[] = [];
         for (const suggestion of allSuggestions) {
-            if (suggestion.toLowerCase().includes(exerciceName.toLowerCase())) {
+            if (suggestion.toLowerCase().includes(value.toLowerCase())) {
                 validSuggestions.push(suggestion);
             }
         }

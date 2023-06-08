@@ -1,13 +1,18 @@
-import { WeightMetrics } from '../enum/WeightMetrics';
-import { ExerciceSet } from './ExerciceSet'
+import type { WeightMetrics } from "../enum/WeightMetrics";
+import type { Set } from "./Set";
 
 export class Exercice {
+    /** HTML Element related/binded to this object. Needs to be set after initialization. */
+    public e: HTMLElement = null;
+
     constructor(
-        /** Name of the exercice selected in the Exercice Menu. */
-        public name: string, 
-        /** List of sets of the exercice. */
-        public sets: ExerciceSet[] = []
-    ) {}
+        /** Name of the exercice. */
+        public name: string,
+        /** List of set of the exercice. */
+        public sets: Set[], 
+        /** Boolean flag to know if the accordeon is opne or not. */
+        public isOpen: boolean
+    ) { }
 
     /** Return the maximal weight done in the sets of the exercice. */
     getMaxWeight(metric: WeightMetrics): number {
@@ -19,4 +24,5 @@ export class Exercice {
         }
         return mw;
     }
+
 }

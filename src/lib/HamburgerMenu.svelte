@@ -8,10 +8,10 @@
 
 <!-- content here -->
 <ul class={`z-20 fixed left-0 h-full menu bg-base-200 p-0 w-4/5 [&_li>*]:rounded-none menu`} class:menu-expanded={showMenu}>
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-    <li><a>Item 3</a></li>
+    <li><button class="btn btn-primary">Item 1</button></li>
 </ul>
+
+
 
 <script lang="ts">
 let showMenu: boolean = false;
@@ -20,6 +20,7 @@ function toggleMenu(): void {
     showMenu = !showMenu;
 }
 </script>
+
 
 
 <style>
