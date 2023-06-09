@@ -39,13 +39,21 @@
   let exercices: Exercice[] = [];
 
   onMount(() => {
-    const defaultSets: Set[] = [
-      new Set(10, new Weight(50, WeightMetrics.Kilos), false)
+    const bpSets: Set[] = [
+      new Set(0, 10, new Weight(50, WeightMetrics.Kilos), false),
+      new Set(1, 9, new Weight(50, WeightMetrics.Kilos), false),
+      new Set(2, 8, new Weight(50, WeightMetrics.Kilos), false),
+    ]
+
+    const sSets: Set[] = [
+      new Set(0, 10, new Weight(100, WeightMetrics.Kilos), false),
+      new Set(1, 9, new Weight(100, WeightMetrics.Kilos), false),
+      new Set(2, 8, new Weight(100, WeightMetrics.Kilos), false)
     ]
 
     exercices = [
-      new Exercice("Bench Press", defaultSets, false),
-      new Exercice("Squat", defaultSets, true),
+      new Exercice("Bench Press", bpSets, false),
+      new Exercice("Squat", sSets, true),
     ]
   })
 

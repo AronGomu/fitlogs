@@ -1,6 +1,6 @@
 {#if isMounted && exercice && exercice.sets}
 {#each exercice.sets as set, i}
-<div class="collapse bg-base-300 p-1" bind:this={set.e}>
+<div class="collapse bg-base-300 p-1 ease-in-out duration-300;" bind:this={set.e}>
   <input type="checkbox" checked={set.isOpen} class="override-collapse-title" on:mouseenter={() => {setHammer(set)}}/> 
   <div class="collapse-title font-medium bg-base-200 override-collapse-title cursor-pointer">
       {`Set ${i+1}`}
@@ -53,17 +53,57 @@
   function addSet(): void {
     let lastWeight: Weight = new Weight(0, weightMetric);
     if (exercice.sets && exercice.sets.length > 0) lastWeight.weight = exercice.sets[exercice.sets.length-1].weight.weight;
-    exercice.sets.push(new Set(0, lastWeight, true));
+    exercice.sets.push(new Set(exercice.sets.length, 0, lastWeight, true));
     exercice.sets = exercice.sets;
   }
 
+  // variables linked to the setHammer function but must be global to the component
+  let lastDeltaX = 0;
+  const threshold = 100;
+  let h;
   function setHammer(set: Set): void {
-    console.log("setHammer");
     console.log(set);
     
-    let h = new Hammer(set.e)
-    h.on('swipeleft', () => deleteSet(set))
-    h.on('swiperight', () => deleteSet(set))
+    h = new Hammer(set.e)
+
+    // // add a "PAN" recognizer to it (all directions)
+    // h.add( new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 100 }) );
+
+    // tie in the handler that will be called
+    h.on("pan", (e) => {
+      const deltaX = e.deltaX - lastDeltaX;
+
+      set.e.style.transform = `translateX(${deltaX}px)`;
+
+      if (deltaX > threshold) {
+        deleteIconVisible = true;
+      } else {
+        deleteIconVisible = false;
+      }
+    });
+
+    // TODO : Superimpose divs with one with gradient and delete icon and make it dynamic when swiping
+    // TODO : Implement deletion by making the div go away in style with a fading
+    h.on('panend', () => {
+      console.log("panend");
+      
+      if (lastDeltaX > threshold) {
+        // Perform action when swipe threshold is reached
+        console.log('Swiped successfully');
+      }
+
+      /** Duration of the ease-out effect in ms.*/
+      const duration = 300;
+      set.e.style.transition = `transform ${duration}ms ease-out`;
+      set.e.style.transform = `translateX(0px)`;
+      deleteIconVisible = false;
+
+      setTimeout(() => {
+        set.e.style.transition = '';
+        deleteIconVisible = false;
+      }, duration);
+    });
+
   }
 
   function deleteSet(set: Set): void {

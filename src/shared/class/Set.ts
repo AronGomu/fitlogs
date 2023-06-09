@@ -5,7 +5,9 @@ export class Set {
     public e: HTMLElement = null;
 
     constructor(
-        /** Number of repetitions dones */
+        /** Order of the set within the exercice. */
+        public rank: number,
+        /** Number of repetitions dones. */
         public repetitions: number,
         /** Weight used in the set. */
         public weight: Weight,
