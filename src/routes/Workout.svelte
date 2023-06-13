@@ -28,6 +28,9 @@
   import { Exercice } from "../shared/class/Exercice";
   import { Set } from "../shared/class/Set";
   import AutoCompleteInput from "../lib/AutoCompleteInput.svelte";
+  
+  // imported icons
+  import Icon from '@iconify/svelte';
 
 
   let weightMetric: WeightMetrics;

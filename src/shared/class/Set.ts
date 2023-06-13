@@ -2,11 +2,13 @@ import type { Weight } from "./Weight";
 
 export class Set {
     /** HTML Element related/binded to this object. Needs to be set after initialization. */
-    public e: HTMLElement = null;
+    public mainDiv: HTMLElement = null;
+    /** HTML Element related/binded to the superimposed div showing the red background and delete icon on touch animation. */
+    public deleteDiv: HTMLElement = null;
 
     constructor(
         /** Order of the set within the exercice. */
-        public rank: number,
+        public id: number,
         /** Number of repetitions dones. */
         public repetitions: number,
         /** Weight used in the set. */

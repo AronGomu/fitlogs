@@ -3,7 +3,9 @@ import type { Set } from "./Set";
 
 export class Exercice {
     /** HTML Element related/binded to this object. Needs to be set after initialization. */
-    public e: HTMLElement = null;
+    public mainDiv: HTMLElement = null;
+    /** HTML Element related/binded to the superimposed div showing the red background and delete icon on touch animation. */
+    public deleteDiv: HTMLElement = null;
 
     constructor(
         /** Name of the exercice. */
