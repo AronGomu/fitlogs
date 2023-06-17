@@ -11,8 +11,8 @@
       <div class="collapse-content">
         <ExerciceForm exercice={exercice}/>
         <div tabindex="0" class="collapse text-red-500"> 
-          <input type="checkbox" class="min-h-0" /> 
-          <div class="collapse-title text-xl font-medium flex justify-center"></div>
+          <input type="checkbox" class="override-input-advancedOptions"/> 
+          <div class="collapse-title text-xl font-medium flex justify-center override-input-advancedOptions"></div>
           <div class="collapse-content flex justify-between"> 
             <button class="btn btn-neutral" on:click={() => duplicateExercice(exercice)}>Duplicate<Icon icon={plusBoxMultiple} color="white" width="30" height="30"/></button>
             <button class="btn btn-error" on:click={() => deleteExercice(exercice)}>Delete<Icon icon={trashCanOutline} color="white" width="30" height="30"/></button>
@@ -98,6 +98,11 @@
   .override-input-exerciceName {
     padding: 0.5rem 0 0 0;
     font-size: 1.125rem;
+  }
+
+  .override-input-advancedOptions {
+    padding: 0 0 0 0;
+    min-height: 2rem;
   }
 
   .override-collapse {
