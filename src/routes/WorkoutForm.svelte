@@ -29,7 +29,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import ExerciceForm from "../lib/ExerciceForm.svelte";
-  import { wm } from './../shared/store/settingsStore';
   import { getReducedStringMetric } from "../shared/functions/Utilitary";
   import { WeightMetrics } from "../shared/enum/WeightMetrics";
   import { Weight } from "../shared/class/Weight";
@@ -38,38 +37,27 @@
   import { Set } from "../shared/class/Set";
   
   import AutoCompleteInput from "../lib/AutoCompleteInput.svelte";
-
+  
   import lodash from 'lodash';
   
   // imported icons
   import Icon from '@iconify/svelte';
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
   import plusBoxMultiple from '@iconify/icons-mdi/plus-box-multiple';
-
+  
+  import { wm } from '../shared/store/settingsStore';
+  import { Workout } from "../shared/class/Workout";
   let weightMetric: WeightMetrics;
   $: { weightMetric = $wm;}
 
+  export let workout: Workout;
+
   /** List of the Exercices Accordeon. */
-  let exercices: Exercice[] = [];
+  export let exercices: Exercice[] = [];
 
-  // !! MOCK
-  const bpSets: Set[] = [
-      new Set(0, 10, new Weight(50, WeightMetrics.Kilos), false),
-      new Set(1, 9, new Weight(50, WeightMetrics.Kilos), false),
-      new Set(2, 8, new Weight(50, WeightMetrics.Kilos), false),
-    ]
-
-    const sSets: Set[] = [
-      new Set(0, 10, new Weight(100, WeightMetrics.Kilos), false),
-      new Set(1, 9, new Weight(100, WeightMetrics.Kilos), false),
-      new Set(2, 8, new Weight(100, WeightMetrics.Kilos), false)
-    ]
-
-    exercices = [
-      new Exercice("Bench Press", bpSets, false),
-      new Exercice("Squat", sSets, true),
-    ]
-    // !! MOCK
+  if (!workout) {
+    workout = new Workout()
+  }
 
   onMount(() => {})
 
@@ -90,6 +78,11 @@
         exercices = exercices;
       }
     }
+  }
+
+  function save() {
+
+        
   }
 </script>
 

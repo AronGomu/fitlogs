@@ -2,7 +2,7 @@
   import { Router, Route } from 'svelte-routing';
   import Home from './routes/Home.svelte';
   import WorkoutMenu from './routes/WorkoutMenu.svelte';
-  import Workout from './routes/Workout.svelte';
+  import Workout from './routes/WorkoutForm.svelte';
   
   import HamburgerMenu from './lib/HamburgerMenu.svelte';
 </script>
