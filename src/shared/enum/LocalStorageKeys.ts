@@ -1,6 +1,6 @@
 export enum LocalStorageKeys {
     /** Key to access the list of all exercices. */
-    WorkoutData = "WorkoutData",
+    WorkoutsData = "WorkoutData",
     Exercices = "Exercices",
     WeightMetric = "WeightMetric"
 }

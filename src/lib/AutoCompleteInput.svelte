@@ -1,21 +1,9 @@
-<input use:setType placeholder={placeholder} class="{$$restProps.class}"
-bind:this={inputElement} bind:value={value} on:input={enHandleInput} on:focus={selectWholeTextOnFocus} on:blur={() => setTimeout(() => isFocused = false, 50) } />
-
-{#if isFocused && validSuggestions.length > 0}
-<ul class="menu bg-base-200 w-56 rounded-box">
-    {#each validSuggestions as suggestion}
-        <li><button on:click={() => {
-            console.log(suggestion);
-            value = suggestion;}}>{suggestion}</button></li>
-    {/each}
-</ul>
-{/if}
-
-
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { selectWholeTextOnFocus } from "../shared/functions/Utilitary";
-
+    
+    const dispatch = createEventDispatcher();
+    
     /** Value of the input. */
     export let type: string = "text";
     /** Value of the input. */
@@ -39,13 +27,15 @@ bind:this={inputElement} bind:value={value} on:input={enHandleInput} on:focus={s
         if (focusOnMount) inputElement.focus();
     })
 
+
     function setType(node) {
         node.type = type;
     }
 
     /** Handle Input function for the Exercice Name Input. */
-    function enHandleInput() {
+    function handleInput(event) {
         validSuggestions = getValidSuggestions(suggestions);
+        dispatch('input', event);
     }
 
 
@@ -59,3 +49,17 @@ bind:this={inputElement} bind:value={value} on:input={enHandleInput} on:focus={s
         return validSuggestions;
     }
 </script>
+
+
+<input use:setType placeholder={placeholder} class="{$$restProps.class}"
+bind:this={inputElement} bind:value={value} on:input={handleInput} on:focus={selectWholeTextOnFocus} on:blur={() => setTimeout(() => isFocused = false, 50) } />
+
+{#if isFocused && validSuggestions.length > 0}
+<ul class="menu bg-base-200 w-56 rounded-box">
+    {#each validSuggestions as suggestion}
+        <li><button on:click={() => {
+            console.log(suggestion);
+            value = suggestion;}}>{suggestion}</button></li>
+    {/each}
+</ul>
+{/if}

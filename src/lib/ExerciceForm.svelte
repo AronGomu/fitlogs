@@ -1,8 +1,88 @@
-{#if isMounted && exercice && exercice.sets}
-{#each exercice.sets as set, i}
+<script lang="ts">
+  import plusIcon from '@iconify/icons-mdi/plus';
+  import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
+  import Icon from '@iconify/svelte';
+  import { onMount } from "svelte";
+  import { Exercice } from "../shared/class/Exercice";
+  import { Set } from "../shared/class/Set";
+  import { Weight } from "../shared/class/Weight";
+  import type { Workout } from '../shared/class/Workout';
+  import type { WeightMetrics } from "../shared/enum/WeightMetrics";
+  import { createElementId, updateWorkoutProperty } from "../shared/functions/Utilitary";
+  import { wm } from './../shared/store/settingsStore';
+  import InputNumber from "./InputNumber.svelte";
+  import { saveWorkout } from '../shared/store/saveStore';
+
+  // TODO : Make input have event on key press to save the data
+
+  // CONST
+  const componentName: string = "ExerciceForm";
+  /** Id for identifying all the divs that contains a single Set object*/
+  const mdKey: string = `setDiv`;
+  /** Id for identifying all the divs that are the superimposed div used for the delete animation for the Set div. */
+  const ddKey: string = `setDeleteDiv`;
+
+  // import store
+  let weightMetric: WeightMetrics;
+  $: { weightMetric = $wm; }
+
+  // defining values
+  let isMounted: boolean = false;
+  let deleteDialog: HTMLElement;
+  let setToBeDeleted: Set = null;
+
+  /** Allow to update the datas when updating the exercices. */
+  export let w: Workout = null;
+  /** Exercice that must be passed in argument. */
+  export let e: Exercice;
+
+  onMount(() => {
+    isMounted = true;
+  })
+
+  function addSet(): void {
+    let lastWeight: Weight = new Weight(0, weightMetric);
+    if (e.sets && e.sets.length > 0) lastWeight.weight = e.sets[e.sets.length-1].weight.weight;
+    e.sets.push(new Set(e.sets.length, 0, lastWeight, true));
+    e.sets = e.sets;
+    saveWorkout(w);
+  }
+
+  function deleteSet(set: Set): void {
+    console.log(set);
+    
+    if (!set) throw new Error("There is no set to be deleted !");
+    
+    for (let i = 0; i < e.sets.length; i++) {
+      if (e.sets[i] === set) {
+        e.sets.splice(i,1);
+        e.sets = e.sets;
+        return;
+      }
+    }
+
+    saveWorkout(w);
+  }
+
+  /** Show the dialog for trying to delete a set. */
+	function showDeleteDialog(set: Set, asModal = true): void {
+    setToBeDeleted = set;
+    try {
+			deleteDialog[asModal ? 'showModal' : 'show']();
+		} catch(e) {
+      throw new Error(e);
+    }
+	};
+
+</script>
+
+
+
+{#if isMounted && e && e.sets}
+{#each e.sets as set, i}
 <!-- id="{createElementId(componentName, `${exercice.name}-${mdKey}`, set.rank)}" -->
-<div class="collapse bg-base-300 mb-1" id="{createElementId(componentName, `${exercice.name}-${mdKey}`, set.id)}" >
-  <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" id="{createElementId(componentName, `${exercice.name}-${ddKey}`, set.id)}">
+<div class="collapse bg-base-300 mb-1" id="{createElementId(componentName, `${e.name}-${mdKey}`, set.id)}" >
+  <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" id="{createElementId(componentName, `${e.name}-${ddKey}`, set.id)}">
     <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
   </div>
   <input type="checkbox" checked={set.isOpen} class="override-collapse-title"/> 
@@ -12,9 +92,15 @@
   <div class="collapse-content bg-base-200 override-collapse-content z-10">
     <div class="flex justify-between items-center">
       <div class="flex flex-row items-center">
-        <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.weight.metric} value={set.weight.weight}/>
+        <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.weight.metric} value={set.weight.weight}
+        on:keyPress={() => saveWorkout(w)}
+        on:input={(event) => {set.weight.weight = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
+        
         <span class="font-bold mx-2">X</span>
-        <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.repetitions}/>
+        
+        <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.repetitions} 
+        on:keyPress={() => saveWorkout(w)} 
+        on:input={(event) => {set.repetitions = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
       </div>
       <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
         <Icon icon={trashCanOutline} color="red" width="15" height="15" class="cursor-pointer" />
@@ -45,158 +131,9 @@
   </form>
 </dialog>
 
-<script lang="ts">
-  import { onMount } from "svelte";
-  
-  import { wm } from './../shared/store/settingsStore';
-  import type { WeightMetrics } from "../shared/enum/WeightMetrics";
-  
-  import InputNumber from "./InputNumber.svelte";
-  
-  import { Weight } from "../shared/class/Weight";
-  import { Exercice } from "../shared/class/Exercice";
-  import { Set } from "../shared/class/Set";
-  import { createElementId } from "../shared/functions/Utilitary";
-
-  // imported icons
-  import Icon from '@iconify/svelte';
-  import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
-  import plusIcon from '@iconify/icons-mdi/plus';
 
 
-  // CONST
-  const componentName: string = "ExerciceForm";
-  /** Id for identifying all the divs that contains a single Set object*/
-  const mdKey: string = `setDiv`;
-  /** Id for identifying all the divs that are the superimposed div used for the delete animation for the Set div. */
-  const ddKey: string = `setDeleteDiv`;
 
-  // import store
-  let weightMetric: WeightMetrics;
-  $: { weightMetric = $wm; }
-
-  // defining values
-  let isMounted: boolean = false;
-  let deleteDialog: HTMLElement;
-  let setToBeDeleted: Set = null;
-
-  /** Exercice that must be passed in argument. */
-  export let exercice: Exercice;
-
-  onMount(() => {
-    isMounted = true;
-  })
-
-  function addSet(): void {
-    let lastWeight: Weight = new Weight(0, weightMetric);
-    if (exercice.sets && exercice.sets.length > 0) lastWeight.weight = exercice.sets[exercice.sets.length-1].weight.weight;
-    exercice.sets.push(new Set(exercice.sets.length, 0, lastWeight, true));
-    exercice.sets = exercice.sets;
-  }
-
-  function deleteSet(set: Set): void {
-    console.log(set);
-    
-    if (!set) throw new Error("There is no set to be deleted !");
-    
-    for (let i = 0; i < exercice.sets.length; i++) {
-      if (exercice.sets[i] === set) {
-        exercice.sets.splice(i,1);
-        exercice.sets = exercice.sets;
-        return;
-      }
-    }
-  }
-
-  /** Show the dialog for trying to delete a set. */
-	function showDeleteDialog(set: Set, asModal = true): void {
-    setToBeDeleted = set;
-    try {
-			deleteDialog[asModal ? 'showModal' : 'show']();
-		} catch(e) {
-      throw new Error(e);
-    }
-	};
-
-
-  
-  // // variables linked to the setHammer function but must be global to the component
-  // let dragging: boolean = false;
-  // let h: Hammer;
-  // let deltaX: number = 0;
-  // const threshold = 200;
-  // const duration = 300;
-  // function setHammer(i: number): void {
-  //   console.log(`setHammer : ${i}`);
-    
-  //   dragging = true;
-  //   // let set: Set = exercice.sets[i];
-
-  //   const mainDiv = document.getElementById(createElementId(componentName, `${exercice.name}-${mdKey}`, i));
-  //   const deleteDiv = document.getElementById(createElementId(componentName, `${exercice.name}-${ddKey}`, i));
-
-  //   h = new Hammer(mainDiv)
-
-  //   // // add a "PAN" recognizer to it (all directions)
-  //   // h.add( new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 100 }) );
-
-  //   // tie in the handler that will be called
-  //   h.on("pan", (e) => {
-  //     deltaX = e.deltaX;
-
-  //     mainDiv.style.transform = `translateX(${deltaX}px)`;
-      
-  //     deleteDiv.style.zIndex = '20';
-      
-  //     let opacity = 100;
-  //     if (Math.abs(deltaX) <= threshold) {
-  //       opacity = Math.abs(deltaX) / threshold * 100;
-  //     }
-      
-  //     deleteDiv.style.opacity = `${opacity}%`;
-
-  //   });
-
-  //   // TODO : Superimpose divs with one with gradient and delete icon and make it dynamic when swiping
-  //   // TODO : Implement deletion by making the div go away in style with a fading
-  //   h.on('panend', () => {
-  //     if (!dragging) return;
-      
-  //     mainDiv.style.transition = `transform ${duration}ms ease-in-out`;
-      
-  //     console.log(deltaX);
-  //     if (Math.abs(deltaX) >= threshold) {
-  //       // allow to do the style change asynchrosely and make it work for some reason
-  //       setTimeout(() => {
-  //         mainDiv.style.transform = `translateX(${deltaX * 5}px)`;
-  //         setTimeout(() => {
-  //           console.log(i);
-  //           const index: number = exercice.sets.findIndex((s) => s.id != i);
-  //           exercice.sets.splice(index,1);
-  //           mainDiv.remove();
-  //           console.log(exercice.sets);
-            
-  //         }, duration);
-  //       }, 0);
-  //     }
-
-  //     else {
-  //       // allow to do the style change asynchrosely and make it work for some reason
-  //       setTimeout(() => {
-  //         mainDiv.style.transform = `translateX(0px)`;
-  //         setTimeout(() => {
-  //           mainDiv.style.transition = '';
-  //           deleteDiv.style.zIndex = '0';
-  //           deleteDiv.style.opacity = '0%';
-  //         }, duration);
-  //       }, 0);
-  //     }
-      
-  //     dragging = false;
-  //   });
-
-  // }
-</script>
 
 <style>
 
