@@ -1,11 +1,9 @@
 import { writable, type Writable } from 'svelte/store';
-import { LocalStorageKeys } from '../enum/LocalStorageKeys';
-import { WeightMetrics } from '../enum/WeightMetrics';
-import { createWorkoutFromWorkout, Workout } from '../class/Workout';
-import { getClassName, parseJsonArrayToObjectArray, parseJsonToObject } from '../functions/Utilitary';
 import { Exercice } from '../class/Exercice';
 import { Set } from '../class/Set';
 import { Weight } from '../class/Weight';
+import { Workout } from '../class/Workout';
+import { LocalStorageKeys } from '../enum/LocalStorageKeys';
 
 /** Workouts data directly extracted from the local storage, its a list of untyped object using Workout as an interface. */
 
@@ -26,19 +24,6 @@ wd.forEach(w => {
     }
 });
 
-console.log(getClassName(wd[0].exercices));
-console.log(getClassName(wd[0].exercices[0]));
-console.log(getClassName(wd[0].exercices[0].sets));
-console.log(wd[0].exercices[0].sets);
-
-// console.log(getClassName(wd[0].exercices[0].sets[0]));
-// console.log(getClassName(wd[0].exercices[0].sets[0].weight));
-// console.log(getClassName(wd[0].exercices[0].sets[0].weight.weight));
-// console.log(getClassName(wd[0].exercices[0].sets[0].weight.metric));
-
-
-
-
 /** Writable that store all the workouts in a list ordered by their creation date starting with the most recent workouts to the oldest. */
 export const workoutsData: Writable<Workout[]> = writable(wd);
 
@@ -47,12 +32,9 @@ export function getWorkoutData() {
 }
 
 /** Save a workout being modified into the database of all workouts in the app. */
-export async function saveWorkout(newW: Workout) {
+export function saveWorkout(newW: Workout) {
     
-    return await workoutsData.update((workouts: Workout[]) => {
-        console.log("Save workout in subscribe");
-        console.log(newW);
-        
+    workoutsData.update((workouts: Workout[]) => {
         if (!newW) throw new Error("From saveWorkout : newW is null !!!");
         if (!newW.creation) throw new Error("From saveWorkout : newW.creation is null !!!");
         
@@ -81,8 +63,7 @@ export async function saveWorkout(newW: Workout) {
         // add the value at the end of the list as the oldest workouts
         workouts.push(newW);
         localStorage.setItem(LocalStorageKeys.WorkoutsData, JSON.stringify(workouts));
-
-    })
+    });
 }
 
 export async function saveWorkoutData(wd: Workout[]) {

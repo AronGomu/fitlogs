@@ -153,3 +153,28 @@ export function updateWorkoutProperty(value: any, property: any, workout: Workou
   console.log(JSON.stringify(workout));
   saveWorkout(workout);
 }
+
+
+/**
+ * Removes duplicate strings and empty strings from a given string list.
+ * @param list - The string list containing duplicates and empty strings.
+ * @returns A new string list without duplicates and empty strings.
+ */
+export function removeDuplicates(list: string[]): string[] {
+  // Create a new Set to store unique strings
+  const uniqueSet = new Set<string>();
+
+  // Iterate over the input list
+  for (const item of list) {
+    // Add each non-empty string to the Set (Set only stores unique values)
+    if (item.trim() !== '') {
+      uniqueSet.add(item);
+    }
+  }
+
+  // Convert the Set back to an array of strings
+  const uniqueList = Array.from(uniqueSet);
+
+  return uniqueList;
+}
+

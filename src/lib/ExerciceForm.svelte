@@ -8,12 +8,9 @@
   import { Weight } from "../shared/class/Weight";
   import type { Workout } from '../shared/class/Workout';
   import type { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { createElementId, updateWorkoutProperty } from "../shared/functions/Utilitary";
   import { wm } from './../shared/store/settingsStore';
   import InputNumber from "./InputNumber.svelte";
   import { saveWorkout } from '../shared/store/saveStore';
-
-  // TODO : Make input have event on key press to save the data
 
   // CONST
   const componentName: string = "ExerciceForm";
@@ -57,11 +54,10 @@
       if (e.sets[i] === set) {
         e.sets.splice(i,1);
         e.sets = e.sets;
+        saveWorkout(w);
         return;
       }
     }
-
-    saveWorkout(w);
   }
 
   /** Show the dialog for trying to delete a set. */
@@ -80,9 +76,8 @@
 
 {#if isMounted && e && e.sets}
 {#each e.sets as set, i}
-<!-- id="{createElementId(componentName, `${exercice.name}-${mdKey}`, set.rank)}" -->
-<div class="collapse bg-base-300 mb-1" id="{createElementId(componentName, `${e.name}-${mdKey}`, set.id)}" >
-  <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" id="{createElementId(componentName, `${e.name}-${ddKey}`, set.id)}">
+<div class="collapse bg-base-300 mb-1" >
+  <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" >
     <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
   </div>
   <input type="checkbox" checked={set.isOpen} class="override-collapse-title"/> 

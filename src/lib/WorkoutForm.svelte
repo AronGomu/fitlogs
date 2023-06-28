@@ -4,14 +4,14 @@
   import Icon from '@iconify/svelte';
   import lodash from 'lodash';
   import { onMount } from "svelte";
-  import AutoCompleteInput from "./AutoCompleteInput.svelte";
-  import ExerciceForm from "./ExerciceForm.svelte";
   import { Exercice } from "../shared/class/Exercice";
   import { Workout } from "../shared/class/Workout";
   import { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { getReducedStringMetric, updateWorkoutProperty } from "../shared/functions/Utilitary";
+  import { getReducedStringMetric } from "../shared/functions/Utilitary";
+  import { saveWorkout } from '../shared/store/saveStore';
   import { wm } from '../shared/store/settingsStore';
-  import { saveWorkout, workoutsData } from '../shared/store/saveStore';
+  import AutoCompleteInput from "./AutoCompleteInput.svelte";
+  import ExerciceForm from "./ExerciceForm.svelte";
   
   // Store variables
   let weightMetric: WeightMetrics;
@@ -24,12 +24,7 @@
     w = new Workout()
   }
 
-  console.log(w);
-  
-
-  onMount(() => {
-    console.log(w);
-  })
+  onMount(() => { })
 
   function newExercice(): void {
     w.exercices.push(new Exercice("", [], true));
@@ -58,14 +53,14 @@
 <div id="workout" class="flex flex-col items-center">
     
   {#each w.exercices as e}
-  <div class="exercice-container collapse collapse-arrow bg-base-300 my-2 w-5/6 override-collapse w-full">
+  <div class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full">
     
     <input type="checkbox" name="exercice" checked={e.isOpen} class="cursor-pointer"/>
     
     <!-- TITLE -->
     <div class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title">
-      <div class="flex flex-row justify-between w-full">
-        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="input input-ghost input-sm text-primary z-10 override-input-exerciceName" on:input={(event) => {e.name = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
+      <div class="flex flex-row justify-between w-full overflow-visible">
+        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10 override-input-exerciceName" on:input={(event) => {e.name = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
       </div>
       <span class="text-secondary text-sm">{`${e.sets.length} Sets`}</span>
       {#if e.getMaxWeight(weightMetric)}
