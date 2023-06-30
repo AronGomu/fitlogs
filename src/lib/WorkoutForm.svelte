@@ -77,7 +77,7 @@
       <div tabindex="0" class="collapse text-red-500"> 
         <input type="checkbox" class="override-input-advancedOptions"/> 
         <div class="collapse-title text-xl font-medium flex justify-center override-input-advancedOptions"></div>
-        <div class="collapse-content flex justify-between"> 
+        <div class="collapse-content flex justify-around"> 
 
           <button class="btn btn-neutral" on:click={() => duplicateExercice(e)}>
             Duplicate

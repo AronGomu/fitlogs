@@ -8,7 +8,7 @@ import { removeDuplicates } from '../functions/Utilitary';
 /** Exercice suggestions in inputs of form. */
 export let exerciceSuggestions: Writable<string[]> = writable(<string[]> []);
 
-await workoutsData.subscribe((workouts: Workout[]) => {
+workoutsData.subscribe((workouts: Workout[]) => {
     let allExercices: string[] = [];
     for (const w of workouts) {
         for (const e of w.exercices) {
