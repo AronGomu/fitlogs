@@ -1,5 +1,5 @@
 import type { WeightMetrics } from "../enum/WeightMetrics";
-import type { Set } from "./Set";
+import type { Serie } from "./Serie";
 
 export class Exercice {
     /** HTML Element related/binded to this object. Needs to be set after initialization. */
@@ -11,7 +11,7 @@ export class Exercice {
         /** Name of the exercice. */
         public name: string,
         /** List of set of the exercice. */
-        public sets: Set[], 
+        public sets: Serie[], 
         /** Boolean flag to know if the accordeon is opne or not. */
         public isOpen: boolean
     ) { }

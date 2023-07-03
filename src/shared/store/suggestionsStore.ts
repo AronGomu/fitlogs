@@ -8,16 +8,21 @@ import { removeDuplicates } from '../functions/Utilitary';
 /** Exercice suggestions in inputs of form. */
 export let exerciceSuggestions: Writable<string[]> = writable(<string[]> []);
 
-workoutsData.subscribe((workouts: Workout[]) => {
-    let allExercices: string[] = [];
-    for (const w of workouts) {
-        for (const e of w.exercices) {
-            allExercices.push(e.name);
-        }
-    }
+if (workoutsData) {
+    workoutsData.subscribe((workouts: Workout[]) => {
 
-    exerciceSuggestions = writable(<string[]> removeDuplicates(allExercices));
-})
+        if (!workouts || workouts.length < 1) return;
+        
+        let allExercices: string[] = [];
+        for (const w of workouts) {
+            for (const e of w.exercices) {
+                allExercices.push(e.name);
+            }
+        }
+    
+        exerciceSuggestions = writable(<string[]> removeDuplicates(allExercices));
+    })
+}
 
 
 // LOCAL STORAGE WAY

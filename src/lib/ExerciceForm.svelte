@@ -4,7 +4,7 @@
   import Icon from '@iconify/svelte';
   import { onMount } from "svelte";
   import { Exercice } from "../shared/class/Exercice";
-  import { Set } from "../shared/class/Set";
+  import { Serie } from "../shared/class/Serie";
   import { Weight } from "../shared/class/Weight";
   import type { Workout } from '../shared/class/Workout';
   import type { WeightMetrics } from "../shared/enum/WeightMetrics";
@@ -26,7 +26,7 @@
   // defining values
   let isMounted: boolean = false;
   let deleteDialog: HTMLElement;
-  let setToBeDeleted: Set = null;
+  let setToBeDeleted: Serie = null;
 
   /** Allow to update the datas when updating the exercices. */
   export let w: Workout = null;
@@ -40,12 +40,12 @@
   function addSet(): void {
     let lastWeight: Weight = new Weight(0, weightMetric);
     if (e.sets && e.sets.length > 0) lastWeight.weight = e.sets[e.sets.length-1].weight.weight;
-    e.sets.push(new Set(e.sets.length, 0, lastWeight, true));
+    e.sets.push(new Serie(e.sets.length, 0, lastWeight, true));
     e.sets = e.sets;
     saveWorkout(w);
   }
 
-  function deleteSet(set: Set): void {
+  function deleteSet(set: Serie): void {
     console.log(set);
     
     if (!set) throw new Error("There is no set to be deleted !");
@@ -61,7 +61,7 @@
   }
 
   /** Show the dialog for trying to delete a set. */
-	function showDeleteDialog(set: Set, asModal = true): void {
+	function showDeleteDialog(set: Serie, asModal = true): void {
     setToBeDeleted = set;
     try {
 			deleteDialog[asModal ? 'showModal' : 'show']();

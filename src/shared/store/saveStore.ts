@@ -1,30 +1,39 @@
-import { writable, type Writable } from 'svelte/store';
-import { Exercice } from '../class/Exercice';
-import { Set } from '../class/Set';
-import { Weight } from '../class/Weight';
-import { Workout } from '../class/Workout';
-import { LocalStorageKeys } from '../enum/LocalStorageKeys';
+// import { writable, type Writable } from 'svelte/store';
+// import { Exercice } from '../class/Exercice';
+// import { Set } from '../class/Set';
+// import { Weight } from '../class/Weight';
+// import { Workout } from '../class/Workout';
+// import { LocalStorageKeys } from '../enum/LocalStorageKeys';
 
-/** Workouts data directly extracted from the local storage, its a list of untyped object using Workout as an interface. */
+import { type Writable, writable } from "svelte/store";
+import type { Workout } from "../class/Workout";
+import { LocalStorageKeys } from "../enum/LocalStorageKeys";
+import { Exercice } from "../class/Exercice";
+import { Serie } from "../class/Serie";
+import { Weight } from "../class/Weight";
+
+// /** Workouts data directly extracted from the local storage, its a list of untyped object using Workout as an interface. */
 
 let wd: Workout[] = JSON.parse(localStorage.getItem(LocalStorageKeys.WorkoutsData));
 
 // Set the dates of the workouts to be Date and not strings
-wd.forEach(w => {
-    w.creation = new Date(w.creation);
-    w.lastModification = new Date(w.lastModification);
-    for (let i = 0; i < w.exercices.length; i++) {
-        const e = w.exercices[i];
-        for (let j = 0; j < e.sets.length; j++) {
-            let s = e.sets[j];
-            s.weight = new Weight(s.weight.weight, s.weight.metric) 
-            e.sets[j] = new Set(s.id, s.repetitions, s.weight, s.isOpen);
+if (wd) {
+    wd.forEach(w => {
+        w.creation = new Date(w.creation);
+        w.lastModification = new Date(w.lastModification);
+        for (let i = 0; i < w.exercices.length; i++) {
+            const e = w.exercices[i];
+            for (let j = 0; j < e.sets.length; j++) {
+                let s = e.sets[j];
+                s.weight = new Weight(s.weight.weight, s.weight.metric) 
+                e.sets[j] = new Serie(s.id, s.repetitions, s.weight, s.isOpen);
+            }
+            w.exercices[i] = new Exercice(e.name, e.sets, e.isOpen);
         }
-        w.exercices[i] = new Exercice(e.name, e.sets, e.isOpen);
-    }
-});
+    });
+}
 
-/** Writable that store all the workouts in a list ordered by their creation date starting with the most recent workouts to the oldest. */
+// /** Writable that store all the workouts in a list ordered by their creation date starting with the most recent workouts to the oldest. */
 export const workoutsData: Writable<Workout[]> = writable(wd);
 
 export function getWorkoutData() {

@@ -1,6 +1,6 @@
 import type { Weight } from "./Weight";
 
-export class Set {
+export class Serie {
     /** HTML Element related/binded to this object. Needs to be set after initialization. */
     public mainDiv: HTMLElement = null;
     /** HTML Element related/binded to the superimposed div showing the red background and delete icon on touch animation. */
