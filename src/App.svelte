@@ -5,8 +5,6 @@
 
 </script>
 
-<span>TEXT FROM APP.svelte</span>
-
 <div class="relative">
   <HamburgerMenu/>
 </div>
