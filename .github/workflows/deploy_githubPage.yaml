@@ -19,7 +19,7 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: rm package-lock.json && npm ci
+        run: rm package-lock.json && npm i
 
       - name: Build the app
         run: npm run build
