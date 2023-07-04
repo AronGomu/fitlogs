@@ -11,6 +11,6 @@
   
 <div class="relative">
   <Router>
-    <Route path="/" component={Home} />
+    <Route path="/fitlogs" component={Home} />
   </Router>
 </div>
