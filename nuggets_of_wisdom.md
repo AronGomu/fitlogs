@@ -6,4 +6,4 @@ The thing is, when building, there is no catch of dynamic errors like trying to 
 
 Make sure you test your app, without anything in cache before building to avoid debugging on a build version, thanks.
 
-TESTING EDITING FROM ARONGOMU ACCOUNT
+TESTING EDITING FROM ARONGOMU ACCOUNT 2
