@@ -13,7 +13,7 @@ export function getReducedStringMetric(metric: WeightMetrics): string {
 
 /** When clicking on some characters of an text input, this will automatically select the whole text */
 export function selectWholeTextOnFocus(e): void {
-    e.target.select();
+  e.target.select();
 }
 
 /** Creates an id for a HTML element combining the parent component key, the key and the index. 

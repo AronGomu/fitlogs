@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
   import type { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { getReducedStringMetric } from "../shared/functions/Utilitary";
+  import { getReducedStringMetric, selectWholeTextOnFocus } from "../shared/functions/Utilitary";
 
   const dispatch = createEventDispatcher();
 
@@ -21,6 +21,9 @@
     }
   });
 
+  function handleFocus(event) {
+    selectWholeTextOnFocus(event);
+  }
   
   function handleKeyPress(event) {
     var theEvent = event || window.event;
@@ -52,12 +55,13 @@
     {placeholder}
     class={className}
     bind:value
+    on:focus={handleFocus}
     on:keypress={handleKeyPress}
     on:input={handleInput}
   />
 {:else if metric}
   <div class="relative">
-    <input type="text" {placeholder} class={className} bind:value on:keypress={handleKeyPress} on:input={handleInput} />
+    <input type="text" {placeholder} class={className} bind:value on:focus={handleFocus} on:keypress={handleKeyPress} on:input={handleInput} />
     {#if value}
       <div
         class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
