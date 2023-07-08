@@ -1,6 +1,7 @@
 <script lang="ts">
   import plusBoxMultiple from '@iconify/icons-mdi/plus-box-multiple';
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
+  import chevronDown from '@iconify/icons-mdi/chevron-down';
   import Icon from '@iconify/svelte';
   import lodash from 'lodash';
   import { onMount } from "svelte";
@@ -8,7 +9,7 @@
   import { Workout } from "../../shared/class/Workout";
   import { WeightMetrics } from "../../shared/enum/WeightMetrics";
   import { getReducedStringMetric } from "../../shared/functions/Utilitary";
-  import { saveWorkout } from '../../shared/store/saveStore';
+  import { saveWorkout, saveWorkoutData } from '../../shared/store/saveStore';
   import { wm } from '../../shared/store/settingsStore';
   import ExerciceForm from "./ExerciceForm.svelte";
   import AutoCompleteInput from './inputs/AutoCompleteInput.svelte';
@@ -55,17 +56,17 @@
   {#each w.exercices as e}
   <div class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full">
     
-    <input type="checkbox" name="exercice" checked={e.isOpen} class="cursor-pointer"/>
+    <input type="checkbox" name="exercice" checked={e.isSelfOpen} class="cursor-pointer"/>
     
     <!-- TITLE -->
     <div class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title">
-      <div class="flex flex-row justify-between w-full overflow-visible">
-        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10 override-input-exerciceName" on:input={(event) => {e.name = event.detail['value']; saveWorkout(w);}}/>
+      <div class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName">
+        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10" on:input={(event) => {e.name = event.detail['value']; saveWorkout(w);}} on:selectSuggestion={() => saveWorkout(w)}/>
       </div>
-      <span class="text-secondary text-sm">{`${e.sets.length} Sets`}</span>
+      <!-- <span class="text-secondary text-sm">{`${e.sets.length} Sets`}</span>
       {#if e.getMaxWeight(weightMetric)}
          <span class="text-secondary text-sm">{` - Max Weight : ${e.getMaxWeight(weightMetric)}${getReducedStringMetric(weightMetric)}`}</span>
-      {/if}
+      {/if} -->
     </div>
 
     <!-- CONTENT -->
@@ -73,8 +74,28 @@
 
       <ExerciceForm e={e} w={w}/>
 
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div class="w-full flex justify-end cursor-pointer" on:click={() => e.isMenuOpen = !e.isMenuOpen}>
+        <Icon icon={chevronDown} color="red" width="15" height="15"/>
+      </div>
+
+      
+      {#if e.isMenuOpen}
+         <div class="flex flex-row justify-between">
+           <button class="btn btn-neutral" on:click={() => duplicateExercice(e)}>
+             Duplicate
+             <Icon icon={plusBoxMultiple} color="white" width="30" height="30"/>
+           </button>
+     
+           <button class="btn btn-error" on:click={() => deleteExercice(e)}>
+             Delete
+             <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
+           </button>
+         </div>
+      {/if}
+
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-      <div tabindex="0" class="collapse text-red-500"> 
+      <!-- <div tabindex="0" class="collapse text-red-500"> 
         <input type="checkbox" class="override-input-advancedOptions"/> 
         <div class="collapse-title text-xl font-medium flex justify-center override-input-advancedOptions"></div>
         <div class="collapse-content flex justify-around"> 
@@ -90,7 +111,7 @@
           </button>
           
         </div>
-      </div>
+      </div> -->
       
     </div>
   </div>
@@ -102,10 +123,10 @@
 
 <style>
 
-  /* .override-input-exerciceName {
-    padding: 0.5rem 0 0 0;
-    font-size: 1.125rem;
-  } */
+  .override-input-exerciceName {
+    padding: 0.5rem 0 0 0 !important;
+    font-size: 1.125rem !important;
+  }
 
   .override-input-advancedOptions {
     padding: 0 0 0 0;
