@@ -3,21 +3,14 @@
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
   import Icon from '@iconify/svelte';
   import { onMount } from "svelte";
-  import { Exercice } from "../shared/class/Exercice";
-  import { Serie } from "../shared/class/Serie";
-  import { Weight } from "../shared/class/Weight";
-  import type { Workout } from '../shared/class/Workout';
-  import type { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { wm } from './../shared/store/settingsStore';
-  import InputNumber from "./InputNumber.svelte";
-  import { saveWorkout } from '../shared/store/saveStore';
-
-  // CONST
-  const componentName: string = "ExerciceForm";
-  /** Id for identifying all the divs that contains a single Set object*/
-  const mdKey: string = `setDiv`;
-  /** Id for identifying all the divs that are the superimposed div used for the delete animation for the Set div. */
-  const ddKey: string = `setDeleteDiv`;
+  import { Exercice } from "../../shared/class/Exercice";
+  import { Serie } from "../../shared/class/Serie";
+  import { Weight } from "../../shared/class/Weight";
+  import type { Workout } from '../../shared/class/Workout';
+  import type { WeightMetrics } from "../../shared/enum/WeightMetrics";
+  import { wm } from '../../shared/store/settingsStore';
+  import InputNumber from "./inputs/InputNumber.svelte";
+  import { saveWorkout } from '../../shared/store/saveStore';
 
   // import store
   let weightMetric: WeightMetrics;

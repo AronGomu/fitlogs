@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import type { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { getReducedStringMetric, selectWholeTextOnFocus } from "../shared/functions/Utilitary";
+  import type { WeightMetrics } from "../../../shared/enum/WeightMetrics";
+  import { getReducedStringMetric, selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
 
   const dispatch = createEventDispatcher();
 

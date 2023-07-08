@@ -4,14 +4,14 @@
   import Icon from '@iconify/svelte';
   import lodash from 'lodash';
   import { onMount } from "svelte";
-  import { Exercice } from "../shared/class/Exercice";
-  import { Workout } from "../shared/class/Workout";
-  import { WeightMetrics } from "../shared/enum/WeightMetrics";
-  import { getReducedStringMetric } from "../shared/functions/Utilitary";
-  import { saveWorkout } from '../shared/store/saveStore';
-  import { wm } from '../shared/store/settingsStore';
-  import AutoCompleteInput from "./AutoCompleteInput.svelte";
+  import { Exercice } from "../../shared/class/Exercice";
+  import { Workout } from "../../shared/class/Workout";
+  import { WeightMetrics } from "../../shared/enum/WeightMetrics";
+  import { getReducedStringMetric } from "../../shared/functions/Utilitary";
+  import { saveWorkout } from '../../shared/store/saveStore';
+  import { wm } from '../../shared/store/settingsStore';
   import ExerciceForm from "./ExerciceForm.svelte";
+  import AutoCompleteInput from './inputs/AutoCompleteInput.svelte';
   
   // Store variables
   let weightMetric: WeightMetrics;

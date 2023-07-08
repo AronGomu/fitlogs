@@ -1,3 +1,22 @@
+<script lang="ts">
+import type { Workout } from "../shared/class/Workout";
+  import { downloadAsJson } from "../shared/functions/Utilitary";
+import { workoutsData } from "../shared/store/saveStore";
+
+let showMenu: boolean = false;
+
+let workouts: Workout[];
+$: { workouts = $workoutsData;}
+
+function toggleMenu() { showMenu = !showMenu; }
+
+function handleOnclickExportData(event) {
+    downloadAsJson(workouts, 'data');
+}
+</script>
+
+
+
 <div class="z-20 navbar bg-base-100 override-nav p-0 m-0">
     <div class="flex-none">
         <button class="btn btn-square btn-ghost" on:click={toggleMenu}>
@@ -8,18 +27,8 @@
 
 <!-- content here -->
 <ul class={`z-20 fixed left-0 h-full menu bg-base-200 p-0 w-4/5 [&_li>*]:rounded-none menu`} class:menu-expanded={showMenu}>
-    <li><button class="btn btn-primary">Item 1</button></li>
+    <li><button class="btn btn-primary" on:click={handleOnclickExportData}>Export Data</button></li>
 </ul>
-
-
-
-<script lang="ts">
-let showMenu: boolean = false;
-
-function toggleMenu(): void { 
-    showMenu = !showMenu;
-}
-</script>
 
 
 

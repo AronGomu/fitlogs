@@ -1,5 +1,5 @@
 <script lang="ts">
-  import WorkoutForm from "../lib/WorkoutForm.svelte";
+  import WorkoutForm from "../lib/WorkoutForm/WorkoutForm.svelte";
   import { Workout } from "../shared/class/Workout";
   import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
   import { deleteWorkoutData, saveWorkout, workoutsData } from "../shared/store/saveStore";
