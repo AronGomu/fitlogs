@@ -26,21 +26,25 @@
   }
   
   function handleKeyPress(event) {
-    var theEvent = event || window.event;
+
+    if (event.key === "Enter") {
+      console.log("ENTER");
+    }
     
     // Handle paste
-    if (theEvent.type === "paste")
+    if (event.type === "paste")
     key = event.clipboardData.getData("text/plain");
     else {
       // Handle key press
-      var key = theEvent.keyCode || theEvent.which;
+      var key = event.keyCode || event.which;
       key = String.fromCharCode(key);
     }
+
     var regex = /^[0-9]\d*$/;
     
     if (!regex.test(key)) {
-      theEvent.returnValue = false;
-      if (theEvent.preventDefault) theEvent.preventDefault();
+      event.returnValue = false;
+      if (event.preventDefault) event.preventDefault();
     }
   }
 

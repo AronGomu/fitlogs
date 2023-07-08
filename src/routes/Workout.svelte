@@ -4,21 +4,19 @@
   import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
   import { deleteWorkoutData, saveWorkout, workoutsData } from "../shared/store/saveStore";
 
-// import { Workout } from "../shared/class/Workout";
-// import { saveWorkout, workoutsData } from "../shared/store/saveStore";
 
-let workouts: Workout[];
-$: { workouts = $workoutsData;}
+  let workouts: Workout[];
+  $: { workouts = $workoutsData;}
 
-let selectedWorkout: Workout = null;
+  let selectedWorkout: Workout = null;
 
-function newWorkout() {
-    saveWorkout(new Workout());
-}
+  function newWorkout() {
+      saveWorkout(new Workout());
+  }
 
-function openWorkout(w: Workout) {
-  selectedWorkout = w;
-}
+  function openWorkout(w: Workout) {
+    selectedWorkout = w;
+  }
 </script>
 
 

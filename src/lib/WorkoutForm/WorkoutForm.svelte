@@ -96,7 +96,7 @@
   </div>
   {/each}
 
-  <button class="btn btn-primary w-4/5" on:click={newExercice}>New Exercice</button>
+  <button class="btn btn-primary w-30" on:click={newExercice}>New Exercice</button>
 </div>
 
 

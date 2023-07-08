@@ -97,8 +97,8 @@
 {/each}
 
 <div class="flex justify-center w-full mt-2">
-  <button class="btn btn-primary w-4/5 override-addExerciceButton" on:click={addSet} >
-    <Icon icon={plusIcon} color="white" width="30" height="30"/>
+  <button class="btn btn-secondary w-36" on:click={addSet} >
+    <Icon icon={plusIcon} color="white" width="25" height="25"/>
     Add Set
   </button>
 </div>
@@ -130,9 +130,5 @@
 
   .override-collapse-content {
     padding: 0.5;
-  }
-
-  .override-addExerciceButton {
-    font-size: large;
   }
 </style>
