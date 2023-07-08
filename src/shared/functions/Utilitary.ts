@@ -69,7 +69,6 @@ export function setObjectFromObject<T>(oldO: T, newO: T): T {
   for (const key of Object.keys(oldO)) {
     newO[key] = oldO[key];
   }
-  console.log(newO);
   
   return newO;
 }
@@ -146,11 +145,7 @@ export function parseJsonArrayToObjectArray<T>(jsonArrayString: string, targetCl
 
 /** Triggers whenever the user modify the name input of the Workout Form is modified. Update the Workout object and save it into the */
 export function updateWorkoutProperty(value: any, property: any, workout: Workout) {
-  console.log(property);
-  console.log(JSON.stringify(workout));
   property = value;
-  console.log(property);
-  console.log(JSON.stringify(workout));
   saveWorkout(workout);
 }
 
@@ -166,6 +161,7 @@ export function removeDuplicates(list: string[]): string[] {
 
   // Iterate over the input list
   for (const item of list) {
+    
     // Add each non-empty string to the Set (Set only stores unique values)
     if (item.trim() !== '') {
       uniqueSet.add(item);

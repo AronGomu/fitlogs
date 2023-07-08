@@ -1,11 +1,11 @@
 
 <script lang="ts">
-import { LocalStorageKeys } from "../shared/enum/LocalStorageKeys";
+import { Keys } from "../shared/enum/Keys";
 import AutoCompleteInput from "./AutoCompleteInput.svelte";
 
 const exercicesPresets: string[] = ["Bench Press", "Squats"] ;
-localStorage.setItem(LocalStorageKeys.Exercices, JSON.stringify(exercicesPresets));
-const enSuggestions = <string[]> JSON.parse(localStorage.getItem(LocalStorageKeys.Exercices));
+set(Keys.Exercices, JSON.stringify(exercicesPresets));
+const enSuggestions = <string[]> JSON.parse(get(Keys.Exercices));
 </script>
 
 

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
     import { selectWholeTextOnFocus } from "../shared/functions/Utilitary";
-  import { addSuggestion, exerciceSuggestions } from "../shared/store/suggestionsStore";
+    import { exerciceSuggestions } from "../shared/store/suggestionsStore";
     
     const dispatch = createEventDispatcher();
 
@@ -42,7 +42,8 @@
     function handleInput(event) {
         validSuggestions = getValidSuggestions(suggestions);
         // addSuggestion(value);
-        dispatch('input', event);
+        
+        dispatch('input', {'input': event.data, 'value': event.target.value});
     }
 
 
@@ -70,8 +71,6 @@
     }
 
     function handleClickSuggestion(vs) {
-        console.log("handleClickSuggestion");
-        console.log(vs);
         value = vs;
         isEntered = false;
     }

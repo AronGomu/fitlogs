@@ -1,5 +1,5 @@
 {
-  "name": "svelte-fitlogs",
+  "name": "Fitlogs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -26,6 +26,7 @@
     "vite-plugin-pwa": "^0.16.3"
   },
   "dependencies": {
+    "idb-keyval": "^6.2.1",
     "lodash": "^4.17.21",
     "svelte-routing": "^1.9.0"
   }

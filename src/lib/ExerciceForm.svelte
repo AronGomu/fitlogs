@@ -46,8 +46,6 @@
   }
 
   function deleteSet(set: Serie): void {
-    console.log(set);
-    
     if (!set) throw new Error("There is no set to be deleted !");
     
     for (let i = 0; i < e.sets.length; i++) {

@@ -60,7 +60,7 @@
     <!-- TITLE -->
     <div class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title">
       <div class="flex flex-row justify-between w-full overflow-visible">
-        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10 override-input-exerciceName" on:input={(event) => {e.name = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
+        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10 override-input-exerciceName" on:input={(event) => {e.name = event.detail['value']; saveWorkout(w);}}/>
       </div>
       <span class="text-secondary text-sm">{`${e.sets.length} Sets`}</span>
       {#if e.getMaxWeight(weightMetric)}
@@ -102,10 +102,10 @@
 
 <style>
 
-  .override-input-exerciceName {
+  /* .override-input-exerciceName {
     padding: 0.5rem 0 0 0;
     font-size: 1.125rem;
-  }
+  } */
 
   .override-input-advancedOptions {
     padding: 0 0 0 0;

@@ -1,8 +1,9 @@
 import { writable, type Writable } from 'svelte/store';
-import { LocalStorageKeys } from '../enum/LocalStorageKeys';
+import { Keys } from '../enum/Keys';
 import { workoutsData } from './saveStore';
 import type { Workout } from '../class/Workout';
 import { removeDuplicates } from '../functions/Utilitary';
+import { set } from 'idb-keyval';
 
 // FROM WORKOUT DATA WAY
 /** Exercice suggestions in inputs of form. */
@@ -16,7 +17,7 @@ if (workoutsData) {
         let allExercices: string[] = [];
         for (const w of workouts) {
             for (const e of w.exercices) {
-                allExercices.push(e.name);
+                if (e && e.name) allExercices.push(e.name);
             }
         }
     
@@ -27,7 +28,7 @@ if (workoutsData) {
 
 // LOCAL STORAGE WAY
 /** Exercice suggestions in inputs of form. */
-// export const exerciceSuggestions: Writable<string[]> = writable(<string[]> JSON.parse(localStorage.getItem(LocalStorageKeys.Suggestions)));
+// export const exerciceSuggestions: Writable<string[]> = writable(<string[]> JSON.parse(get(LocalStorageKeys.Suggestions)));
 
 /** Try to add a new suggestion to the suggestion store. It verify the non existence and then proceed to add it to the current value and save it in the local storage.
 * @param s1 Suggestion value trying to be added.
@@ -39,7 +40,7 @@ export function addSuggestion(s1: string) {
         
         if (!suggestions.find((s2: string) => s2 === s1)) {
             suggestions.push(s1);
-            localStorage.setItem(LocalStorageKeys.Suggestions, JSON.stringify(suggestions));
+            set(Keys.Suggestions, suggestions);
         }
 
         return suggestions;
