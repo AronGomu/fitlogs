@@ -49,7 +49,7 @@
   }
 
   function handleInput(event) {
-    dispatch("input", event);
+    dispatch('input', {'input': event.data, 'value': event.target.value});
   }
 </script>
 
@@ -79,6 +79,7 @@
 <style>
   /** Style to add for the base input. */
   .base-override {
+    height: 2rem;
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
   }

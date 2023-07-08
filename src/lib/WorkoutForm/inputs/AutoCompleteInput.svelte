@@ -73,6 +73,7 @@
     function handleClickSuggestion(vs) {
         value = vs;
         isEntered = false;
+        dispatch('selectSuggestion');
     }
 
     function handleMouseEnter() {
@@ -84,7 +85,7 @@
     }
 </script>
 
-<input use:setType placeholder={placeholder} class="{$$restProps.class}"
+<input use:setType placeholder={placeholder} class="{$$restProps.class} override"
 bind:this={inputElement} bind:value={value} on:input={handleInput} on:focus={handleFocus} on:blur={handleBlur} />
 
 {#if (isFocused || isEntered) && validSuggestions.length > 0}
@@ -94,3 +95,15 @@ bind:this={inputElement} bind:value={value} on:input={handleInput} on:focus={han
     {/each}
 </ul>
 {/if}
+
+<style>
+    .override {
+        height: auto;
+        width: 80%;
+        font-size: larger;
+    }
+
+    .override::placeholder {
+        font-style: italic;
+    }
+</style>

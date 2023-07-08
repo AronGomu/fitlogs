@@ -80,13 +80,13 @@
       <div class="flex flex-row items-center">
         <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.weight.metric} value={set.weight.weight}
         on:keyPress={() => saveWorkout(w)}
-        on:input={(event) => {set.weight.weight = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
+        on:input={(event) => {set.weight.weight = event.detail['value']; saveWorkout(w);}}/>
         
         <span class="font-bold mx-2">X</span>
         
         <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.repetitions} 
         on:keyPress={() => saveWorkout(w)} 
-        on:input={(event) => {set.repetitions = event['explicitOriginalTarget']['value']; saveWorkout(w);}}/>
+        on:input={(event) => {set.repetitions = event.detail['value']; saveWorkout(w);}}/>
       </div>
       <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
         <Icon icon={trashCanOutline} color="red" width="15" height="15" class="cursor-pointer" />

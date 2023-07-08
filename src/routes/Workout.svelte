@@ -19,9 +19,10 @@
   }
 </script>
 
-
-<button class="btn" on:click={newWorkout}>NEW New Workout</button>
-<button class="btn" on:click={() => deleteWorkoutData()}>DELETE ALL</button>
+<div class="flex flex-row justify-center mb-4">
+  <button class="btn btn-primary" on:click={newWorkout}>New Workout</button>
+</div>
+<!-- <button class="btn" on:click={() => deleteWorkoutData()}>DELETE ALL</button> -->
 
 {#if workouts}
 <div class="collapse bg-base-200">

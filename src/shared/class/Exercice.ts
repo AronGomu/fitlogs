@@ -2,18 +2,16 @@ import type { WeightMetrics } from "../enum/WeightMetrics";
 import type { Serie } from "./Serie";
 
 export class Exercice {
-    /** HTML Element related/binded to this object. Needs to be set after initialization. */
-    public mainDiv: HTMLElement = null;
-    /** HTML Element related/binded to the superimposed div showing the red background and delete icon on touch animation. */
-    public deleteDiv: HTMLElement = null;
 
     constructor(
         /** Name of the exercice. */
         public name: string,
         /** List of set of the exercice. */
         public sets: Serie[], 
-        /** Boolean flag to know if the accordeon is opne or not. */
-        public isOpen: boolean
+        /** Boolean flag to know if the accordeon is open or not. */
+        public isSelfOpen: boolean = false,
+        /** Boolean flag to know if the menu for duplication and stuff is open. */
+        public isMenuOpen: boolean = false
     ) { }
 
     /** Return the maximal weight done in the sets of the exercice. */

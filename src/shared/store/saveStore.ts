@@ -30,7 +30,7 @@ get(Keys.WorkoutsData).then((wd: Workout[]) => {
                     s.weight = new Weight(s.weight.weight, s.weight.metric) 
                     e.sets[j] = new Serie(s.id, s.repetitions, s.weight, s.isOpen);
                 }
-                w.exercices[i] = new Exercice(e.name, e.sets, e.isOpen);
+                w.exercices[i] = new Exercice(e.name, e.sets, e.isSelfOpen);
             }
         });
 
