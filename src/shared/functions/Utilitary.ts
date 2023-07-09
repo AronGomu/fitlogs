@@ -1,4 +1,5 @@
 import type { Workout } from "../class/Workout";
+import type { WorkoutGUI } from "../class/WorkoutGUI";
 import { WeightMetrics } from "../enum/WeightMetrics";
 import { saveWorkout } from "../store/saveStore";
 
@@ -12,7 +13,7 @@ export function getReducedStringMetric(metric: WeightMetrics): string {
 }
 
 /** When clicking on some characters of an text input, this will automatically select the whole text */
-export function selectWholeTextOnFocus(e): void {
+export function selectWholeTextOnFocus(e) {
   e.target.select();
 }
 
@@ -143,13 +144,6 @@ export function parseJsonArrayToObjectArray<T>(jsonArrayString: string, targetCl
 }
 
 
-/** Triggers whenever the user modify the name input of the Workout Form is modified. Update the Workout object and save it into the */
-export function updateWorkoutProperty(value: any, property: any, workout: Workout) {
-  property = value;
-  saveWorkout(workout);
-}
-
-
 /**
  * Removes duplicate strings and empty strings from a given string list.
  * @param list - The string list containing duplicates and empty strings.
@@ -179,7 +173,7 @@ export function removeDuplicates(list: string[]): string[] {
  * @param data - The data to be downloaded as JSON.
  * @param filename - The filename for the downloaded file (without extension).
  */
-export function downloadAsJson(data: object | object[], filename: string): void {
+export function downloadAsJson(data: object | object[], filename: string) {
   const json = JSON.stringify(data);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -193,3 +187,5 @@ export function downloadAsJson(data: object | object[], filename: string): void 
 
   URL.revokeObjectURL(url);
 }
+
+

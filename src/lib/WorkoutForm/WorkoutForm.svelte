@@ -1,59 +1,64 @@
 <script lang="ts">
+  import chevronDown from '@iconify/icons-mdi/chevron-down';
   import plusBoxMultiple from '@iconify/icons-mdi/plus-box-multiple';
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
-  import chevronDown from '@iconify/icons-mdi/chevron-down';
   import Icon from '@iconify/svelte';
   import lodash from 'lodash';
   import { onMount } from "svelte";
   import { Exercice } from "../../shared/class/Exercice";
+  import { ExerciceGUI } from '../../shared/class/ExerciceGUI';
   import { Workout } from "../../shared/class/Workout";
+  import { WorkoutGUI } from '../../shared/class/WorkoutGUI';
   import { WeightMetrics } from "../../shared/enum/WeightMetrics";
-  import { getReducedStringMetric } from "../../shared/functions/Utilitary";
-  import { saveWorkout, saveWorkoutData } from '../../shared/store/saveStore';
+  import { saveWorkout } from '../../shared/store/saveStore';
   import { wm } from '../../shared/store/settingsStore';
   import ExerciceForm from "./ExerciceForm.svelte";
   import AutoCompleteInput from './inputs/AutoCompleteInput.svelte';
   
   // Store variables
   let weightMetric: WeightMetrics;
-  $: { weightMetric = $wm;}
+  wm.subscribe((wm: WeightMetrics) => {
+    weightMetric = wm;
+  })
+  // $: { weightMetric = $wm;}
 
   /** Workout object */
-  export let w: Workout;
+  export let workout: WorkoutGUI;
 
-  if (!w) {
-    w = new Workout()
+  if (!workout) {
+    workout = new WorkoutGUI(new Workout());
   }
 
   onMount(() => { })
 
-  function newExercice(): void {
-    w.exercices.push(new Exercice("", [], true));
-    w.exercices = w.exercices;
-    saveWorkout(w);
+  /** Update the list, to refresh it and the save the modification in the storage. */
+  function updateAndSave() {
+    workout.el = workout.el;
+    saveWorkout(workout.convertToWorkout());
   }
 
-  function duplicateExercice(e: Exercice): void {
-    w.exercices.push(lodash.cloneDeep(e));
-    w.exercices = w.exercices;
-    saveWorkout(w);
+  function newExercice() {
+    workout.el.push(new ExerciceGUI("", [], true));
+    updateAndSave();
   }
 
-  function deleteExercice(e: Exercice): void {
-    for (let i = 0; i < w.exercices.length; i++) {
-      if (e === w.exercices[i]) {
-        w.exercices.splice(i,1);
-        w.exercices = w.exercices;
-      }
+  function duplicateExercice(e: Exercice) {
+    workout.el.push(lodash.cloneDeep(e));
+    updateAndSave();
+  }
+
+  function deleteExercice(e: Exercice) {
+    for (let i = 0; i < workout.el.length; i++) {
+      if (e === workout.el[i]) workout.el.splice(i,1);
     }
-    saveWorkout(w);
+    updateAndSave();
   }
 </script>
 
 
 <div id="workout" class="flex flex-col items-center">
     
-  {#each w.exercices as e}
+  {#each workout.el as e}
   <div class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full">
     
     <input type="checkbox" name="exercice" checked={e.isSelfOpen} class="cursor-pointer"/>
@@ -61,7 +66,7 @@
     <!-- TITLE -->
     <div class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title">
       <div class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName">
-        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10" on:input={(event) => {e.name = event.detail['value']; saveWorkout(w);}} on:selectSuggestion={() => saveWorkout(w)}/>
+        <AutoCompleteInput type="text" value="{e.n}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10" on:input={(event) => {e.n = event.detail['value']; saveWorkout(workout.convertToWorkout());}} on:selectSuggestion={() => saveWorkout(workout.convertToWorkout())}/>
       </div>
       <!-- <span class="text-secondary text-sm">{`${e.sets.length} Sets`}</span>
       {#if e.getMaxWeight(weightMetric)}
@@ -70,50 +75,33 @@
     </div>
 
     <!-- CONTENT -->
-    <div class="collapse-content">
-
-      <ExerciceForm e={e} w={w}/>
-
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div class="w-full flex justify-end cursor-pointer" on:click={() => e.isMenuOpen = !e.isMenuOpen}>
-        <Icon icon={chevronDown} color="red" width="15" height="15"/>
-      </div>
-
-      
-      {#if e.isMenuOpen}
-         <div class="flex flex-row justify-between">
-           <button class="btn btn-neutral" on:click={() => duplicateExercice(e)}>
-             Duplicate
-             <Icon icon={plusBoxMultiple} color="white" width="30" height="30"/>
-           </button>
-     
-           <button class="btn btn-error" on:click={() => deleteExercice(e)}>
-             Delete
-             <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
-           </button>
+    {#if e.isSelfOpen}
+       <!-- content here -->
+       <div class="collapse-content">
+   
+         <ExerciceForm e={e} w={workout}/>
+   
+         <!-- svelte-ignore a11y-click-events-have-key-events -->
+         <div class="w-full flex justify-end cursor-pointer" on:click={() => e.isMenuOpen = !e.isMenuOpen}>
+           <Icon icon={chevronDown} color="red" width="15" height="15"/>
          </div>
-      {/if}
-
-      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-      <!-- <div tabindex="0" class="collapse text-red-500"> 
-        <input type="checkbox" class="override-input-advancedOptions"/> 
-        <div class="collapse-title text-xl font-medium flex justify-center override-input-advancedOptions"></div>
-        <div class="collapse-content flex justify-around"> 
-
-          <button class="btn btn-neutral" on:click={() => duplicateExercice(e)}>
-            Duplicate
-            <Icon icon={plusBoxMultiple} color="white" width="30" height="30"/>
-          </button>
-
-          <button class="btn btn-error" on:click={() => deleteExercice(e)}>
-            Delete
-            <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
-          </button>
-          
-        </div>
-      </div> -->
-      
-    </div>
+   
+         
+         {#if e.isMenuOpen}
+            <div class="flex flex-row justify-between">
+              <button class="btn btn-neutral" on:click={() => duplicateExercice(e)}>
+                Duplicate
+                <Icon icon={plusBoxMultiple} color="white" width="30" height="30"/>
+              </button>
+        
+              <button class="btn btn-error" on:click={() => deleteExercice(e)}>
+                Delete
+                <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
+              </button>
+            </div>
+         {/if}
+       </div>
+    {/if}
   </div>
   {/each}
 

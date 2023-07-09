@@ -3,14 +3,14 @@
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
   import Icon from '@iconify/svelte';
   import { onMount } from "svelte";
-  import { Exercice } from "../../shared/class/Exercice";
-  import { Serie } from "../../shared/class/Serie";
+  import type { ExerciceGUI } from '../../shared/class/ExerciceGUI';
+  import { SerieGUI } from '../../shared/class/SerieGUI';
   import { Weight } from "../../shared/class/Weight";
-  import type { Workout } from '../../shared/class/Workout';
+  import type { WorkoutGUI } from '../../shared/class/WorkoutGUI';
   import type { WeightMetrics } from "../../shared/enum/WeightMetrics";
+  import { saveWorkout } from '../../shared/store/saveStore';
   import { wm } from '../../shared/store/settingsStore';
   import InputNumber from "./inputs/InputNumber.svelte";
-  import { saveWorkout } from '../../shared/store/saveStore';
 
   // import store
   let weightMetric: WeightMetrics;
@@ -19,40 +19,40 @@
   // defining values
   let isMounted: boolean = false;
   let deleteDialog: HTMLElement;
-  let setToBeDeleted: Serie = null;
+  let setToBeDeleted: SerieGUI = null;
 
   /** Allow to update the datas when updating the exercices. */
-  export let w: Workout = null;
+  export let w: WorkoutGUI = null;
   /** Exercice that must be passed in argument. */
-  export let e: Exercice;
+  export let e: ExerciceGUI;
 
   onMount(() => {
     isMounted = true;
   })
 
-  function addSet(): void {
+  function addSet() {
     let lastWeight: Weight = new Weight(0, weightMetric);
-    if (e.sets && e.sets.length > 0) lastWeight.weight = e.sets[e.sets.length-1].weight.weight;
-    e.sets.push(new Serie(e.sets.length, 0, lastWeight, true));
-    e.sets = e.sets;
-    saveWorkout(w);
+    if (e.sl && e.sl.length > 0) lastWeight.weight = e.sl[e.sl.length-1].w.weight;
+    e.sl.push(new SerieGUI(e.sl.length, 0, lastWeight, true));
+    e.sl = e.sl;
+    saveWorkout(w.convertToWorkout());
   }
 
-  function deleteSet(set: Serie): void {
+  function deleteSet(set: SerieGUI) {
     if (!set) throw new Error("There is no set to be deleted !");
     
-    for (let i = 0; i < e.sets.length; i++) {
-      if (e.sets[i] === set) {
-        e.sets.splice(i,1);
-        e.sets = e.sets;
-        saveWorkout(w);
+    for (let i = 0; i < e.sl.length; i++) {
+      if (e.sl[i] === set) {
+        e.sl.splice(i,1);
+        e.sl = e.sl;
+        saveWorkout(w.convertToWorkout());
         return;
       }
     }
   }
 
   /** Show the dialog for trying to delete a set. */
-	function showDeleteDialog(set: Serie, asModal = true): void {
+	function showDeleteDialog(set: SerieGUI, asModal = true) {
     setToBeDeleted = set;
     try {
 			deleteDialog[asModal ? 'showModal' : 'show']();
@@ -65,8 +65,8 @@
 
 
 
-{#if isMounted && e && e.sets}
-{#each e.sets as set, i}
+{#if isMounted && e && e.sl}
+{#each e.slGUI as set, i}
 <div class="collapse bg-base-300 mb-1" >
   <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" >
     <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
@@ -78,15 +78,15 @@
   <div class="collapse-content bg-base-200 override-collapse-content z-10">
     <div class="flex justify-between items-center">
       <div class="flex flex-row items-center">
-        <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.weight.metric} value={set.weight.weight}
-        on:keyPress={() => saveWorkout(w)}
-        on:input={(event) => {set.weight.weight = event.detail['value']; saveWorkout(w);}}/>
+        <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.w.metric} value={set.w.weight}
+        on:keyPress={() => saveWorkout(w.convertToWorkout())}
+        on:input={(event) => {set.w.weight = event.detail['value']; saveWorkout(w.convertToWorkout());}}/>
         
         <span class="font-bold mx-2">X</span>
         
-        <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.repetitions} 
-        on:keyPress={() => saveWorkout(w)} 
-        on:input={(event) => {set.repetitions = event.detail['value']; saveWorkout(w);}}/>
+        <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.rn} 
+        on:keyPress={() => saveWorkout(w.convertToWorkout())} 
+        on:input={(event) => {set.rn = event.detail['value']; saveWorkout(w.convertToWorkout());}}/>
       </div>
       <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
         <Icon icon={trashCanOutline} color="red" width="15" height="15" class="cursor-pointer" />

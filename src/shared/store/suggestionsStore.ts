@@ -16,8 +16,8 @@ if (workoutsData) {
         
         let allExercices: string[] = [];
         for (const w of workouts) {
-            for (const e of w.exercices) {
-                if (e && e.name) allExercices.push(e.name);
+            for (const e of w.el) {
+                if (e && e.n) allExercices.push(e.n);
             }
         }
     
