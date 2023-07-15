@@ -2,50 +2,50 @@
   import plusIcon from '@iconify/icons-mdi/plus';
   import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
   import Icon from '@iconify/svelte';
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import type { ExerciceGUI } from '../../shared/class/ExerciceGUI';
   import { SerieGUI } from '../../shared/class/SerieGUI';
-  import { Weight } from "../../shared/class/Weight";
-  import type { WorkoutGUI } from '../../shared/class/WorkoutGUI';
-  import type { WeightMetrics } from "../../shared/enum/WeightMetrics";
-  import { saveWorkout } from '../../shared/store/saveStore';
-  import { wm } from '../../shared/store/settingsStore';
+  import type { Settings } from '../../shared/class/Settings';
+  import { settings } from '../../shared/store/settingsStore';
   import InputNumber from "./inputs/InputNumber.svelte";
 
-  // import store
-  let weightMetric: WeightMetrics;
-  $: { weightMetric = $wm; }
+  const dispatch = createEventDispatcher();
+
+  /** Settings Imported form the store. */
+  let si: Settings;
+  settings.subscribe(s => si = s);
 
   // defining values
   let isMounted: boolean = false;
   let deleteDialog: HTMLElement;
   let setToBeDeleted: SerieGUI = null;
 
-  /** Allow to update the datas when updating the exercices. */
-  export let w: WorkoutGUI = null;
   /** Exercice that must be passed in argument. */
   export let e: ExerciceGUI;
 
   onMount(() => {
     isMounted = true;
-  })
+  });
 
+  /** Add a new empty set to an exercice object and signal to the parent to update the database. */
   function addSet() {
-    let lastWeight: Weight = new Weight(0, weightMetric);
-    if (e.sl && e.sl.length > 0) lastWeight.weight = e.sl[e.sl.length-1].w.weight;
-    e.sl.push(new SerieGUI(e.sl.length, 0, lastWeight, true));
-    e.sl = e.sl;
-    saveWorkout(w.convertToWorkout());
+    console.log("ADD SET");
+    console.log(e.sl);
+    console.log(e.slGUI);
+    e.addSet(si.wm);
+    dispatch('update', e);
   }
 
-  function deleteSet(set: SerieGUI) {
-    if (!set) throw new Error("There is no set to be deleted !");
+  /** Delete a set and signal to the parent to update the database.*/
+  function deleteSet(sGUI: SerieGUI) {
+    if (!sGUI) throw new Error("There is no set to be deleted !");
     
     for (let i = 0; i < e.sl.length; i++) {
-      if (e.sl[i] === set) {
+      if (e.slGUI[i] === sGUI) {
         e.sl.splice(i,1);
-        e.sl = e.sl;
-        saveWorkout(w.convertToWorkout());
+        e.slGUI.splice(i,1);
+        e.slGUI = e.slGUI;
+        dispatch('update', e);
         return;
       }
     }
@@ -65,34 +65,23 @@
 
 
 
-{#if isMounted && e && e.sl}
+{#if isMounted && e && e.slGUI}
 {#each e.slGUI as set, i}
-<div class="collapse bg-base-300 mb-1" >
-  <div class="absolute bg-red-400 z-0 w-full h-full opacity-0 flex justify-center items-center" >
-    <Icon icon={trashCanOutline} color="white" width="30" height="30"/>
+<div class="flex justify-between items-center bg-base-300 p-2 rounded-xl">
+  <div class="flex flex-row items-center">
+    <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.weigth.metric} value={set.weigth.weight}
+    on:keyPress={() => dispatch('update', e)}
+    on:input={(event) => {set.weigth.weight = event.detail['value']; dispatch('update', e);}}/>
+    
+    <span class="font-bold mx-2">X</span>
+    
+    <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.rn} 
+    on:keyPress={() => dispatch('update', e)} 
+    on:input={(event) => {set.rn = event.detail['value']; dispatch('update', e);}}/>
   </div>
-  <input type="checkbox" checked={set.isOpen} class="override-collapse-title"/> 
-  <div class="collapse-title font-medium bg-base-200 override-collapse-title cursor-pointer">
-      {`Set ${i+1}`}
-  </div>
-  <div class="collapse-content bg-base-200 override-collapse-content z-10">
-    <div class="flex justify-between items-center">
-      <div class="flex flex-row items-center">
-        <InputNumber placeholder="Weight" className="input w-24 mr-0 text-left" metric={set.w.metric} value={set.w.weight}
-        on:keyPress={() => saveWorkout(w.convertToWorkout())}
-        on:input={(event) => {set.w.weight = event.detail['value']; saveWorkout(w.convertToWorkout());}}/>
-        
-        <span class="font-bold mx-2">X</span>
-        
-        <InputNumber placeholder="Reps" className="input w-14 ml-0 text-center" value={set.rn} 
-        on:keyPress={() => saveWorkout(w.convertToWorkout())} 
-        on:input={(event) => {set.rn = event.detail['value']; saveWorkout(w.convertToWorkout());}}/>
-      </div>
-      <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
-        <Icon icon={trashCanOutline} color="red" width="15" height="15" class="cursor-pointer" />
-      </button>
-    </div>
-  </div>
+  <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
+    <Icon icon={trashCanOutline} color="white" width="15" height="15" class="cursor-pointer" />
+  </button>
 </div>
 {/each}
 
@@ -102,6 +91,17 @@
     Add Set
   </button>
 </div>
+
+{#if e.isExtraOpen}
+<div class="mt-2">
+  <textarea class="textarea textarea-bordered w-full"
+  placeholder="Add additionnal notes..."
+  bind:value={e.notes}
+  on:input={() => dispatch('update', e)}
+  ></textarea>
+</div>
+{/if}
+
 {/if}
 
 

@@ -4,10 +4,10 @@ import type { Weight } from "./Weight";
 export class Serie {
     constructor(
         /** Rank of the set within the exercice. */
-        public r: number,
+        public rank: number,
         /** Repetition number of repetitions dones. */
         public rn: number,
         /** Weight used in the set. */
-        public w: Weight,
+        public weigth: Weight,
     ) {}
 }

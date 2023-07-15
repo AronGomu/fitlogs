@@ -1,13 +1,13 @@
-import { WeightMetrics } from "../enum/WeightMetrics";
+import { WeightMetric } from "../enum/WeightMetrics";
 
 
 export class Weight {
-    constructor(public weight: number, public metric: WeightMetrics) {}
+    constructor(public weight: number, public metric: WeightMetric) {}
 
     /** Return the weight in kilos. */
     getWeightInKilos(): number {
         switch (this.metric) {
-            case WeightMetrics.Pounds: return this.weight * 2.205;
+            case WeightMetric.Pounds: return this.weight * 2.205;
             default: return this.weight;
         }
     }
@@ -15,15 +15,15 @@ export class Weight {
     /** Return the weight in pounds. */
     getWeightInPounds(): number {
         switch (this.metric) {
-            case WeightMetrics.Kilos: return this.weight / 2.205;
+            case WeightMetric.Kilos: return this.weight / 2.205;
             default: return this.weight;
         }
     }
 
-    getWeightByMetric(metric: WeightMetrics): number {
+    getWeightByMetric(metric: WeightMetric): number {
         switch (metric) {
-            case WeightMetrics.Kilos: return this.getWeightInKilos();
-            case WeightMetrics.Pounds: return this.getWeightInPounds();
+            case WeightMetric.Kilos: return this.getWeightInKilos();
+            case WeightMetric.Pounds: return this.getWeightInPounds();
         
             default: throw new Error(`From getWeightByMetric : "${metric}" is not a valid metric`);
             

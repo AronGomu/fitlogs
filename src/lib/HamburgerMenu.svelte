@@ -1,17 +1,16 @@
 <script lang="ts">
 import type { Workout } from "../shared/class/Workout";
-  import { downloadAsJson } from "../shared/functions/Utilitary";
-import { workoutsData } from "../shared/store/saveStore";
+  import { fetchWorkoutList } from "../shared/functions/Database";
+import { downloadAsJson } from "../shared/functions/Utilitary";
 
 let showMenu: boolean = false;
-
-let workouts: Workout[];
-$: { workouts = $workoutsData;}
 
 function toggleMenu() { showMenu = !showMenu; }
 
 function handleOnclickExportData(event) {
-    downloadAsJson(workouts, 'data');
+    fetchWorkoutList().then(wl => {
+        downloadAsJson(wl, 'data');
+    })
 }
 </script>
 

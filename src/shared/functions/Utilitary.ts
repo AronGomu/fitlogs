@@ -1,17 +1,3 @@
-import type { Workout } from "../class/Workout";
-import type { WorkoutGUI } from "../class/WorkoutGUI";
-import { WeightMetrics } from "../enum/WeightMetrics";
-import { saveWorkout } from "../store/saveStore";
-
-export function getReducedStringMetric(metric: WeightMetrics): string {
-    switch (metric) {
-        case WeightMetrics.Kilos: return "kgs";
-        case WeightMetrics.Pounds: return "lbs";
-    
-        default: throw new Error(`From getWeightByMetric : "${metric}" is not a valid metric`);
-    }
-}
-
 /** When clicking on some characters of an text input, this will automatically select the whole text */
 export function selectWholeTextOnFocus(e) {
   e.target.select();
@@ -188,4 +174,64 @@ export function downloadAsJson(data: object | object[], filename: string) {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Returns the last element from an array.
+ * @param array - The input array.
+ * @returns The last element of the array, or `undefined` if the array is empty.
+ */
+export function last<T>(array: T[]): T | undefined {
+  if (array.length === 0) {
+    return undefined;
+  }
+  return array[array.length - 1];
+}
 
+
+
+// Condition functions
+
+/**
+ * Checks if a number is negative.
+ * @param number - The number to check.
+ * @returns {boolean} - `true` if the number is negative, `false` otherwise.
+ */
+export function isNegative(number) {
+  return number < 0;
+}
+
+/**
+ * Checks if a number is postive and above 0.
+ * @param number - The number to check.
+ * @returns {boolean} - `true` if the number is positive, above 0, `false` otherwise.
+ */
+export function isPositiveNonZero(number) {
+  return number > 0;
+}
+
+/**
+ * Checks if a string is not null and not empty.
+ * @param str - The string to check.
+ * @returns `true` if the string is not null and not empty, otherwise `false`.
+ */
+export function isStringNotEmpty(str: string | null | undefined): boolean {
+  return str !== null && str !== undefined && str.trim() !== '';
+}
+
+
+/**
+ * Checks if a value is an array and has at least one element.
+ * @param value - The value to check.
+ * @returns `true` if the value is an array with at least one element, otherwise `false`.
+ */
+export function isArrayWithElements(value: unknown): boolean {
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+  return false;
+}
+
+/** Compare the 2 objects values and properties.*/
+export function compare(o1: any, o2: any): boolean {
+  if (JSON.stringify(o1) == JSON.stringify(o2)) return true;
+  return false
+}

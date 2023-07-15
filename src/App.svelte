@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Route, Router } from "svelte-routing";
   import HamburgerMenu from "./lib/HamburgerMenu.svelte";
-  import Home from "./routes/Workout.svelte";
+  import Workouts from "./routes/Workouts.svelte";
 
 </script>
 
@@ -9,8 +9,17 @@
   <HamburgerMenu/>
 </div>
   
-<div class="relative">
-  <Router>
-    <Route path="/fitlogs" component={Home} />
-  </Router>
+<div class="flex justify-center">
+  <div class="page-content">
+    <Router>
+      <Route path="/fitlogs" component={Workouts} />
+    </Router>
+  </div>
 </div>
+
+<style>
+
+  .page-content {
+    width: 90%;
+  }
+</style>

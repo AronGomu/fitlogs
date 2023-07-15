@@ -1,14 +1,19 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
+import { createEventDispatcher, onMount } from "svelte";
+import { StoreName, getAllFromDatabase } from "../../../shared/functions/Database";
+import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
+  import type { ExerciceSuggestion } from "../../../shared/class/ExerciceSuggestion";
   import { exerciceSuggestions } from "../../../shared/store/suggestionsStore";
-  import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
     
     const dispatch = createEventDispatcher();
 
     // Store variables
     /** All the exercices stored that can be shown as suggestions. */
-    let suggestions: string[];
-    $: { suggestions = $exerciceSuggestions;}
+    let esl: ExerciceSuggestion[] = [];
+    exerciceSuggestions.subscribe(exerciceSuggestions => {
+        esl = exerciceSuggestions
+        console.log(esl);
+    });
     
     /** Value of the input. */
     export let type: string = "text";
@@ -20,7 +25,7 @@
     export let focusOnMount: boolean = false;
     
     /** All the exercices that match what's inputed in the Exercice Name input. */
-    let validSuggestions: string[];
+    let validSuggestions: ExerciceSuggestion[];
     /** Input Element for Exercice Name*/
     let inputElement: HTMLInputElement;
     /** Input Exercice Name Focus boolean flag */
@@ -29,10 +34,9 @@
     let isEntered: boolean = false;
 
     onMount(() => {
-        validSuggestions = suggestions;
+        validSuggestions = esl;
         if (focusOnMount) inputElement.focus();
     })
-
 
     function setType(node) {
         node.type = type;
@@ -40,20 +44,18 @@
 
     /** Handle Input function for the Exercice Name Input. */
     function handleInput(event) {
-        validSuggestions = getValidSuggestions(suggestions);
-        // addSuggestion(value);
-        
-        dispatch('input', {'input': event.data, 'value': event.target.value});
+        validSuggestions = getValidSuggestions(esl);
+        // const input = event.data // character inputed
+        dispatch('input', event.target.value);
     }
 
 
-    function getValidSuggestions(allSuggestions: string[]) {
-        
+    function getValidSuggestions(allSuggestions: ExerciceSuggestion[]) {
 
         if (!allSuggestions) return [];
         validSuggestions = [];
         for (const suggestion of allSuggestions) {
-            if (suggestion.includes(value.toLowerCase())) {
+            if (suggestion.name.includes(value.toLowerCase())) {
                 validSuggestions.push(suggestion);
             }
         }
@@ -70,10 +72,12 @@
         setTimeout(() => isFocused = false, 100);
     }
 
-    function handleClickSuggestion(vs) {
-        value = vs;
+    /** Handle the event when the user select a suggestion from the list by clicking/tapping.*/
+    function handleClickSuggestion(es: ExerciceSuggestion) {
+        value = es.getExerciceName();
         isEntered = false;
-        dispatch('selectSuggestion');
+        console.log(value);
+        dispatch('selectSuggestion', value);
     }
 
     function handleMouseEnter() {
@@ -91,7 +95,11 @@ bind:this={inputElement} bind:value={value} on:input={handleInput} on:focus={han
 {#if (isFocused || isEntered) && validSuggestions.length > 0}
 <ul class="absolute top-16 menu bg-base-200 w-56 rounded-box z-20">
     {#each validSuggestions as vs}
-        <li><button on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave} on:click={() => handleClickSuggestion(vs)}>{vs}</button></li>
+        <li>
+            <button on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave} on:click={() => handleClickSuggestion(vs)}>
+                {vs.name} ({vs.variation})
+            </button>
+        </li>
     {/each}
 </ul>
 {/if}
