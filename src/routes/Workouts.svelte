@@ -86,7 +86,7 @@
 
   /** Delete a workout in the database and remove it in the GUI. */
   function onDeleteWorkout(wGUI: WorkoutGUI) {
-    deleteFromDatabase(StoreName.WORKOUT_STORE, wGUI.id).then(() => {
+    deleteFromDatabase(StoreName.WORKOUT, wGUI.id).then(() => {
       workoutsGUI = workoutsGUI.filter(w => w != wGUI);
     })
   }

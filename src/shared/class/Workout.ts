@@ -31,7 +31,7 @@ export function getRealWorkout(w: Workout): Workout {
     // loop through all the exercices
     if (w.el) {
       for (let i = 0; i < w.el.length; i++) {
-        let realExercice: Exercice = new Exercice(w.el[i].name, [], w.el[i].notes);
+        let realExercice: Exercice = new Exercice(w.el[i].lift, [], w.el[i].notes);
         const e = w.el[i];
         if (e.sl) {
           for (let j = 0; j < e.sl.length; j++) {

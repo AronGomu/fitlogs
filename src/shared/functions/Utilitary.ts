@@ -174,6 +174,8 @@ export function downloadAsJson(data: object | object[], filename: string) {
   URL.revokeObjectURL(url);
 }
 
+// CONVERT OBJECTS INTO OTHER OR SUBSETS
+
 /**
  * Returns the last element from an array.
  * @param array - The input array.
@@ -185,6 +187,21 @@ export function last<T>(array: T[]): T | undefined {
   }
   return array[array.length - 1];
 }
+
+
+/**
+ * Converts an enum object into a list of strings containing the values of the enum.
+ * @param enumObject - The enum object.
+ * @param nullString - String showed for the null value.
+ * @returns An array of strings with the values of the enum.
+ */
+export function enumToList<T extends Record<string, string | number>>(enumObject: T, nullString: string = null): string[] {
+  return Object.values(enumObject) as string[];
+  // let l: string[] = Object.values(enumObject) as string[];
+  // l.unshift(nullString);
+  // return l;
+}
+
 
 
 
@@ -207,6 +224,7 @@ export function isNegative(number) {
 export function isPositiveNonZero(number) {
   return number > 0;
 }
+
 
 /**
  * Checks if a string is not null and not empty.

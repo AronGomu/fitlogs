@@ -2,22 +2,22 @@ import { isStringNotEmpty } from "../functions/Utilitary";
 import type { MuscleWork } from "./MuscleWork";
 
 /** Exercice suggestions that pops out when filling out a auto complete form of the exercice name.  */
-export class ExerciceSuggestion {
+export class Lift {
     constructor(
         /** Id of the object in the database. */
-        public id: number,
+        public id?: number,
         /** Name of the exercice. */
-        public name: string,
+        public name?: string,
         /** Name of the variation of the lift (what is between parenthese). */
-        public variation: string = "",
+        public variation?: string,
         /** List of muscle targeted by the exercice with the estimated average percentage of work for each. */
         public targets: MuscleWork[] = [],
 
     ) { }
 
     /** Return true if they have the same id. False otherwise. */
-    compareById(es: ExerciceSuggestion): boolean {
-        if (es.id === this.id) return true;
+    compareById(l: Lift): boolean {
+        if (l.id === this.id) return true;
         return false;
     }
 
@@ -33,6 +33,6 @@ export class ExerciceSuggestion {
     }
 }
 
-export function getRealEs(es: ExerciceSuggestion) {
-    return new ExerciceSuggestion(es.id, es.name, es.variation, es.targets);
+export function getRealEs(l: Lift) {
+    return new Lift(l.id, l.name, l.variation, l.targets);
 }

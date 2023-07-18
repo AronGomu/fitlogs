@@ -1,5 +1,6 @@
 import type { WeightMetric } from "../enum/WeightMetrics";
 import { isArrayWithElements, last } from "../functions/Utilitary";
+import type { Lift } from "./Lift";
 import type { Serie } from "./Serie";
 import { Weight } from "./Weight";
 
@@ -7,8 +8,8 @@ import { Weight } from "./Weight";
 export class Exercice {
 
     constructor(
-        /** Name of the exercice. */
-        public name: string,
+        /** Lift of the exercice. */
+        public lift: Lift,
         /** List of set of the exercice. */
         public sl: Serie[],
         /** Additionnal notes that can be added about the exercice. */

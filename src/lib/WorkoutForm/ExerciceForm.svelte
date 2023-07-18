@@ -29,9 +29,6 @@
 
   /** Add a new empty set to an exercice object and signal to the parent to update the database. */
   function addSet() {
-    console.log("ADD SET");
-    console.log(e.sl);
-    console.log(e.slGUI);
     e.addSet(si.wm);
     dispatch('update', e);
   }
@@ -80,7 +77,7 @@
     on:input={(event) => {set.rn = event.detail['value']; dispatch('update', e);}}/>
   </div>
   <button class="btn btn-ghost btn-xs" on:click={() => {setToBeDeleted = set; showDeleteDialog(set, true)}}>
-    <Icon icon={trashCanOutline} color="white" width="15" height="15" class="cursor-pointer" />
+    <Icon icon={trashCanOutline} color="red" width="15" height="15" class="cursor-pointer" />
   </button>
 </div>
 {/each}

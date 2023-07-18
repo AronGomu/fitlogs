@@ -26,7 +26,7 @@
   /** Update the workout in the database. */
   function updateWorkout() {
     
-    updateInDatabase<Workout>(StoreName.WORKOUT_STORE, workoutGUI.id, workoutGUI.convertToWorkout()).then(updatedW => {
+    updateInDatabase<Workout>(StoreName.WORKOUT, workoutGUI.id, workoutGUI.convertToWorkout()).then(updatedW => {
       //TODO: Stop closing the extra from exercice on refresh
       workoutGUI.updateWorkout(getRealWorkout(updatedW));
       console.log(workoutGUI.el);
@@ -61,7 +61,7 @@
   }
 
   function updateName(e: ExerciceGUI, newName: string) {
-    e.name = newName;
+    e.lift = newName;
     workoutGUI.el = []
     for (const elGUI of workoutGUI.elGUI) {
       workoutGUI.el.push(elGUI.convertToExercice())
@@ -82,7 +82,7 @@
     <!-- TITLE -->
     <div class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title">
       <div class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName">
-        <AutoCompleteInput type="text" value="{e.name}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10"
+        <AutoCompleteInput type="text" value="{e.lift}" placeholder="Exercice Name" class="bg-base-500 input input-ghost input-lg text-primary z-10"
         on:input={event => {
           updateName(e, event.detail);
         }} 

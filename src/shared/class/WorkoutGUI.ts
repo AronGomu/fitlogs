@@ -20,7 +20,7 @@ export class WorkoutGUI extends Workout {
         this.elGUI = [];
         for (const e of w.el) {
             // The exercice already exist
-            const oldEGUI = oldElGUI.find(oldEGUI => oldEGUI.name == e.name)
+            const oldEGUI = oldElGUI.find(oldEGUI => oldEGUI.lift == e.lift)
             if (oldElGUI) this.elGUI.push(new ExerciceGUI(e, oldEGUI.isSelfOpen, oldEGUI.isExtraOpen));
             else this.elGUI.push(new ExerciceGUI(e));
         }

@@ -1,18 +1,16 @@
 <script lang="ts">
 import { createEventDispatcher, onMount } from "svelte";
-import { StoreName, getAllFromDatabase } from "../../../shared/functions/Database";
+import type { Lift } from "../../../shared/class/Lift";
 import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
-  import type { ExerciceSuggestion } from "../../../shared/class/ExerciceSuggestion";
-  import { exerciceSuggestions } from "../../../shared/store/suggestionsStore";
+import { exerciceSuggestions } from "../../../shared/store/suggestionsStore";
     
     const dispatch = createEventDispatcher();
 
     // Store variables
     /** All the exercices stored that can be shown as suggestions. */
-    let esl: ExerciceSuggestion[] = [];
+    let ll: Lift[] = [];
     exerciceSuggestions.subscribe(exerciceSuggestions => {
-        esl = exerciceSuggestions
-        console.log(esl);
+        ll = exerciceSuggestions
     });
     
     /** Value of the input. */
@@ -25,7 +23,7 @@ import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
     export let focusOnMount: boolean = false;
     
     /** All the exercices that match what's inputed in the Exercice Name input. */
-    let validSuggestions: ExerciceSuggestion[];
+    let validSuggestions: Lift[];
     /** Input Element for Exercice Name*/
     let inputElement: HTMLInputElement;
     /** Input Exercice Name Focus boolean flag */
@@ -34,7 +32,7 @@ import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
     let isEntered: boolean = false;
 
     onMount(() => {
-        validSuggestions = esl;
+        validSuggestions = ll;
         if (focusOnMount) inputElement.focus();
     })
 
@@ -44,13 +42,13 @@ import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
 
     /** Handle Input function for the Exercice Name Input. */
     function handleInput(event) {
-        validSuggestions = getValidSuggestions(esl);
+        validSuggestions = getValidSuggestions(ll);
         // const input = event.data // character inputed
         dispatch('input', event.target.value);
     }
 
 
-    function getValidSuggestions(allSuggestions: ExerciceSuggestion[]) {
+    function getValidSuggestions(allSuggestions: Lift[]) {
 
         if (!allSuggestions) return [];
         validSuggestions = [];
@@ -73,8 +71,8 @@ import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
     }
 
     /** Handle the event when the user select a suggestion from the list by clicking/tapping.*/
-    function handleClickSuggestion(es: ExerciceSuggestion) {
-        value = es.getExerciceName();
+    function handleClickSuggestion(l: Lift) {
+        value = l.getExerciceName();
         isEntered = false;
         console.log(value);
         dispatch('selectSuggestion', value);

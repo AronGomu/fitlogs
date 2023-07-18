@@ -1,17 +1,14 @@
-import { openDB, type DBSchema, deleteDB } from 'idb';
-import { Exercice } from '../class/Exercice';
-import { Serie } from '../class/Serie';
-import { Weight } from '../class/Weight';
+import { deleteDB, openDB, type DBSchema } from 'idb';
+import { Settings } from '../class/Settings';
 import { Workout, getRealWorkout } from '../class/Workout';
 import { WorkoutDate } from '../class/WorkoutDate';
-import { Settings } from '../class/Settings';
 
 const DB_NAME = "db";
 
 export enum StoreName {
-    WORKOUT_STORE = "workout-store",
-    SUGGESTION_STORE = "suggestion-store",
-    SETTINGS_STORE = "settings-store"
+    WORKOUT = "workout-store",
+    LIFT = "lift-store",
+    SETTINGS = "settings-store"
 } 
 
 // Define the database schema
@@ -20,7 +17,7 @@ interface Database extends DBSchema {
       key: number;
       value: any;
     };
-    "suggestion-store": {
+    "lift-store": {
       key: number;
       value: any;
     };
@@ -40,16 +37,16 @@ async function openDatabase() {
   return openDB<Database>(DB_NAME, 1, {
     upgrade(db) {
       // Create object store(s) and indexes
-      if (!db.objectStoreNames.contains(StoreName.WORKOUT_STORE)) {
-        db.createObjectStore(StoreName.WORKOUT_STORE, { autoIncrement: true });
+      if (!db.objectStoreNames.contains(StoreName.WORKOUT)) {
+        db.createObjectStore(StoreName.WORKOUT, { autoIncrement: true });
       }
       // Create object store(s) and indexes
-      if (!db.objectStoreNames.contains(StoreName.SUGGESTION_STORE)) {
-        db.createObjectStore(StoreName.SUGGESTION_STORE, { autoIncrement: true });
+      if (!db.objectStoreNames.contains(StoreName.LIFT)) {
+        db.createObjectStore(StoreName.LIFT, { autoIncrement: true });
       }
       // Create object store(s) and indexes
-      if (!db.objectStoreNames.contains(StoreName.SETTINGS_STORE)) {
-        db.createObjectStore(StoreName.SETTINGS_STORE, { keyPath: 'key' });
+      if (!db.objectStoreNames.contains(StoreName.SETTINGS)) {
+        db.createObjectStore(StoreName.SETTINGS, { keyPath: 'key' });
       }
     },
   });
@@ -145,7 +142,7 @@ export async function fetchWorkoutList(): Promise<Workout[]> {
   /** List of the workouts correctly instanciated to return */  
   let realWl: Workout[] = [];
   /** List of the workout loaded from the database but that are just object without typing or functions. */
-  const fakeWl: Workout[] = await getAllFromDatabase<Workout>(StoreName.WORKOUT_STORE);
+  const fakeWl: Workout[] = await getAllFromDatabase<Workout>(StoreName.WORKOUT);
 
   // Set the dates of the workouts to be Date and not strings
   if (fakeWl) {
@@ -159,8 +156,8 @@ export async function fetchWorkoutList(): Promise<Workout[]> {
 
 export async function addNewWorkout(): Promise<Workout> {
   const db = await openDatabase();
-  const tx = db.transaction(StoreName.WORKOUT_STORE, 'readwrite');
-  const store = tx.objectStore(StoreName.WORKOUT_STORE);
+  const tx = db.transaction(StoreName.WORKOUT, 'readwrite');
+  const store = tx.objectStore(StoreName.WORKOUT);
   const newWorkout = <Workout> { createdAt: new WorkoutDate() };
   const id = await store.add(newWorkout);
   const newWorkoutWithId = new Workout(id, newWorkout.createdAt);
@@ -174,7 +171,7 @@ export async function addNewWorkout(): Promise<Workout> {
 /** Fetch the settings */
 export async function fetchSettings(): Promise<Settings> {
   /** Load the only one settings object in the database. */
-  const fakeS: Settings = await getObjectById<Settings>(StoreName.SETTINGS_STORE, 0);
+  const fakeS: Settings = await getObjectById<Settings>(StoreName.SETTINGS, 0);
 
   if (!fakeS) return new Settings();
 
@@ -185,9 +182,9 @@ export async function fetchSettings(): Promise<Settings> {
 /** Save the settings. If there is no settings already, create the settings in the database. */
 export async function saveSettings(s: Settings): Promise<Settings> {
   /** Load the settings from the database to make sure it exists. */
-  const fakeS: Settings = await getObjectById<Settings>(StoreName.SETTINGS_STORE, 0);
+  const fakeS: Settings = await getObjectById<Settings>(StoreName.SETTINGS, 0);
 
-  if (!fakeS) return addToDatabase<Settings>(StoreName.SETTINGS_STORE, s, 0);
+  if (!fakeS) return addToDatabase<Settings>(StoreName.SETTINGS, s, 0);
 
-  return updateInDatabase<Settings>(StoreName.SETTINGS_STORE, 0, s);
+  return updateInDatabase<Settings>(StoreName.SETTINGS, 0, s);
 }

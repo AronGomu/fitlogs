@@ -19,7 +19,7 @@ export class ExerciceGUI extends Exercice {
         /** Boolean flag to know if the extra inputs (optionnal ones) are showed or not. */
         public isExtraOpen: boolean = false
     ) {
-        super(e.name, e.sl, e.notes);
+        super(e.lift, e.sl, e.notes);
         if (e.sl) for (const s of e.sl) this.slGUI.push(new SerieGUI(s));
     }
 
@@ -32,13 +32,13 @@ export class ExerciceGUI extends Exercice {
 
     /** Update the base properties of Exercice with a given Exercice object. */
     updateExercice(e: Exercice) {
-        this.name = e.name;
+        this.lift = e.lift;
         this.sl = e.sl;
     }
 
     /** Return a base Exercice object instance from the data of this ExerciceGUI instance. */
     convertToExercice(): Exercice {
-        return new Exercice(this.name, this.sl, this.notes);
+        return new Exercice(this.lift, this.sl, this.notes);
     }
 
 }
