@@ -2,14 +2,14 @@
 import { createEventDispatcher, onMount } from "svelte";
 import type { Lift } from "../../../shared/class/Lift";
 import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
-import { exerciceSuggestions } from "../../../shared/store/suggestionsStore";
+import { lifts } from "../../../shared/store/liftStore";
     
     const dispatch = createEventDispatcher();
 
     // Store variables
     /** All the exercices stored that can be shown as suggestions. */
     let ll: Lift[] = [];
-    exerciceSuggestions.subscribe(exerciceSuggestions => {
+    lifts.subscribe(exerciceSuggestions => {
         ll = exerciceSuggestions
     });
     

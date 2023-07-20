@@ -2,7 +2,8 @@
   import { Route, Router } from "svelte-routing";
   import HamburgerMenu from "./lib/HamburgerMenu.svelte";
   import Workouts from "./routes/Workouts.svelte";
-  import ExerciceSuggestions from "./routes/Lifts.svelte";
+  import Lifts from "./routes/Lifts.svelte";
+
 
 </script>
 
@@ -13,8 +14,9 @@
 <div class="flex justify-center">
   <div class="page-content">
     <Router>
-      <Route path="/fitlogs/exercice-suggestions" component={ExerciceSuggestions} />
+      <Route path="/fitlogs/lifts" component={Lifts} />
       <Route path="/fitlogs" component={Workouts} />
+      <Route path="/" component={Workouts} />
     </Router>
   </div>
 </div>

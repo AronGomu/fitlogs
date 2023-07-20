@@ -34,5 +34,6 @@ export class Lift {
 }
 
 export function getRealEs(l: Lift) {
+    console.log(l);
     return new Lift(l.id, l.name, l.variation, l.targets);
 }

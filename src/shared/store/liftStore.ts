@@ -7,7 +7,7 @@ import { isArrayWithElements } from '../functions/Utilitary';
 
 // FROM WORKOUT DATA WAY
 /** Exercice suggestions in inputs of form. */
-export let exerciceSuggestions: Writable<Lift[]> = writable(<Lift[]> []);
+export let lifts: Writable<Lift[]> = writable(<Lift[]> []);
 
 loadEsl();
 
@@ -18,10 +18,12 @@ function loadEsl() {
         if (!isArrayWithElements(fakeEsl)) {
             load().then(() => loadEsl());
         }
-    
+        
+        console.log(fakeEsl);
+        
         let realEsl = [];
         for (const fakeEs of fakeEsl) realEsl.push(getRealEs(fakeEs));
-        exerciceSuggestions.set(realEsl);
+        lifts.set(realEsl);
     })
 }
 
@@ -39,7 +41,7 @@ export async function addSuggestion(newEs: Lift) {
 
     addToDatabase(StoreName.LIFT, newEs).then(addedEs => {
         getAllFromDatabase<Lift>(StoreName.LIFT).then(fetchedEsl => {
-            exerciceSuggestions.set(fetchedEsl);
+            lifts.set(fetchedEsl);
         })
     });
 }
@@ -48,12 +50,11 @@ export async function addSuggestion(newEs: Lift) {
 * @param s1 Suggestion value trying to be added.
 */
 export async function updateSuggestion(newEs: Lift) {
-
     if (!newEs.id) throw new Error("Cannot update Lift if it has no id.");
 
     updateInDatabase(StoreName.LIFT, newEs.id, newEs).then(updateEs => {
         getAllFromDatabase<Lift>(StoreName.LIFT).then(fetchedEsl => {
-            exerciceSuggestions.set(fetchedEsl);
+            lifts.set(fetchedEsl);
         })
     });
 }

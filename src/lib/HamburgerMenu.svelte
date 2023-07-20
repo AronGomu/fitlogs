@@ -1,7 +1,7 @@
 <script lang="ts">
-import type { Workout } from "../shared/class/Workout";
+  import { Link } from "svelte-routing";
   import { fetchWorkoutList } from "../shared/functions/Database";
-import { downloadAsJson } from "../shared/functions/Utilitary";
+  import { downloadAsJson } from "../shared/functions/Utilitary";
 
 let showMenu: boolean = false;
 
@@ -22,10 +22,12 @@ function handleOnclickExportData(event) {
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </div>
+    <a href="/"><span>FitLogs</span></a>
 </div>
 
 <!-- content here -->
 <ul class={`z-20 fixed left-0 h-full menu bg-base-200 p-0 w-4/5 [&_li>*]:rounded-none menu`} class:menu-expanded={showMenu}>
+    <li><a href="/fitlogs/lifts">Lifts</a></li>
     <li><button class="btn btn-primary" on:click={handleOnclickExportData}>Export Data</button></li>
 </ul>
 
