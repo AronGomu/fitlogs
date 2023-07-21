@@ -11,7 +11,10 @@
 		updateInDatabase,
 	} from "../../shared/functions/Database";
 	import { isPercentage, minLength } from "../../shared/functions/Form";
-	import { enumToList } from "../../shared/functions/Utilitary";
+	import {
+		enumToList,
+		selectWholeTextOnFocus,
+	} from "../../shared/functions/Utilitary";
 
 	const dispatch = createEventDispatcher();
 
@@ -42,6 +45,7 @@
 		type="text"
 		class="m-2 input input-bordered input-primary"
 		bind:value={lift.name}
+		on:focus={(e) => selectWholeTextOnFocus(e)}
 		on:input={() => (exerciceIsValid = setExerciceIsValid())}
 		placeholder="Main name of the lift..."
 	/>
@@ -49,6 +53,7 @@
 		type="text"
 		class="m-2 input input-bordered input-secondary"
 		bind:value={lift.variation}
+		on:focus={(e) => selectWholeTextOnFocus(e)}
 		on:input={() => (exerciceIsValid = setExerciceIsValid())}
 		placeholder="Name of the variation of lift..."
 	/>
@@ -72,6 +77,7 @@
 					type="number"
 					class="input input-bordered w-full"
 					bind:value={t.work}
+					on:focus={(e) => selectWholeTextOnFocus(e)}
 					on:input={() => (exerciceIsValid = setExerciceIsValid())}
 				/>
 				<div

@@ -15,6 +15,7 @@
 	import {
 		enumToList,
 		isStringNotEmpty,
+		selectWholeTextOnFocus,
 	} from "../shared/functions/Utilitary";
 	import { Muscle } from "../shared/enum/Muscle";
 	import { onMount } from "svelte";
@@ -214,6 +215,7 @@
 					placeholder="Filter by name"
 					class="input input-bordered"
 					bind:value={filtersLift.name}
+					on:focus={(e) => selectWholeTextOnFocus(e)}
 				/>
 
 				<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -225,6 +227,7 @@
 					placeholder="Filter by variation"
 					class="input input-bordered"
 					bind:value={filtersLift.variation}
+					on:focus={(e) => selectWholeTextOnFocus(e)}
 				/>
 
 				<span class="mt-2 font-bold">Muscles</span>
