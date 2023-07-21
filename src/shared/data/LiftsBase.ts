@@ -74,7 +74,6 @@ const ExerciceSuggestionsBase: Lift[] = [
 		new MuscleWork(Muscle.TrapLow, 20),
 	]),
 	new Lift(null, "Calf Raise", "Sitted", [new MuscleWork(Muscle.Calve, 100)]),
-	,
 	new Lift(null, "Pull-up", "", [new MuscleWork(Muscle.Calve, 100)]),
 	new Lift(null, "Pull-up", "Wide", [new MuscleWork(Muscle.Calve, 100)]),
 	new Lift(null, "Chin-up", "", [new MuscleWork(Muscle.Calve, 100)]),

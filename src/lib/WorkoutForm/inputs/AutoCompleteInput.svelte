@@ -50,8 +50,14 @@
 	function getValidSuggestions(allSuggestions: Lift[]) {
 		if (!allSuggestions) return [];
 		validSuggestions = [];
+
 		for (const suggestion of allSuggestions) {
-			if (suggestion.name.includes(value.toLowerCase())) {
+			if (
+				suggestion
+					.getExerciceName()
+					.toLowerCase()
+					.includes(value.toLowerCase())
+			) {
 				validSuggestions.push(suggestion);
 			}
 		}
@@ -97,19 +103,23 @@
 />
 
 {#if (isFocused || isEntered) && validSuggestions.length > 0}
-	<ul class="absolute top-16 menu bg-base-200 w-56 rounded-box z-20">
-		{#each validSuggestions as vs}
-			<li>
-				<button
-					on:mouseenter={handleMouseEnter}
-					on:mouseleave={handleMouseLeave}
-					on:click={() => handleClickSuggestion(vs)}
-				>
-					{vs.name} ({vs.variation})
-				</button>
-			</li>
-		{/each}
-	</ul>
+	<div
+		class="absolute top-16 menu bg-base-200 w-56 rounded-box z-20 overflow-y-auto h-36"
+	>
+		<ul>
+			{#each validSuggestions as vs}
+				<li>
+					<button
+						on:mouseenter={handleMouseEnter}
+						on:mouseleave={handleMouseLeave}
+						on:click={() => handleClickSuggestion(vs)}
+					>
+						{vs.getExerciceName()}
+					</button>
+				</li>
+			{/each}
+		</ul>
+	</div>
 {/if}
 
 <style>
