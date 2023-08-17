@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from "svelte";
-	import type { Lift } from "../../../shared/class/Lift";
+	import type { Lift } from "../../../shared/class/Lift/Lift";
 	import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
 	import { lifts } from "../../../shared/store/liftStore";
 
@@ -16,7 +16,7 @@
 	/** Value of the input. */
 	export let type: string = "text";
 	/** Value of the input. */
-	export let value: string;
+	export let value: any;
 	/** Placeholder of the input. */
 	export let placeholder: string;
 	/** Indicate of the the input will autofocus on initialisation.*/

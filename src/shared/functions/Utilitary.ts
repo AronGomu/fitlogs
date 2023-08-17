@@ -220,20 +220,30 @@ export function getAllEnums<T extends Record<string, string | number>>(
 
 /**
  * Checks if a number is negative.
- * @param number - The number to check.
+ * @param num - The number to check.
  * @returns {boolean} - `true` if the number is negative, `false` otherwise.
  */
-export function isNegative(number) {
-	return number < 0;
+export function isNegative(num: number) {
+	return num < 0;
+}
+
+/**
+ * Check if the given argument is a positive number.
+ * @param num - The number to be checked.
+ * @returns {boolean} - True if the number is positive, false otherwise.
+ */
+export function isPositive(num: number): boolean {
+	// Check if the number is positive
+	return num > 0;
 }
 
 /**
  * Checks if a number is postive and above 0.
- * @param number - The number to check.
+ * @param num - The number to check.
  * @returns {boolean} - `true` if the number is positive, above 0, `false` otherwise.
  */
-export function isPositiveNonZero(number) {
-	return number > 0;
+export function isPositiveNonZero(num: number) {
+	return num > 0;
 }
 
 /**
@@ -248,11 +258,15 @@ export function isStringNotEmpty(str: string | null | undefined): boolean {
 /**
  * Checks if a value is an array and has at least one element.
  * @param value - The value to check.
+ * @param nMin - Minimum number of elements.
  * @returns `true` if the value is an array with at least one element, otherwise `false`.
  */
-export function isArrayWithElements(value: unknown): boolean {
+export function isArrayWithElements(
+	value: unknown,
+	nMin: number = -1
+): boolean {
 	if (Array.isArray(value)) {
-		return value.length > 0;
+		return value.length >= nMin;
 	}
 	return false;
 }

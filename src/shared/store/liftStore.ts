@@ -1,5 +1,4 @@
 import { writable, type Writable } from "svelte/store";
-import { getRealEs, Lift } from "../class/Lift";
 import { load } from "../data/LiftsBase";
 import {
 	addToDatabase,
@@ -8,6 +7,7 @@ import {
 	updateInDatabase,
 } from "../functions/Database";
 import { isArrayWithElements } from "../functions/Utilitary";
+import { getRealLift, type Lift } from "../class/Lift/Lift";
 
 // FROM WORKOUT DATA WAY
 /** Exercice suggestions in inputs of form. */
@@ -27,7 +27,7 @@ function loadEsl() {
 
 		let realEsl = [];
 
-		for (const fakeEs of fakeEsl) realEsl.push(getRealEs(fakeEs));
+		for (const fakeEs of fakeEsl) realEsl.push(getRealLift(fakeEs));
 		lifts.set(realEsl);
 	});
 }

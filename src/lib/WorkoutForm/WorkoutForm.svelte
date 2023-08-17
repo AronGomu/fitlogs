@@ -1,14 +1,16 @@
 <script lang="ts">
-	import chevronDown from "@iconify/icons-mdi/chevron-down";
 	import minusIcon from "@iconify/icons-mdi/minus";
 	import plusIcon from "@iconify/icons-mdi/plus";
-
 	import Icon from "@iconify/svelte";
 	import { onMount } from "svelte";
-	import { Exercice } from "../../shared/class/Exercice";
 	import { Settings } from "../../shared/class/Settings";
-	import { Workout, getRealWorkout } from "../../shared/class/Workout";
-	import { WorkoutGUI } from "../../shared/class/WorkoutGUI";
+	import { Exercice } from "../../shared/class/Workout/Exercice";
+	import type { ExerciceGUI } from "../../shared/class/Workout/ExerciceGUI";
+	import {
+		Workout,
+		getRealWorkout,
+	} from "../../shared/class/Workout/Workout";
+	import type { WorkoutGUI } from "../../shared/class/Workout/WorkoutGUI";
 	import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
 	import {
 		StoreName,
@@ -17,7 +19,6 @@
 	} from "../../shared/functions/Database";
 	import ExerciceForm from "./ExerciceForm.svelte";
 	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
-	import { ExerciceGUI } from "../../shared/class/ExerciceGUI";
 
 	let settings: Settings = new Settings();
 	fetchSettings().then((fs) => (settings = fs));
@@ -68,7 +69,7 @@
 	}
 
 	function updateName(e: ExerciceGUI, newName: string) {
-		e.lift = newName;
+		e.lift.name = newName;
 		workoutGUI.el = [];
 		for (const elGUI of workoutGUI.elGUI) {
 			workoutGUI.el.push(elGUI.convertToExercice());
@@ -103,7 +104,7 @@
 				>
 					<AutoCompleteInput
 						type="text"
-						value={e.lift}
+						value={e.lift.name}
 						placeholder="Exercice Name"
 						class="bg-base-500 input input-ghost input-lg text-primary z-10"
 						on:input={(event) => {

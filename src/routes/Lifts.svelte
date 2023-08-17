@@ -3,8 +3,7 @@
 	import Icon from "@iconify/svelte";
 	import magnifyIcon from "@iconify/icons-mdi/magnify";
 	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-	import { Lift } from "../shared/class/Lift";
-	import { MuscleWork } from "../shared/class/MuscleWork";
+	import { Lift } from "../shared/class/Lift/Lift";
 	import { lifts } from "../shared/store/liftStore";
 	import {
 		StoreName,
@@ -19,7 +18,8 @@
 	} from "../shared/functions/Utilitary";
 	import { Muscle } from "../shared/enum/Muscle";
 	import { onMount } from "svelte";
-	import { FiltersLift } from "../shared/class/FiltersLift";
+	import { FiltersLift } from "../shared/class/Lift/FiltersLift";
+	import { MuscleWork } from "../shared/class/Lift/MuscleWork";
 
 	// TODO : Implements deletion, addition, edition and detail page for exercices. Probably creating another page that is a form or putting at the bottom of the page, idk, we'll see
 	// TODO2 : Replace the exercice name from Exercice clas with a Lift object

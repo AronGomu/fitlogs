@@ -1,5 +1,5 @@
-import { isStringNotEmpty } from "../functions/Utilitary";
-import type { MuscleWork } from "./MuscleWork";
+import { isStringNotEmpty } from "../../functions/Utilitary";
+import { getRealMuscleWork, type MuscleWork } from "./MuscleWork";
 
 /** Exercice suggestions that pops out when filling out a auto complete form of the exercice name.  */
 export class Lift {
@@ -23,9 +23,6 @@ export class Lift {
 	/** Return the complete name of the exercice. */
 	getExerciceName(): string {
 		// in the case there is the variation specified
-		console.log(
-			`'${this.variation}' => ${isStringNotEmpty(this.variation)}`
-		);
 		if (isStringNotEmpty(this.variation)) {
 			return `${this.name} (${this.variation})`;
 		}
@@ -34,7 +31,10 @@ export class Lift {
 	}
 }
 
-export function getRealEs(l: Lift) {
-	console.log(l);
-	return new Lift(l.id, l.name, l.variation, l.targets);
+export function getRealLift(l: Lift) {
+	let realTargets: MuscleWork[] = [];
+	for (const t of l.targets) {
+		realTargets.push(getRealMuscleWork(t));
+	}
+	return new Lift(l.id, l.name, l.variation, realTargets);
 }

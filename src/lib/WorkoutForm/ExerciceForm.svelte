@@ -3,11 +3,11 @@
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
 	import { createEventDispatcher, onMount } from "svelte";
-	import type { ExerciceGUI } from "../../shared/class/ExerciceGUI";
-	import { SerieGUI } from "../../shared/class/SerieGUI";
 	import type { Settings } from "../../shared/class/Settings";
 	import { settings } from "../../shared/store/settingsStore";
 	import InputNumber from "./inputs/InputNumber.svelte";
+	import type { ExerciceGUI } from "../../shared/class/Workout/ExerciceGUI";
+	import type { SerieGUI } from "../../shared/class/Workout/SerieGUI";
 
 	const dispatch = createEventDispatcher();
 
@@ -37,9 +37,9 @@
 	function deleteSet(sGUI: SerieGUI) {
 		if (!sGUI) throw new Error("There is no set to be deleted !");
 
-		for (let i = 0; i < e.sl.length; i++) {
+		for (let i = 0; i < e.series.length; i++) {
 			if (e.slGUI[i] === sGUI) {
-				e.sl.splice(i, 1);
+				e.series.splice(i, 1);
 				e.slGUI.splice(i, 1);
 				e.slGUI = e.slGUI;
 				dispatch("update", e);

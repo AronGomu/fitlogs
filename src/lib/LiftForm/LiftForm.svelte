@@ -2,8 +2,7 @@
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
 	import { createEventDispatcher } from "svelte";
-	import { Lift } from "../../shared/class/Lift";
-	import { MuscleWork } from "../../shared/class/MuscleWork";
+	import { Lift } from "../../shared/class/Lift/Lift";
 	import { Muscle } from "../../shared/enum/Muscle";
 	import {
 		addToDatabase,
@@ -15,6 +14,7 @@
 		enumToList,
 		selectWholeTextOnFocus,
 	} from "../../shared/functions/Utilitary";
+	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
 
 	const dispatch = createEventDispatcher();
 

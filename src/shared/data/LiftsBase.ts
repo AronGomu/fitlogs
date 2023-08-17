@@ -1,5 +1,5 @@
-import { Lift } from "../class/Lift";
-import { MuscleWork } from "../class/MuscleWork";
+import { Lift } from "../class/Lift/Lift";
+import { MuscleWork } from "../class/Lift/MuscleWork";
 import { Muscle } from "../enum/Muscle";
 import { StoreName, addToDatabase } from "../functions/Database";
 
