@@ -11,7 +11,7 @@ export class Workout {
 		public createdAt: WorkoutDate = new WorkoutDate(),
 		/** Exercice List of the workout. */
 		public el: Exercice[] = []
-	) {}
+	) { }
 
 	/** Return 0 that represent if the workouts are the same (if same date of creation), -1 if the workout was created before, 1 if created after. */
 	compareWorkout(w: Workout): number {
@@ -36,7 +36,8 @@ export function getRealWorkout(w: Workout): Workout {
 			let realExercice: Exercice = new Exercice(
 				w.el[i].lift,
 				[],
-				w.el[i].notes
+				w.el[i].notes,
+				w.el[i].repRange
 			);
 			const e = w.el[i];
 			if (e.series) {

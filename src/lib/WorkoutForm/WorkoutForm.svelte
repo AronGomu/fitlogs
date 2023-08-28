@@ -1,32 +1,30 @@
 <script lang="ts">
-	import minusIcon from "@iconify/icons-mdi/minus";
-	import plusIcon from "@iconify/icons-mdi/plus";
-	import Icon from "@iconify/svelte";
-	import { onMount } from "svelte";
-	import { Settings } from "../../shared/class/Settings";
-	import { Exercice } from "../../shared/class/Workout/Exercice";
-	import type { ExerciceGUI } from "../../shared/class/Workout/ExerciceGUI";
+	import minusIcon from '@iconify/icons-mdi/minus';
+	import plusIcon from '@iconify/icons-mdi/plus';
+	import Icon from '@iconify/svelte';
+	import { onMount } from 'svelte';
+	import { Settings } from '../../shared/class/Settings';
+	import { Exercice } from '../../shared/class/Workout/Exercice';
+	import type { ExerciceGUI } from '../../shared/class/Workout/ExerciceGUI';
 	import {
 		Workout,
 		getRealWorkout,
-	} from "../../shared/class/Workout/Workout";
-	import type { WorkoutGUI } from "../../shared/class/Workout/WorkoutGUI";
-	import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
+	} from '../../shared/class/Workout/Workout';
+	import type { WorkoutGUI } from '../../shared/class/Workout/WorkoutGUI';
+	import { getReducedStringMetric } from '../../shared/enum/WeightMetrics';
 	import {
 		StoreName,
 		fetchSettings,
 		updateInDatabase,
-	} from "../../shared/functions/Database";
-	import ExerciceForm from "./ExerciceForm.svelte";
-	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
+	} from '../../shared/functions/Database';
+	import ExerciceForm from './ExerciceForm.svelte';
+	import AutoCompleteInput from './inputs/AutoCompleteInput.svelte';
 
 	let settings: Settings = new Settings();
 	fetchSettings().then((fs) => (settings = fs));
 
 	/** Workout object */
 	export let workoutGUI: WorkoutGUI;
-
-	onMount(() => {});
 
 	/** Update the workout in the database. */
 	function updateWorkout() {
@@ -69,6 +67,8 @@
 	}
 
 	function updateName(e: ExerciceGUI, newName: string) {
+		console.log(e);
+		console.log(newName);
 		e.lift.name = newName;
 		workoutGUI.el = [];
 		for (const elGUI of workoutGUI.elGUI) {

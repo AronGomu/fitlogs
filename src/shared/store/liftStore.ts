@@ -1,5 +1,5 @@
 import { writable, type Writable } from "svelte/store";
-import { load } from "../data/LiftsBase";
+import { loadLiftsMock } from "../data/LiftsBase";
 import {
 	addToDatabase,
 	getAllFromDatabase,
@@ -20,7 +20,7 @@ function loadEsl() {
 	getAllFromDatabase<Lift>(StoreName.LIFT).then((fakeEsl) => {
 		// It there is nothing in the database, we load the base suggestions and retry to load the ll from the database
 		if (!isArrayWithElements(fakeEsl)) {
-			load().then(() => loadEsl());
+			loadLiftsMock().then(() => loadEsl());
 		}
 
 		console.log(fakeEsl);

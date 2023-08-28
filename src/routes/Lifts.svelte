@@ -1,38 +1,46 @@
 <script lang="ts">
-	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
-	import Icon from "@iconify/svelte";
-	import magnifyIcon from "@iconify/icons-mdi/magnify";
-	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-	import { Lift } from "../shared/class/Lift/Lift";
-	import { lifts } from "../shared/store/liftStore";
+	import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
+	import Icon from '@iconify/svelte';
+	import magnifyIcon from '@iconify/icons-mdi/magnify';
+	import LiftForm from '../lib/LiftForm/LiftForm.svelte';
+	import { Lift } from '../shared/class/Lift/Lift';
+	import { lifts } from '../shared/store/liftStore';
 	import {
 		StoreName,
 		deleteFromDatabase,
-	} from "../shared/functions/Database";
-	import sortAlphabeticalAscending from "@iconify/icons-mdi/sort-alphabetical-ascending";
-	import sortAlphabeticalDescending from "@iconify/icons-mdi/sort-alphabetical-descending";
+	} from '../shared/functions/Database';
+	import sortAlphabeticalAscending from '@iconify/icons-mdi/sort-alphabetical-ascending';
+	import sortAlphabeticalDescending from '@iconify/icons-mdi/sort-alphabetical-descending';
 	import {
 		enumToList,
 		isStringNotEmpty,
 		selectWholeTextOnFocus,
-	} from "../shared/functions/Utilitary";
-	import { Muscle } from "../shared/enum/Muscle";
-	import { onMount } from "svelte";
-	import { FiltersLift } from "../shared/class/Lift/FiltersLift";
-	import { MuscleWork } from "../shared/class/Lift/MuscleWork";
-
-	// TODO : Implements deletion, addition, edition and detail page for exercices. Probably creating another page that is a form or putting at the bottom of the page, idk, we'll see
-	// TODO2 : Replace the exercice name from Exercice clas with a Lift object
+	} from '../shared/functions/Utilitary';
+	import { Muscle } from '../shared/enum/Muscle';
+	import { onMount } from 'svelte';
+	import { FiltersLift } from '../shared/class/Lift/FiltersLift';
+	import { MuscleWork } from '../shared/class/Lift/MuscleWork';
+	import { fetchGlobalLifts } from '../shared/functions/Global';
 
 	/** All the filters for the lift list. */
 	const filtersLift: FiltersLift = new FiltersLift();
-
 	/** All the exercices stored that can be shown as suggestions. */
 	var ll: Lift[] = [];
-	lifts.subscribe((lifts) => {
-		ll = lifts;
-		applyFilters();
-	});
+
+	// if we're fetching the global lift (online ressource)
+	if (window.location.pathname === '/fitlogs/globalLifts') {
+		fetchGlobalLifts().then((globalLifts) => {
+			ll = globalLifts;
+			applyFilters();
+		});
+	}
+	// by default we're fetching the local ressources
+	else {
+		lifts.subscribe((lifts) => {
+			ll = lifts;
+			applyFilters();
+		});
+	}
 
 	var llFiltered: Lift[] = [];
 
@@ -45,7 +53,7 @@
 	/** Show the dialog for trying to delete a set. */
 	function showFilterDialog(asModal = true) {
 		try {
-			filterDialog[asModal ? "showModal" : "show"]();
+			filterDialog[asModal ? 'showModal' : 'show']();
 		} catch (e) {
 			throw new Error(e);
 		}

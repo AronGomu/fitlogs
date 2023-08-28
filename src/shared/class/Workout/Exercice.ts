@@ -18,7 +18,7 @@ export class Exercice {
 		// Data specific to the program
 		/** Range of the number of repetitions that should be done during the sets. */
 		public repRange: RepRange
-	) {}
+	) { }
 
 	/** Return the maximal weight done in the sets of the exercice. */
 	getMaxWeight(metric: WeightMetric): number {
