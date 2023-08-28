@@ -26,8 +26,6 @@
 	/** Workout object */
 	export let workoutGUI: WorkoutGUI;
 
-	onMount(() => {});
-
 	/** Update the workout in the database. */
 	function updateWorkout() {
 		updateInDatabase<Workout>(
@@ -69,6 +67,8 @@
 	}
 
 	function updateName(e: ExerciceGUI, newName: string) {
+		console.log(e);
+		console.log(newName);
 		e.lift.name = newName;
 		workoutGUI.el = [];
 		for (const elGUI of workoutGUI.elGUI) {

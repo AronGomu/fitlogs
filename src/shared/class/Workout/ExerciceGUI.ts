@@ -16,7 +16,7 @@ export class ExerciceGUI extends Exercice {
 		/** Boolean flag to know if the extra inputs (optionnal ones) are showed or not. */
 		public isExtraOpen: boolean = false
 	) {
-		super(e.lift, e.series, e.notes);
+		super(e.lift, e.series, e.notes, e.repRange);
 		if (e.series)
 			for (const s of e.series) this.slGUI.push(new SerieGUI(s));
 	}
