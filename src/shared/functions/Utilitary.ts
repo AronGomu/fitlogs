@@ -263,7 +263,7 @@ export function isStringNotEmpty(str: string | null | undefined): boolean {
  */
 export function isArrayWithElements(
 	value: unknown,
-	nMin: number = -1
+	nMin: number = 1
 ): boolean {
 	if (Array.isArray(value)) {
 		return value.length >= nMin;

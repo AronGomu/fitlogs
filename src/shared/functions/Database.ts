@@ -1,4 +1,4 @@
-import { deleteDB, openDB, type DBSchema } from "idb";
+import { deleteDB, openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { Settings } from "../class/Settings";
 import { Workout, getRealWorkout } from "../class/Workout/Workout";
 import { WorkoutDate } from "../class/Workout/WorkoutDate";
@@ -38,8 +38,8 @@ interface Database extends DBSchema {
  * Opens the IndexedDB database and returns a promise of the database instance.
  * @returns {Promise<IDBPDatabase<Database>>} - Promise of the IndexedDB database instance.
  */
-async function openDatabase() {
-	return openDB<Database>(DB_NAME, 1, {
+async function openDatabase(): Promise<IDBPDatabase<Database>> {
+	return openDB < Database > (DB_NAME, 1, {
 		upgrade(db) {
 			if (!db.objectStoreNames.contains(StoreName.WORKOUT)) {
 				db.createObjectStore(StoreName.WORKOUT, {
@@ -98,6 +98,7 @@ export async function addToDatabase<T>(
 export async function getAllFromDatabase<T>(
 	storeName: StoreName
 ): Promise<T[]> {
+	console.log(`getAllFromDatabase : ${storeName}`);
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readonly");
 	const store = tx.objectStore(storeName);
@@ -174,44 +175,41 @@ export async function deleteDatabase(): Promise<void> {
 }
 
 // SPECIFIC DATABASE FUNCTIONS - WORKOUT
-/** Fetch the data of all the workouts in the storage and convert the stringify data into real objects. */
+/** Fetch the data of all the workouts in the storage
+ * then convert the stringify data into real objects. */
 export async function fetchWorkoutList(): Promise<Workout[]> {
-	/** List of the workouts correctly instanciated to return */
-	let realWl: Workout[] = [];
-	/** List of the workout loaded from the database but that are just object without typing or functions. */
-	const fakeWl: Workout[] = await getAllFromDatabase<Workout>(
+	const workouts: Workout[] = await getAllFromDatabase < Workout > (
 		StoreName.WORKOUT
 	);
 
-	// Set the dates of the workouts to be Date and not strings
-	if (fakeWl) {
-		fakeWl.forEach((w) => {
-			realWl.push(getRealWorkout(w));
-		});
+	for (let i = 0; i < workouts.length; i++) {
+		workouts[i] = getRealWorkout(workouts[i]);
 	}
 
-	return realWl;
+	return workouts;
 }
 
-export async function addNewWorkout(): Promise<Workout> {
+export async function addNewWorkout() {
+	console.log(`addNewWorkout`);
 	const db = await openDatabase();
 	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
 	const store = tx.objectStore(StoreName.WORKOUT);
-	const newWorkout = <Workout>{ createdAt: new WorkoutDate() };
+	const newWorkout = { createdAt: new WorkoutDate() } as Workout;
 	const id = await store.add(newWorkout);
-	const newWorkoutWithId = new Workout(id, newWorkout.createdAt);
+	const newWorkoutWithId = new Workout(id, newWorkout.createdAt, [], false);
 	await store.put(newWorkoutWithId, id);
-	return newWorkoutWithId;
+	console.log(await store.get(id));
+
 }
 
-// SPECIFIC DATABASE FUNCTIONS - Settings (Use only those to avoid errors with the settings database errors)
+// SPECIFIC DATABASE FUNCTIONS - Settings 
+// (Use only those to avoid errors with the settings database errors)
 
 /** Fetch the settings */
 export async function fetchSettings(): Promise<Settings> {
 	/** Load the only one settings object in the database. */
-	const fakeS: Settings = await getObjectById<Settings>(
-		StoreName.SETTINGS,
-		0
+	const fakeS: Settings = await getObjectById < Settings > (
+		StoreName.SETTINGS, 0
 	);
 
 	if (!fakeS) return new Settings();
@@ -223,12 +221,12 @@ export async function fetchSettings(): Promise<Settings> {
 /** Save the settings. If there is no settings already, create the settings in the database. */
 export async function saveSettings(s: Settings): Promise<Settings> {
 	/** Load the settings from the database to make sure it exists. */
-	const fakeS: Settings = await getObjectById<Settings>(
+	const fakeS: Settings = await getObjectById < Settings > (
 		StoreName.SETTINGS,
 		0
 	);
 
-	if (!fakeS) return addToDatabase<Settings>(StoreName.SETTINGS, s, 0);
+	if (!fakeS) return addToDatabase < Settings > (StoreName.SETTINGS, s, 0);
 
-	return updateInDatabase<Settings>(StoreName.SETTINGS, 0, s);
+	return updateInDatabase < Settings > (StoreName.SETTINGS, 0, s);
 }

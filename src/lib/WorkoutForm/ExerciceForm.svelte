@@ -6,8 +6,8 @@
 	import type { Settings } from "../../shared/class/Settings";
 	import { settings } from "../../shared/store/settingsStore";
 	import InputNumber from "./inputs/InputNumber.svelte";
-	import type { ExerciceGUI } from "../../shared/class/Workout/ExerciceGUI";
-	import type { SerieGUI } from "../../shared/class/Workout/SerieGUI";
+	import type { Serie } from "../../shared/class/Workout/Serie";
+	import type { Exercice } from "../../shared/class/Workout/Exercice";
 
 	const dispatch = createEventDispatcher();
 
@@ -18,12 +18,13 @@
 	// defining values
 	let isMounted: boolean = false;
 	let deleteDialog: HTMLElement;
-	let setToBeDeleted: SerieGUI = null;
+	let setToBeDeleted: Serie = null;
 
 	/** Exercice that must be passed in argument. */
-	export let e: ExerciceGUI;
+	export let e: Exercice;
 
 	onMount(() => {
+		console.log(e.isExtraOpen);
 		isMounted = true;
 	});
 
@@ -34,14 +35,12 @@
 	}
 
 	/** Delete a set and signal to the parent to update the database.*/
-	function deleteSet(sGUI: SerieGUI) {
-		if (!sGUI) throw new Error("There is no set to be deleted !");
+	function deleteSet(s: Serie) {
+		if (!s) throw new Error("There is no set to be deleted !");
 
 		for (let i = 0; i < e.series.length; i++) {
-			if (e.slGUI[i] === sGUI) {
+			if (e.series[i] === s) {
 				e.series.splice(i, 1);
-				e.slGUI.splice(i, 1);
-				e.slGUI = e.slGUI;
 				dispatch("update", e);
 				return;
 			}
@@ -49,7 +48,7 @@
 	}
 
 	/** Show the dialog for trying to delete a set. */
-	function showDeleteDialog(set: SerieGUI, asModal = true) {
+	function showDeleteDialog(set: Serie, asModal = true) {
 		setToBeDeleted = set;
 		try {
 			deleteDialog[asModal ? "showModal" : "show"]();
@@ -59,8 +58,8 @@
 	}
 </script>
 
-{#if isMounted && e && e.slGUI}
-	{#each e.slGUI as set, i}
+{#if isMounted && e}
+	{#each e.series as set, i}
 		<div
 			class="flex justify-between items-center bg-base-300 p-2 rounded-xl"
 		>
@@ -68,11 +67,11 @@
 				<InputNumber
 					placeholder="Weight"
 					className="input w-24 mr-0 text-left"
-					metric={set.weigth.metric}
-					value={set.weigth.weight}
+					initValue={set.weight.weight}
+					metric={set.weight.metric}
 					on:keyPress={() => dispatch("update", e)}
 					on:input={(event) => {
-						set.weigth.weight = event.detail["value"];
+						set.weight.weight = event.detail.value;
 						dispatch("update", e);
 					}}
 				/>
@@ -82,10 +81,10 @@
 				<InputNumber
 					placeholder="Reps"
 					className="input w-14 ml-0 text-center"
-					value={set.rn}
+					initValue={set.reps}
 					on:keyPress={() => dispatch("update", e)}
 					on:input={(event) => {
-						set.rn = event.detail["value"];
+						set.reps = Number(event.detail["value"]);
 						dispatch("update", e);
 					}}
 				/>

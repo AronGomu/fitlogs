@@ -4,8 +4,7 @@ import { WeightMetric } from "../enum/WeightMetrics";
 export class Settings {
     constructor(
         /** Unit for the weight used. Kilos by default. */
-        public wm: WeightMetric = WeightMetric.Kilos) 
-    { }
+        public wm: WeightMetric = WeightMetric.Kilos) { }
 }
 
 export function getRealSettings(s: Settings): Settings {

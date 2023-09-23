@@ -69,6 +69,7 @@
 			class="btn btn-warning"
 			on:click={() => {
 				deleteDatabase();
+				location.reload();
 			}}>RESET</button
 		>
 	</li>

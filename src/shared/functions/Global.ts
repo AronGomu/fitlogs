@@ -21,6 +21,6 @@ export async function fetchGlobalPrograms(): Promise<Program[]> {
 
 const programsMock: Program[] = [
   // todo faire le mock des programs
-  new Program(0, "FullBody 3X", ProgramType.FB, "",
-    [new Day("Day1", [new Superset([new Exercice()])])])
+  // new Program(0, "FullBody 3X", ProgramType.FB, "",
+  //   [new Day("Day1", [new Superset([new Exercice()])])])
 ]

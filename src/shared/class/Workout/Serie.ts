@@ -1,17 +1,22 @@
 import { getRealWeigth, type Weight } from "./Weight";
 
-/** A serie of an exercice within a workout. Contains only essential properties for minimizing space in save file. */
+/** A serie of an exercice within a workout. */
 export class Serie {
 	constructor(
+		// SERIE VARIABLES
 		/** Rank of the set within the exercice. */
 		public rank: number,
 		/** Repetition number of repetitions dones. */
-		public rn: number,
+		public reps: number,
 		/** Weight used in the set. */
-		public weigth: Weight
-	) {}
+		public weight: Weight,
+
+		// GUI VARIABLES
+		/** Indicate if the collapse element is open or close. */
+		public isOpen: boolean = true) { }
 }
 
+/** Take a Serie from the database and transform it into a class instance.*/
 export function getRealSerie(s: Serie) {
-	return new Serie(s.rank, s.rn, getRealWeigth(s.weigth));
+	return new Serie(s.rank, s.reps, getRealWeigth(s.weight));
 }

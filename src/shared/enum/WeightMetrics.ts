@@ -12,7 +12,7 @@ export function getReducedStringMetric(metric: WeightMetric): string {
 
 		default:
 			throw new Error(
-				`From getWeightByMetric : "${metric}" is not a valid metric`
+				`From getReducedStringMetric: "${metric}" is not a valid metric`
 			);
 	}
 }

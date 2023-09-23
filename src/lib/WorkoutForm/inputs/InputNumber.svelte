@@ -1,6 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { getReducedStringMetric, type WeightMetric } from "../../../shared/enum/WeightMetrics";
+  import {
+    getReducedStringMetric,
+    type WeightMetric,
+  } from "../../../shared/enum/WeightMetrics";
   import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
 
   const dispatch = createEventDispatcher();
@@ -11,8 +14,8 @@
   export let className: string = "";
   /** Text to put next to the number in the template. */
   export let metric: WeightMetric = null;
-  /** Value of the input. */
-  export let value: number;
+  /** Initial value of the input. */
+  export let initValue: number;
 
   onMount(() => {
     className += " base-override";
@@ -24,16 +27,14 @@
   function handleFocus(event) {
     selectWholeTextOnFocus(event);
   }
-  
-  function handleKeyPress(event) {
 
+  function handleKeyPress(event) {
     if (event.key === "Enter") {
       console.log("ENTER");
     }
-    
+
     // Handle paste
-    if (event.type === "paste")
-    key = event.clipboardData.getData("text/plain");
+    if (event.type === "paste") key = event.clipboardData.getData("text/plain");
     else {
       // Handle key press
       var key = event.keyCode || event.which;
@@ -41,42 +42,46 @@
     }
 
     var regex = /^[0-9]\d*$/;
-    
+
     if (!regex.test(key)) {
       event.returnValue = false;
       if (event.preventDefault) event.preventDefault();
     }
   }
 
-  function handleInput(event) {
-    console.log(metric);
-    console.log(value);
-    dispatch('input', {'input': event.data, 'value': event.target.value});
+  // On input trigger the input event for this component.
+  function handleInput(event: any) {
+    // todo : check why reseting value then inputing again prevent new characters to be inputed
+    console.log(`\n\nhandleInput InputNumber`);
+    console.log(event.target.value);
+    console.log(initValue);
+    // initValue = Number(event.target.value);
+    dispatch("input", { input: event.data, value: event.target.value });
   }
 </script>
-
 
 {#if !metric}
   <input
     type="text"
     {placeholder}
     class={className}
-    bind:value
+    bind:value={initValue}
     on:focus={handleFocus}
     on:keypress={handleKeyPress}
     on:input={handleInput}
   />
 {:else if metric}
   <div class="relative">
-    <input type="text"
-    {placeholder}
-    class={className}
-    bind:value
-    on:focus={handleFocus}
-    on:keypress={handleKeyPress}
-    on:input={handleInput} 
-  />
-    {#if value}
+    <input
+      type="text"
+      {placeholder}
+      class={className}
+      bind:value={initValue}
+      on:focus={handleFocus}
+      on:keypress={handleKeyPress}
+      on:input={handleInput}
+    />
+    {#if initValue}
       <div
         class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
       >

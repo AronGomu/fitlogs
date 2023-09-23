@@ -1,87 +1,70 @@
 <script lang="ts">
-	import minusIcon from '@iconify/icons-mdi/minus';
-	import plusIcon from '@iconify/icons-mdi/plus';
-	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
-	import { Settings } from '../../shared/class/Settings';
-	import { Exercice } from '../../shared/class/Workout/Exercice';
-	import type { ExerciceGUI } from '../../shared/class/Workout/ExerciceGUI';
+	import minusIcon from "@iconify/icons-mdi/minus";
+	import plusIcon from "@iconify/icons-mdi/plus";
+	import Icon from "@iconify/svelte";
+	import { Settings } from "../../shared/class/Settings";
+	import { Exercice } from "../../shared/class/Workout/Exercice";
 	import {
 		Workout,
 		getRealWorkout,
-	} from '../../shared/class/Workout/Workout';
-	import type { WorkoutGUI } from '../../shared/class/Workout/WorkoutGUI';
-	import { getReducedStringMetric } from '../../shared/enum/WeightMetrics';
+	} from "../../shared/class/Workout/Workout";
+	import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
 	import {
 		StoreName,
 		fetchSettings,
 		updateInDatabase,
-	} from '../../shared/functions/Database';
-	import ExerciceForm from './ExerciceForm.svelte';
-	import AutoCompleteInput from './inputs/AutoCompleteInput.svelte';
+	} from "../../shared/functions/Database";
+	import ExerciceForm from "./ExerciceForm.svelte";
+	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
+	import type { Weight } from "../../shared/class/Workout/Weight";
+	import { createEventDispatcher } from "svelte";
+
+	const dispatch = createEventDispatcher();
 
 	let settings: Settings = new Settings();
 	fetchSettings().then((fs) => (settings = fs));
 
 	/** Workout object */
-	export let workoutGUI: WorkoutGUI;
+	export let workout: Workout;
 
-	/** Update the workout in the database. */
 	function updateWorkout() {
-		updateInDatabase<Workout>(
-			StoreName.WORKOUT,
-			workoutGUI.id,
-			workoutGUI.convertToWorkout()
-		).then((updatedW) => {
-			//TODO: Stop closing the extra from exercice on refresh
-			workoutGUI.updateWorkout(getRealWorkout(updatedW));
-			console.log(workoutGUI.el);
-			console.log(workoutGUI.elGUI);
-			workoutGUI.elGUI = workoutGUI.elGUI; // refresh
-		});
+		dispatch("update", workout);
 	}
 
 	/** Add a new exercice to the workout and update it in the database. */
 	function newExercice() {
-		workoutGUI.addNewExercice();
+		workout.addNewExercice();
 		updateWorkout();
 	}
-
-	// /** Duplicate the exercice in the workout. */
-	// function duplicateExercice(e: Exercice) {
-	//   workout.el.push(lodash.cloneDeep(e));
-	//   updateAndRefresh();
-	// }
 
 	/** Add an exercice from the workout and update it in the database. */
 	function deleteExercice(e: Exercice) {
-		for (let i = 0; i < workoutGUI.el.length; i++) {
-			if (e === workoutGUI.el[i]) workoutGUI.el.splice(i, 1);
-		}
-	}
-
-	/** Close all of the other workouts open. */
-	function onOpenExercice(eToOpen: ExerciceGUI) {
-		eToOpen.isSelfOpen = !eToOpen.isSelfOpen;
-		workoutGUI = workoutGUI;
-	}
-
-	function updateName(e: ExerciceGUI, newName: string) {
-		console.log(e);
-		console.log(newName);
-		e.lift.name = newName;
-		workoutGUI.el = [];
-		for (const elGUI of workoutGUI.elGUI) {
-			workoutGUI.el.push(elGUI.convertToExercice());
+		for (let i = 0; i < workout.el.length; i++) {
+			if (e === workout.el[i]) workout.el.splice(i, 1);
 		}
 		updateWorkout();
 	}
+
+	/** Close all of the other workouts open. */
+	function onOpenExercice(eToOpen: Exercice) {
+		eToOpen.isSelfOpen = !eToOpen.isSelfOpen;
+		updateWorkout();
+	}
+
+	function openExerciceExtra(e: Exercice) {
+		console.log(e.isExtraOpen);
+		e.isExtraOpen = !e.isExtraOpen;
+		console.log(e.isExtraOpen);
+		updateWorkout();
+	}
+
+	function updateName(e: Exercice, newName: string) {}
 </script>
 
 <!-- TODO : Make the exercice suggestions work from selecting and adding new ones -->
 
 <div id="workout" class="flex flex-col items-center">
-	{#each workoutGUI.elGUI as e}
+	{#each workout.el as e}
 		<div
 			class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full force-overflow-visible"
 		>
@@ -116,7 +99,7 @@
 					/>
 				</div>
 				<span class="text-secondary text-sm"
-					>{`${e.slGUI.length} Sets`}</span
+					>{`${e.series.length} Sets`}</span
 				>
 				{#if e.getMaxWeight(settings.wm)}
 					<span class="text-secondary text-sm"
@@ -136,9 +119,8 @@
 					<ExerciceForm
 						{e}
 						on:update={(event) => {
-							workoutGUI.el = [];
-							for (const eGUI of workoutGUI.elGUI)
-								workoutGUI.el.push(eGUI.convertToExercice());
+							/* console.log(event.detail); */
+							/* workoutGUI.el = event.detail; */
 							updateWorkout();
 						}}
 					/>
@@ -146,7 +128,7 @@
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						class="w-full flex justify-end cursor-pointer"
-						on:click={() => (e.isExtraOpen = !e.isExtraOpen)}
+						on:click={() => openExerciceExtra(e)}
 					>
 						{#if e.isExtraOpen}
 							<Icon

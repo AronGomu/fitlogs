@@ -1,6 +1,6 @@
 /** Represents the date of a workout. */
 export class WorkoutDate {
-  
+
     /** Creates a new instance of WorkoutDate.
      * @param {number} year - The year of the workout date.
      * @param {number} month - The month of the workout date.
@@ -29,5 +29,14 @@ export class WorkoutDate {
     public getDate(): Date {
         return new Date(this.year, this.month, this.day);
     }
-  }
-  
+}
+
+
+export function getRealWorkoutDate(wd: WorkoutDate): WorkoutDate {
+    return new WorkoutDate(
+        wd.day,
+        wd.month,
+        wd.year
+    );
+
+}
