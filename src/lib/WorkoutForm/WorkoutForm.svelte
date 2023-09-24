@@ -51,6 +51,14 @@
 		updateWorkout();
 	}
 
+	function updateExerciceName(event, exercice: Exercice) {
+		console.log(`updateExerciceName`);
+		console.log(event);
+		console.log(exercice);
+		exercice.lift.name = event.detail;
+		updateWorkout();
+	}
+
 	function openExerciceExtra(e: Exercice) {
 		console.log(e.isExtraOpen);
 		e.isExtraOpen = !e.isExtraOpen;
@@ -90,12 +98,7 @@
 						value={e.lift.name}
 						placeholder="Exercice Name"
 						class="bg-base-500 input input-ghost input-lg text-primary z-10"
-						on:input={(event) => {
-							updateName(e, event.detail);
-						}}
-						on:selectSuggestion={(event) => {
-							updateName(e, event.detail);
-						}}
+						on:update={(event) => updateExerciceName(event, e)}
 					/>
 				</div>
 				<span class="text-secondary text-sm"

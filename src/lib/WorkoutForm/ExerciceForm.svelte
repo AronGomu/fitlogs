@@ -92,7 +92,6 @@
 			<button
 				class="btn btn-ghost btn-xs"
 				on:click={() => {
-					setToBeDeleted = set;
 					showDeleteDialog(set, true);
 				}}
 			>

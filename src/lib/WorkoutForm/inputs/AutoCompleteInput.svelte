@@ -43,8 +43,7 @@
 	/** Handle Input function for the Exercice Name Input. */
 	function handleInput(event) {
 		validSuggestions = getValidSuggestions(ll);
-		// const input = event.data // character inputed
-		dispatch("input", event.target.value);
+		dispatch("update", value);
 	}
 
 	function getValidSuggestions(allSuggestions: Lift[]) {
@@ -78,8 +77,7 @@
 	function handleClickSuggestion(l: Lift) {
 		value = l.getExerciceName();
 		isEntered = false;
-		console.log(value);
-		dispatch("selectSuggestion", value);
+		dispatch("update", value);
 	}
 
 	function handleMouseEnter() {

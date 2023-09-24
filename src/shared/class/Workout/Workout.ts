@@ -23,15 +23,23 @@ export class Workout {
 
     /** Return 0 that represent if the workouts are the same (if same date of creation), -1 if the workout was created before, 1 if created after. */
     compareWorkout(w: Workout): number {
-        if (w.createdAt == this.createdAt) return 0;
-        else if (w.createdAt > this.createdAt) return -1;
+        const w1Date = w.createdAt.getDate();
+        const w2Date = this.createdAt.getDate();
+        if (w1Date == w2Date) return 0;
+        else if (w1Date > w2Date) return -1;
         else return 1;
     }
 
     /** Add a new empty exercice to both exercice list. */
     addNewExercice() {
-        const newExercice: Exercice =
-            new Exercice(new Lift(), [], '', new RepRange(null, null));
+        const newExercice: Exercice = new Exercice(
+            new Lift(),
+            [],
+            '',
+            new RepRange(null, null),
+            false,
+            false
+        );
         this.el.push(newExercice);
     }
 }

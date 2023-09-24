@@ -21,13 +21,17 @@ export class WorkoutDate {
 
     /**
      * Converts the provided year, month, and day to a formatted date string.
-     * @param {number} year - The year of the date.
-     * @param {number} month - The month of the date (0-based, January is 0).
-     * @param {number} day - The day of the date.
-     * @returns {string} - The formatted date string.
+     * @returns {Date} - The formatted date string.
      */
     public getDate(): Date {
         return new Date(this.year, this.month, this.day);
+    }
+
+
+    public hasBeenCreatedToday(): boolean {
+        if (JSON.stringify(this.getDate()) ===
+            JSON.stringify(new WorkoutDate().getDate())) return true;
+        return false;
     }
 }
 
