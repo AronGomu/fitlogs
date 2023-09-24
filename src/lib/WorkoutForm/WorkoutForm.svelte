@@ -101,17 +101,19 @@
 						on:update={(event) => updateExerciceName(event, e)}
 					/>
 				</div>
-				<span class="text-secondary text-sm"
-					>{`${e.series.length} Sets`}</span
-				>
-				{#if e.getMaxWeight(settings.wm)}
+				{#if !e.isSelfOpen}
 					<span class="text-secondary text-sm"
-						>{` - Max : ${e.getMaxWeight(
-							settings.wm
-						)}${getReducedStringMetric(settings.wm)}`}
-						{e.isSelfOpen}
-						{e.isExtraOpen}</span
-					>
+						>{`${e.series.length} Sets`}
+					</span>
+					{#if e.getMaxWeight(settings.wm)}
+						<span class="text-secondary text-sm"
+							>{` - Max : ${e.getMaxWeight(
+								settings.wm
+							)}${getReducedStringMetric(settings.wm)}`}
+							{e.isSelfOpen}
+							{e.isExtraOpen}
+						</span>
+					{/if}
 				{/if}
 			</div>
 

@@ -29,14 +29,6 @@
 	}
 
 	function showNewWorkoutButton() {
-		console.log(`showNewWorkoutButton`);
-		console.log(workouts[0].createdAt.getDate());
-		console.log(new WorkoutDate().getDate());
-		console.log(
-			JSON.stringify(workouts[0].createdAt.getDate()) ==
-				JSON.stringify(new WorkoutDate().getDate())
-		);
-
 		if (!workouts) return true;
 		if (workouts.length === 0) return true;
 		if (!workouts[0].createdAt.hasBeenCreatedToday()) return true;
@@ -133,8 +125,8 @@
 										color="red"
 										width="10"
 										height="10"
-									/></button
-								>
+									/>
+								</button>
 							</div>
 						</div>
 					{/if}
@@ -150,8 +142,8 @@
 			<button
 				class="btn btn-error"
 				on:click={() => deleteWorkout(workoutToBeDeleted)}
-				>CONFIRM</button
-			>
+				>CONFIRM
+			</button>
 		</div>
 	</form>
 	<form method="dialog" class="modal-backdrop">
