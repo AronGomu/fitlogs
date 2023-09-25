@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Route, Router } from 'svelte-routing';
-	import HamburgerMenu from './lib/HamburgerMenu.svelte';
-	import Workouts from './routes/Workouts.svelte';
-	import Lifts from './routes/Lifts.svelte';
-	import Programs from './routes/Programs.svelte';
-	import ProgramForm from './lib/ProgramForm/ProgramForm.svelte';
+	import { Route, Router } from "svelte-routing";
+	import HamburgerMenu from "./lib/HamburgerMenu.svelte";
+	import Workouts from "./routes/Workouts.svelte";
+	import Lifts from "./routes/Lifts.svelte";
+	import Programs from "./routes/Programs.svelte";
+	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
 </script>
 
 <div class="h-screen flex flex-col overflow-auto">
@@ -12,7 +12,7 @@
 		<HamburgerMenu />
 	</div>
 
-	<div class="flex flex-auto justify-center h-full overflow-y-hidden">
+	<div class="flex flex-auto justify-center h-full overflow-y-scroll">
 		<div class="page-content">
 			<Router>
 				<Route path="/fitlogs/globalPrograms" component={Programs} />
