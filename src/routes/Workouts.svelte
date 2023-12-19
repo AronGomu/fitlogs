@@ -12,6 +12,7 @@
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
+	import { menuPath } from "../shared/store/menuPath";
 
 	let workouts: Workout[] = [];
 
@@ -21,6 +22,7 @@
 	let workoutToBeDeleted: Workout = null;
 
 	var isWorkoutsLoaded: boolean = false;
+	menuPath.set("Workouts");
 	setWorkouts();
 
 	async function setWorkouts() {
@@ -78,7 +80,9 @@
 			</button>
 		{:else}
 			<!-- else content here -->
-			<button class="btn btn-primary" disabled>New Workout</button>
+			<button class="btn btn-primary" disabled
+				>New Workout</button
+			>
 		{/if}
 	</div>
 
@@ -93,14 +97,17 @@
 						name="exercice"
 						checked={w.isSelfOpen}
 						class="cursor-pointer"
-						on:click={() => onOpenWorkout(w)}
+						on:click={() =>
+							onOpenWorkout(w)}
 					/>
 					<div
 						class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
 					>
-						<div class="flex flex-row justify-between w-full">
+						<div
+							class="flex flex-row justify-between w-full"
+						>
 							{formatDateWithSpelledOutMonth(
-								w.createdAt.getDate()
+								w.createdAt.getDate(),
 							)}
 							{w.isSelfOpen}
 						</div>
@@ -111,14 +118,23 @@
 						<div class="collapse-content">
 							<WorkoutForm
 								workout={w}
-								on:update={() => updateWorkout(w)}
+								on:update={() =>
+									updateWorkout(
+										w,
+									)}
 							/>
-							<div class="w-full flex justify-end">
+							<div
+								class="w-full flex justify-end"
+							>
 								<button
 									class="btn btn-xs"
 									on:click={() => {
-										workoutToBeDeleted = w;
-										showDeleteDialog(w, true);
+										workoutToBeDeleted =
+											w;
+										showDeleteDialog(
+											w,
+											true,
+										);
 									}}
 									><Icon
 										icon={trashCanOutline}
@@ -138,10 +154,13 @@
 <dialog id="modal" class="modal" bind:this={deleteDialog}>
 	<form method="dialog" class="modal-box">
 		<div class="flex flex-col justify-center items-center">
-			<h3 class="font-bold text-lg mb-10">Delete Workout ?</h3>
+			<h3 class="font-bold text-lg mb-10">
+				Delete Workout ?
+			</h3>
 			<button
 				class="btn btn-error"
-				on:click={() => deleteWorkout(workoutToBeDeleted)}
+				on:click={() =>
+					deleteWorkout(workoutToBeDeleted)}
 				>CONFIRM
 			</button>
 		</div>

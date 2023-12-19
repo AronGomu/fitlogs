@@ -1,44 +1,34 @@
 <script lang="ts">
-	import { FiltersProgram } from './../shared/class/Program/FiltersProgram.ts';
-	import { programs } from '../shared/store/programStore.ts';
-	import { isStringNotEmpty } from '../shared/functions/Utilitary.ts';
-	import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
-	import Icon from '@iconify/svelte';
-	import magnifyIcon from '@iconify/icons-mdi/magnify';
-	import { selectWholeTextOnFocus } from '../shared/functions/Utilitary.ts';
+	import { FiltersProgram } from "./../shared/class/Program/FiltersProgram.ts";
+	import { programs } from "../shared/store/programStore.ts";
+	import { isStringNotEmpty } from "../shared/functions/Utilitary.ts";
+	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
+	import Icon from "@iconify/svelte";
+	import magnifyIcon from "@iconify/icons-mdi/magnify";
+	import { selectWholeTextOnFocus } from "../shared/functions/Utilitary.ts";
+	import type { Program } from "../shared/class/Program/Program.ts";
+	import { menuPath } from "../shared/store/menuPath.ts";
+
+	menuPath.set("Programs");
 
 	/** All the filters for the program list. */
 	const filters: FiltersProgram = new FiltersProgram();
 	/** All the programs fetched unfiltered */
 	var pl: Program[] = [];
-
-	// if we're fetching the global program (online ressource)
-	if (window.location.pathname === '/fitlogs/globalPrograms') {
-		fetchGlobalPrograms().then((globalPrograms) => {
-			pl = globalLifts;
-			applyFilters();
-			console.log(plFiltered);
-		});
-	}
-	// by default we're fetching the local ressources
-	else {
-		programs.subscribe((programs) => {
-			pl = programs;
-			applyFilters();
-		});
-	}
+	programs.subscribe((programs) => {
+		pl = programs;
+		applyFilters();
+	});
 
 	/** List of the programs showed (matching the filters) */
 	var plFiltered: Program[] = [];
-
-	// All functions
 
 	/** HTML element containing the filter form for the programs opening on modal/dialog. */
 	var filterDialog: HTMLElement;
 	/** Show the dialog for trying to delete a set. */
 	function showFilterDialog(asModal = true) {
 		try {
-			filterDialog[asModal ? 'showModal' : 'show']();
+			filterDialog[asModal ? "showModal" : "show"]();
 		} catch (e) {
 			throw new Error(e);
 		}
@@ -52,7 +42,7 @@
 		// Filtering by names
 		if (isStringNotEmpty(filters.name)) {
 			plFiltered = pl.filter((program) =>
-				program.name.includes(filters.name)
+				program.name.includes(filters.name),
 			);
 		}
 	}
@@ -70,18 +60,24 @@
 				<tr>
 					<th>
 						<div>
-							<span class="font-bold">Name</span>
+							<span class="font-bold"
+								>Name</span
+							>
 						</div>
 					</th>
 					<th>
 						<div>
-							<span class="font-bold">Category</span>
+							<span class="font-bold"
+								>Category</span
+							>
 						</div>
 					</th>
 					<th>
 						<button
 							on:click={() => {
-								showFilterDialog(true);
+								showFilterDialog(
+									true,
+								);
 							}}
 						>
 							<Icon
@@ -111,11 +107,17 @@
 								on:click={() => {
 									deleteFromDatabase(
 										StoreName.LIFT,
-										l.id
-									).then(() => {
-										ll.splice(i, 1);
-										pl = pl;
-									});
+										l.id,
+									).then(
+										() => {
+											ll.splice(
+												i,
+												1,
+											);
+											pl =
+												pl;
+										},
+									);
 								}}
 							>
 								<Icon
@@ -146,25 +148,33 @@
 					placeholder="Filter by name"
 					class="input input-bordered"
 					bind:value={filters.name}
-					on:focus={(e) => selectWholeTextOnFocus(e)}
+					on:focus={(e) =>
+						selectWholeTextOnFocus(e)}
 				/>
 
 				<label class="label">
-					<span class="label-text-alt">Description</span>
+					<span class="label-text-alt"
+						>Description</span
+					>
 				</label>
 				<input
 					type="text"
 					placeholder="Filter by description"
 					class="input input-bordered"
 					bind:value={filters.description}
-					on:focus={(e) => selectWholeTextOnFocus(e)}
+					on:focus={(e) =>
+						selectWholeTextOnFocus(e)}
 				/>
 
 				<span class="mt-2 font-bold">Types</span>
 				<div class="grid grid-cols-2 gap-4">
 					{#each filters.types as type}
-						<label class="label cursor-pointer">
-							<span class="label-text">{type.name}</span>
+						<label
+							class="label cursor-pointer"
+						>
+							<span class="label-text"
+								>{type.name}</span
+							>
 							<input
 								type="checkbox"
 								class="checkbox checkbox-sm"
@@ -174,8 +184,9 @@
 					{/each}
 				</div>
 
-				<button class="mt-2 btn btn-primary" on:click={applyFilters}
-					>Submit</button
+				<button
+					class="mt-2 btn btn-primary"
+					on:click={applyFilters}>Submit</button
 				>
 			</div>
 		</div>

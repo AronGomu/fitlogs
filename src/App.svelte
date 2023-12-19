@@ -15,8 +15,14 @@
 	<div class="flex flex-auto justify-center h-full overflow-y-scroll">
 		<div class="page-content">
 			<Router>
-				<Route path="/fitlogs/globalPrograms" component={Programs} />
-				<Route path="/fitlogs/globalLifts" component={Lifts} />
+				<Route
+					path="/fitlogs/globalPrograms"
+					component={Programs}
+				/>
+				<Route
+					path="/fitlogs/globalLifts"
+					component={Lifts}
+				/>
 				<Route
 					path="/fitlogs/program/:id"
 					component={ProgramForm}
@@ -24,8 +30,14 @@
 				>
 					<ProgramForm id={Number(params.id)} />
 				</Route>
-				<Route path="/fitlogs/programs" component={Programs} />
-				<Route path="/fitlogs/lifts" component={Lifts} />
+				<Route
+					path="/fitlogs/programs"
+					component={Programs}
+				/>
+				<Route
+					path="/fitlogs/lifts"
+					component={Lifts}
+				/>
 				<Route path="/fitlogs" component={Workouts} />
 				<Route path="/" component={Workouts} />
 			</Router>
@@ -34,9 +46,6 @@
 </div>
 
 <style>
-	.navbar {
-	}
-
 	.page-content {
 		width: 90%;
 	}

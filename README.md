@@ -22,3 +22,6 @@ To run the app :
 npm run dev 
 ```
 
+### Deving
+
+Make sure you test the application of a chromium based browser. This being a PWA, I don't care about supporting other browsers that cannot install the app.

@@ -1,15 +1,28 @@
 <script lang="ts">
-	import { Link } from "svelte-routing";
 	import {
 		deleteDatabase,
 		fetchWorkoutList,
 	} from "../shared/functions/Database";
 	import { downloadAsJson } from "../shared/functions/Utilitary";
+	import { menuPath } from "../shared/store/menuPath";
 
 	let showMenu: boolean = false;
 
+	let mp: string = null;
+	menuPath.subscribe((newMenuPath) => (mp = newMenuPath));
+
 	function toggleMenu() {
 		showMenu = !showMenu;
+	}
+
+	function setMenuPath(menus: string[]) {
+		mp = "";
+		for (let i = 0; i < menus.length; i++) {
+			if (i != 0) {
+				mp += " > ";
+			}
+			mp += menus[i];
+		}
 	}
 
 	function handleOnclickExportData(event) {
@@ -37,6 +50,9 @@
 		</button>
 	</div>
 	<a href="/"><span>FitLogs</span></a>
+	{#if mp}
+		<span class="menuPath-container">{mp}</span>
+	{/if}
 </div>
 
 <!-- content here -->
@@ -88,5 +104,9 @@
 
 	.menu-expanded {
 		transform: translateX(0%);
+	}
+
+	.menuPath-container {
+		margin-left: 20px;
 	}
 </style>
