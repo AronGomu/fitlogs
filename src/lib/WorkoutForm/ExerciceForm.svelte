@@ -8,6 +8,11 @@
 	import InputNumber from "./inputs/InputNumber.svelte";
 	import type { Serie } from "../../shared/class/Workout/Serie";
 	import type { Exercice } from "../../shared/class/Workout/Exercice";
+	import type { Lift } from "../../shared/class/Lift/Lift";
+	import {
+		StoreName,
+		getObjectById,
+	} from "../../shared/functions/Database";
 
 	const dispatch = createEventDispatcher();
 
@@ -17,7 +22,6 @@
 
 	// defining values
 	let isMounted: boolean = false;
-	let deleteDialog: HTMLElement;
 	let setToBeDeleted: Serie = null;
 
 	/** Exercice that must be passed in argument. */
@@ -48,10 +52,24 @@
 	}
 
 	/** Show the dialog for trying to delete a set. */
+	let deleteDialog: HTMLElement;
 	function showDeleteDialog(set: Serie, asModal = true) {
 		setToBeDeleted = set;
 		try {
 			deleteDialog[asModal ? "showModal" : "show"]();
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
+	function addLift() {
+		showAddLiftDialog();
+	}
+
+	let addLiftDialog: HTMLElement;
+	function showAddLiftDialog(asModal = true) {
+		try {
+			addLiftDialog[asModal ? "showModal" : "show"]();
 		} catch (e) {
 			throw new Error(e);
 		}
@@ -69,9 +87,11 @@
 					className="input w-24 mr-0 text-left"
 					initValue={set.weight.weight}
 					metric={set.weight.metric}
-					on:keyPress={() => dispatch("update", e)}
+					on:keyPress={() =>
+						dispatch("update", e)}
 					on:input={(event) => {
-						set.weight.weight = event.detail.value;
+						set.weight.weight =
+							event.detail.value;
 						dispatch("update", e);
 					}}
 				/>
@@ -82,9 +102,12 @@
 					placeholder="Reps"
 					className="input w-14 ml-0 text-center"
 					initValue={set.reps}
-					on:keyPress={() => dispatch("update", e)}
+					on:keyPress={() =>
+						dispatch("update", e)}
 					on:input={(event) => {
-						set.reps = Number(event.detail["value"]);
+						set.reps = Number(
+							event.detail["value"],
+						);
 						dispatch("update", e);
 					}}
 				/>
@@ -106,9 +129,31 @@
 		</div>
 	{/each}
 
+	{#if e.isNewLift}
+		<div class="flex justify-center w-full mt-2">
+			<button
+				class="btn btn-secondary w-36"
+				on:click={addLift}
+			>
+				<Icon
+					icon={plusIcon}
+					color="green"
+					width="25"
+					height="25"
+				/>
+				Add Lift
+			</button>
+		</div>
+	{/if}
+
 	<div class="flex justify-center w-full mt-2">
 		<button class="btn btn-secondary w-36" on:click={addSet}>
-			<Icon icon={plusIcon} color="white" width="25" height="25" />
+			<Icon
+				icon={plusIcon}
+				color="white"
+				width="25"
+				height="25"
+			/>
 			Add Set
 		</button>
 	</div>
@@ -131,7 +176,24 @@
 			<h3 class="font-bold text-lg mb-10">Delete Set ?</h3>
 			<button
 				class="btn btn-error"
-				on:click={() => deleteSet(setToBeDeleted)}>CONFIRM</button
+				on:click={() => deleteSet(setToBeDeleted)}
+				>CONFIRM</button
+			>
+		</div>
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
+	</form>
+</dialog>
+
+<dialog id="modal" class="modal" bind:this={addLiftDialog}>
+	<form method="dialog" class="modal-box">
+		<div class="flex flex-col justify-center items-center">
+			<h3 class="font-bold text-lg mb-10">Delete Set ?</h3>
+			<button
+				class="btn btn-error"
+				on:click={() => deleteSet(setToBeDeleted)}
+				>CONFIRM</button
 			>
 		</div>
 	</form>

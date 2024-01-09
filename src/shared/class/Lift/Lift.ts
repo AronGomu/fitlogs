@@ -12,7 +12,7 @@ export class Lift {
 		public variation?: string,
 		/** List of muscle targeted by the exercice with the estimated average percentage of work for each. */
 		public targets: MuscleWork[] = []
-	) {}
+	) { }
 
 	/** Return true if they have the same id. False otherwise. */
 	compareById(l: Lift): boolean {

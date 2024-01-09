@@ -51,11 +51,12 @@
 		updateWorkout();
 	}
 
-	function updateExerciceName(event, exercice: Exercice) {
+	function updateExerciceName(event: any, exercice: Exercice) {
 		console.log(`updateExerciceName`);
 		console.log(event);
 		console.log(exercice);
 		exercice.lift.name = event.detail;
+		exercice.checkIfItsNewLift(exercice.lift.name);
 		updateWorkout();
 	}
 
@@ -65,8 +66,6 @@
 		console.log(e.isExtraOpen);
 		updateWorkout();
 	}
-
-	function updateName(e: Exercice, newName: string) {}
 </script>
 
 <!-- TODO : Make the exercice suggestions work from selecting and adding new ones -->
@@ -98,7 +97,11 @@
 						value={e.lift.name}
 						placeholder="Exercice Name"
 						class="bg-base-500 input input-ghost input-lg text-primary z-10"
-						on:update={(event) => updateExerciceName(event, e)}
+						on:update={(event) =>
+							updateExerciceName(
+								event,
+								e,
+							)}
 					/>
 				</div>
 				{#if !e.isSelfOpen}
@@ -106,10 +109,13 @@
 						>{`${e.series.length} Sets`}
 					</span>
 					{#if e.getMaxWeight(settings.wm)}
-						<span class="text-secondary text-sm"
+						<span
+							class="text-secondary text-sm"
 							>{` - Max : ${e.getMaxWeight(
-								settings.wm
-							)}${getReducedStringMetric(settings.wm)}`}
+								settings.wm,
+							)}${getReducedStringMetric(
+								settings.wm,
+							)}`}
 							{e.isSelfOpen}
 							{e.isExtraOpen}
 						</span>
@@ -133,7 +139,8 @@
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						class="w-full flex justify-end cursor-pointer"
-						on:click={() => openExerciceExtra(e)}
+						on:click={() =>
+							openExerciceExtra(e)}
 					>
 						{#if e.isExtraOpen}
 							<Icon

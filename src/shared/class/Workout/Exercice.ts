@@ -1,5 +1,7 @@
 import type { WeightMetric } from "../../enum/WeightMetrics";
+import { StoreName, getObjectById } from "../../functions/Database";
 import { isArrayWithElements, last } from "../../functions/Utilitary";
+import { getLiftByName } from "../../functions/database/lift";
 import { Lift, getRealLift } from "../Lift/Lift";
 import { getRealRepRange, type RepRange } from "../Program/RepRange";
 import { Serie, getRealSerie } from "./Serie";
@@ -24,8 +26,26 @@ export class Exercice {
 		/** Boolean flag to know if the accordeon is open or not. */
 		public isSelfOpen: boolean,
 		/** Boolean flag to know if the extra inputs (optionnal ones) are showed or not. */
-		public isExtraOpen: boolean
+		public isExtraOpen: boolean,
+
+		// CREATION VARIABLES
+		public isNewLift: boolean = false
 	) { }
+
+	public async checkIfItsNewLift(name: string): Promise<void> {
+		const retrieved = await getLiftByName(
+			name
+		);
+
+		if (!retrieved || !retrieved.id) {
+			this.isNewLift = true;
+			return;
+
+		}
+		this.isNewLift = false
+		this.lift = getRealLift(retrieved)
+
+	}
 
 	addSet(weightMetric: WeightMetric) {
 		const lastWeight: Weight = this.getLastWeigth(weightMetric);

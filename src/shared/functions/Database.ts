@@ -2,6 +2,8 @@ import { deleteDB, openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { Settings } from "../class/Settings";
 import { Workout, getRealWorkout } from "../class/Workout/Workout";
 import { WorkoutDate } from "../class/Workout/WorkoutDate";
+import type { Lift } from "../class/Lift/Lift";
+import type { Program } from "../class/Program/Program";
 
 const DB_NAME = "db";
 
@@ -12,8 +14,10 @@ export enum StoreName {
 	SETTINGS = "settings-store",
 }
 
+export type databaseObject = Workout | Lift | Program;
+
 // Define the database schema
-interface Database extends DBSchema {
+export interface Database extends DBSchema {
 	"workout-store": {
 		key: number;
 		value: any;
@@ -38,8 +42,8 @@ interface Database extends DBSchema {
  * Opens the IndexedDB database and returns a promise of the database instance.
  * @returns {Promise<IDBPDatabase<Database>>} - Promise of the IndexedDB database instance.
  */
-async function openDatabase(): Promise<IDBPDatabase<Database>> {
-	return openDB < Database > (DB_NAME, 1, {
+export async function openDatabase(): Promise<IDBPDatabase<Database>> {
+	return openDB<Database>(DB_NAME, 1, {
 		upgrade(db) {
 			if (!db.objectStoreNames.contains(StoreName.WORKOUT)) {
 				db.createObjectStore(StoreName.WORKOUT, {
@@ -90,6 +94,14 @@ export async function addToDatabase<T>(
 
 	return store.get(id);
 }
+
+// export async function doesObjectExist<T>(storeName: StoreName, o: any): Promise<boolean> {
+// 	const db = await openDatabase();
+// 	const tx = db.transaction(storeName, "readonly");
+// 	const store = tx.objectStore(storeName);
+// 	const doesObjectExist = store.get(o)
+// 	
+// }
 
 /**
  * Retrieves all data from the IndexedDB database.
@@ -178,7 +190,7 @@ export async function deleteDatabase(): Promise<void> {
 /** Fetch the data of all the workouts in the storage
  * then convert the stringify data into real objects. */
 export async function fetchWorkoutList(): Promise<Workout[]> {
-	const workouts: Workout[] = await getAllFromDatabase < Workout > (
+	const workouts: Workout[] = await getAllFromDatabase<Workout>(
 		StoreName.WORKOUT
 	);
 
@@ -208,7 +220,7 @@ export async function addNewWorkout() {
 /** Fetch the settings */
 export async function fetchSettings(): Promise<Settings> {
 	/** Load the only one settings object in the database. */
-	const fakeS: Settings = await getObjectById < Settings > (
+	const fakeS: Settings = await getObjectById<Settings>(
 		StoreName.SETTINGS, 0
 	);
 
@@ -221,12 +233,15 @@ export async function fetchSettings(): Promise<Settings> {
 /** Save the settings. If there is no settings already, create the settings in the database. */
 export async function saveSettings(s: Settings): Promise<Settings> {
 	/** Load the settings from the database to make sure it exists. */
-	const fakeS: Settings = await getObjectById < Settings > (
+	const fakeS: Settings = await getObjectById<Settings>(
 		StoreName.SETTINGS,
 		0
 	);
 
-	if (!fakeS) return addToDatabase < Settings > (StoreName.SETTINGS, s, 0);
+	if (!fakeS) return addToDatabase<Settings>(StoreName.SETTINGS, s, 0);
 
-	return updateInDatabase < Settings > (StoreName.SETTINGS, 0, s);
+	return updateInDatabase<Settings>(StoreName.SETTINGS, 0, s);
 }
+
+
+
