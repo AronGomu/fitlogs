@@ -1,7 +1,7 @@
 import { deleteDB, openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { Settings } from "../class/Settings";
 import { Workout, getRealWorkout } from "../class/Workout/Workout";
-import { WorkoutDate } from "../class/Workout/WorkoutDate";
+import { WorkoutDate, getRealWorkoutDate } from "../class/Workout/WorkoutDate";
 import type { Lift } from "../class/Lift/Lift";
 import type { Program } from "../class/Program/Program";
 
@@ -195,7 +195,9 @@ export async function fetchWorkoutList(): Promise<Workout[]> {
 	);
 
 	for (let i = 0; i < workouts.length; i++) {
-		workouts[i] = getRealWorkout(workouts[i]);
+		// workouts[i] = getRealWorkout(workouts[i]);
+		const createdAt: WorkoutDate = getRealWorkoutDate(workouts[i].createdAt);
+		workouts[i] = new Workout(workouts[i].id, createdAt, null, null)
 	}
 
 	return workouts;

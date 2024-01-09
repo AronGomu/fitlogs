@@ -24,8 +24,8 @@
 	let settings: Settings = new Settings();
 	fetchSettings().then((fs) => (settings = fs));
 
-	/** Workout object */
-	export let workout: Workout;
+	export let id: number;
+	let workout: Workout;
 
 	function updateWorkout() {
 		dispatch("update", workout);

@@ -5,6 +5,7 @@
 	import Lifts from "./routes/Lifts.svelte";
 	import Programs from "./routes/Programs.svelte";
 	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
+	import WorkoutForm from "./lib/WorkoutForm/WorkoutForm.svelte";
 </script>
 
 <div class="h-screen flex flex-col overflow-auto">
@@ -38,6 +39,14 @@
 					path="/fitlogs/lifts"
 					component={Lifts}
 				/>
+				<Route
+					path="/fitlogs/workout/:id"
+					component={WorkoutForm}
+					let:params
+				>
+					<WorkoutForm id={Number(params.id)} />
+				</Route>
+
 				<Route path="/fitlogs" component={Workouts} />
 				<Route path="/" component={Workouts} />
 			</Router>

@@ -7,12 +7,14 @@
 		addNewWorkout,
 		deleteFromDatabase,
 		fetchWorkoutList,
+		getObjectById,
 		updateInDatabase,
 	} from "../shared/functions/Database";
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { menuPath } from "../shared/store/menuPath";
+	import { navigate } from "svelte-routing";
 
 	let workouts: Workout[] = [];
 
@@ -21,7 +23,7 @@
 	let deleteDialog: HTMLElement;
 	let workoutToBeDeleted: Workout = null;
 
-	var isWorkoutsLoaded: boolean = false;
+	let isWorkoutsLoaded: boolean = false;
 	menuPath.set("Workouts");
 	setWorkouts();
 
@@ -49,10 +51,8 @@
 	}
 
 	/** Open or close the workout by clicking on it. */
-	async function onOpenWorkout(w: Workout) {
-		selectedWorkout = w;
-		w.isSelfOpen = !w.isSelfOpen;
-		updateWorkout(w);
+	async function onOpenWorkout(id: number) {
+		navigate(`/fitlogs/workout:${id}`);
 	}
 
 	/** Delete a workout in the database and remove it in the GUI. */
@@ -72,6 +72,13 @@
 	}
 </script>
 
+{#if !isWorkoutsLoaded}
+	<div class="flex items-center justify-center h-screen">
+		<span class="text-center loading loading-spinner loading-lg"
+		></span>
+	</div>
+{/if}
+
 {#if isWorkoutsLoaded}
 	<div class="flex flex-row justify-center mb-4">
 		{#if showNewWorkoutButton()}
@@ -86,71 +93,36 @@
 		{/if}
 	</div>
 
-	{#if workouts}
-		<div class="collapse bg-base-200">
-			{#each workouts as w}
-				<div
-					class="exercice-container collapse collapse-arrow bg-base-300 my-2 w-5/6 override-collapse w-full"
-				>
-					<input
-						type="checkbox"
-						name="exercice"
-						checked={w.isSelfOpen}
-						class="cursor-pointer"
-						on:click={() =>
-							onOpenWorkout(w)}
-					/>
-					<div
-						class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
-					>
-						<div
-							class="flex flex-row justify-between w-full"
-						>
-							{formatDateWithSpelledOutMonth(
-								w.createdAt.getDate(),
-							)}
-							{w.isSelfOpen}
-						</div>
-						creation
-					</div>
+	<div class="overflow-x-auto">
+		<table class="table">
+			<!-- <thead> -->
+			<!-- 	<tr> -->
+			<!-- 		<th>Date</th> -->
+			<!-- 	</tr> -->
+			<!-- </thead> -->
 
-					{#if w.isSelfOpen}
-						<div class="collapse-content">
-							<WorkoutForm
-								workout={w}
-								on:update={() =>
-									updateWorkout(
-										w,
-									)}
-							/>
-							<div
-								class="w-full flex justify-end"
+			<tbody>
+				{#each workouts as w}
+					<tr>
+						<th
+							class="cursor-pointer"
+							on:click={onOpenWorkout(
+								w.id,
+							)}
+						>
+							<span
+								>{formatDateWithSpelledOutMonth(
+									w.createdAt.getDate(),
+								)}</span
 							>
-								<button
-									class="btn btn-xs"
-									on:click={() => {
-										workoutToBeDeleted =
-											w;
-										showDeleteDialog(
-											w,
-											true,
-										);
-									}}
-									><Icon
-										icon={trashCanOutline}
-										color="red"
-										width="10"
-										height="10"
-									/>
-								</button>
-							</div>
-						</div>
-					{/if}
-				</div>
-			{/each}
-		</div>
-	{/if}
+						</th>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 {/if}
+
 <dialog id="modal" class="modal" bind:this={deleteDialog}>
 	<form method="dialog" class="modal-box">
 		<div class="flex flex-col justify-center items-center">
