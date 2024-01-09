@@ -52,7 +52,7 @@
 
 	/** Open or close the workout by clicking on it. */
 	async function onOpenWorkout(id: number) {
-		navigate(`/fitlogs/workout:${id}`);
+		navigate(`/fitlogs/workout/${id}`);
 	}
 
 	/** Delete a workout in the database and remove it in the GUI. */

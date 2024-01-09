@@ -12,6 +12,7 @@
 	import {
 		StoreName,
 		fetchSettings,
+		getObjectById,
 		updateInDatabase,
 	} from "../../shared/functions/Database";
 	import ExerciceForm from "./ExerciceForm.svelte";
@@ -20,12 +21,37 @@
 	import { createEventDispatcher } from "svelte";
 
 	const dispatch = createEventDispatcher();
+	export let id: number = null;
 
 	let settings: Settings = new Settings();
 	fetchSettings().then((fs) => (settings = fs));
 
-	export let id: number;
-	let workout: Workout;
+	let isWorkoutLoaded: boolean = false;
+	let doesWorkoutExist: boolean = true;
+	let workout: Workout = null;
+	fetchWorkout();
+
+	async function fetchWorkout() {
+		console.log(`workout id : ${id}`);
+		const fetchedWorkout = await getObjectById<Workout>(
+			StoreName.WORKOUT,
+			id,
+		);
+
+		if (!fetchedWorkout) {
+			doesWorkoutExist = false;
+			throw new Error(
+				`No workout if id=${id} found in the database`,
+			);
+			return;
+		}
+
+		console.log(fetchedWorkout);
+		workout = getRealWorkout(fetchedWorkout);
+		isWorkoutLoaded = true;
+		console.log(`END OF FETCHWORKOIUT`);
+		console.log(workout);
+	}
 
 	function updateWorkout() {
 		dispatch("update", workout);
@@ -70,103 +96,123 @@
 
 <!-- TODO : Make the exercice suggestions work from selecting and adding new ones -->
 
-<div id="workout" class="flex flex-col items-center">
-	{#each workout.el as e}
-		<div
-			class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full force-overflow-visible"
-		>
-			<input
-				type="checkbox"
-				name="exercice"
-				checked={e.isSelfOpen}
-				class="cursor-pointer"
-				on:click={() => {
-					onOpenExercice(e);
-				}}
-			/>
+{#if !isWorkoutLoaded && doesWorkoutExist}
+	<div class="flex items-center justify-center h-screen">
+		<span class="text-center loading loading-spinner loading-lg"
+		></span>
+	</div>
+{/if}
 
-			<!-- TITLE -->
+{#if !isWorkoutLoaded && !doesWorkoutExist}
+	<div class="flex items-center justify-center h-screen">
+		<span class="text-center text-error">
+			ERROR : The workout searched does not exist !
+		</span>
+	</div>
+{/if}
+
+{#if isWorkoutLoaded}
+	<div id="workout" class="flex flex-col items-center">
+		{#each workout.el as e}
 			<div
-				class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
+				class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full force-overflow-visible"
 			>
+				<input
+					type="checkbox"
+					name="exercice"
+					checked={e.isSelfOpen}
+					class="cursor-pointer"
+					on:click={() => {
+						onOpenExercice(e);
+					}}
+				/>
+
+				<!-- TITLE -->
 				<div
-					class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName"
+					class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
 				>
-					<AutoCompleteInput
-						type="text"
-						value={e.lift.name}
-						placeholder="Exercice Name"
-						class="bg-base-500 input input-ghost input-lg text-primary z-10"
-						on:update={(event) =>
-							updateExerciceName(
-								event,
-								e,
-							)}
-					/>
-				</div>
-				{#if !e.isSelfOpen}
-					<span class="text-secondary text-sm"
-						>{`${e.series.length} Sets`}
-					</span>
-					{#if e.getMaxWeight(settings.wm)}
+					<div
+						class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName"
+					>
+						<AutoCompleteInput
+							type="text"
+							value={e.lift.name}
+							placeholder="Exercice Name"
+							class="bg-base-500 input input-ghost input-lg text-primary z-10"
+							on:update={(event) =>
+								updateExerciceName(
+									event,
+									e,
+								)}
+						/>
+					</div>
+					{#if !e.isSelfOpen}
 						<span
 							class="text-secondary text-sm"
-							>{` - Max : ${e.getMaxWeight(
-								settings.wm,
-							)}${getReducedStringMetric(
-								settings.wm,
-							)}`}
-							{e.isSelfOpen}
-							{e.isExtraOpen}
+							>{`${e.series.length} Sets`}
 						</span>
+						{#if e.getMaxWeight(settings.wm)}
+							<span
+								class="text-secondary text-sm"
+								>{` - Max : ${e.getMaxWeight(
+									settings.wm,
+								)}${getReducedStringMetric(
+									settings.wm,
+								)}`}
+								{e.isSelfOpen}
+								{e.isExtraOpen}
+							</span>
+						{/if}
 					{/if}
+				</div>
+
+				<!-- CONTENT -->
+				{#if e.isSelfOpen}
+					<!-- content here -->
+					<div class="collapse-content">
+						<ExerciceForm
+							{e}
+							on:update={(event) => {
+								/* console.log(event.detail); */
+								/* workoutGUI.el = event.detail; */
+								updateWorkout();
+							}}
+						/>
+
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div
+							class="w-full flex justify-end cursor-pointer"
+							on:click={() =>
+								openExerciceExtra(
+									e,
+								)}
+						>
+							{#if e.isExtraOpen}
+								<Icon
+									icon={minusIcon}
+									color="blue"
+									width="15"
+									height="15"
+								/>
+							{:else}
+								<Icon
+									icon={plusIcon}
+									color="blue"
+									width="15"
+									height="15"
+								/>
+							{/if}
+						</div>
+					</div>
 				{/if}
 			</div>
+		{/each}
 
-			<!-- CONTENT -->
-			{#if e.isSelfOpen}
-				<!-- content here -->
-				<div class="collapse-content">
-					<ExerciceForm
-						{e}
-						on:update={(event) => {
-							/* console.log(event.detail); */
-							/* workoutGUI.el = event.detail; */
-							updateWorkout();
-						}}
-					/>
-
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div
-						class="w-full flex justify-end cursor-pointer"
-						on:click={() =>
-							openExerciceExtra(e)}
-					>
-						{#if e.isExtraOpen}
-							<Icon
-								icon={minusIcon}
-								color="blue"
-								width="15"
-								height="15"
-							/>
-						{:else}
-							<Icon
-								icon={plusIcon}
-								color="blue"
-								width="15"
-								height="15"
-							/>
-						{/if}
-					</div>
-				</div>
-			{/if}
-		</div>
-	{/each}
-
-	<button class="btn btn-primary w-30" on:click={newExercice}
-		>New Exercice</button
-	>
-</div>
+		<button class="btn btn-primary w-30" on:click={newExercice}
+			>New Exercice</button
+		>
+	</div>
+{/if}
 
 <style>
 	.force-overflow-visible {
