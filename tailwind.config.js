@@ -37,6 +37,9 @@ export default {
       "night",
       "coffee",
       "winter",
+      "dim",
+      "nord",
+      "sunset",
     ],
   },
   content: ["./index.html", './src/**/*.{svelte,js,ts}'], // for unused CSS

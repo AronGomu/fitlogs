@@ -1,7 +1,6 @@
 <script lang="ts">
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
-	import WorkoutForm from "../lib/WorkoutForm/WorkoutForm.svelte";
 	import {
 		StoreName,
 		addNewWorkout,
@@ -15,6 +14,8 @@
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";
+
+	document.querySelector("html").setAttribute("data-theme", "black");
 
 	let workouts: Workout[] = [];
 

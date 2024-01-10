@@ -104,41 +104,46 @@
 		</div>
 	</div>
 
-	{#each e.series as set, i}
+	{#each e.series as set}
 		<div
-			class="flex justify-between items-center bg-base-300 p-2 rounded-xl"
+			class="w-full flex justify-between items-center bg-base-300 p-2 rounded-xl"
 		>
-			<div class="flex flex-row items-center">
-				<InputNumber
-					placeholder="Weight"
-					className="input w-24 mr-0 text-left"
-					initValue={set.weight.weight}
-					metric={set.weight.metric}
-					on:keyPress={() =>
-						dispatch("update", e)}
-					on:input={(event) => {
-						set.weight.weight =
-							event.detail.value;
-						dispatch("update", e);
-					}}
-				/>
+			<div class="flex justify-between items-center">
+				<div class="flex flex-row items-center">
+					<InputNumber
+						placeholder="Weight"
+						className="input w-24 mr-0 text-left"
+						initValue={set.weight.weight}
+						metric={set.weight.metric}
+						on:keyPress={() =>
+							dispatch("update", e)}
+						on:input={(event) => {
+							set.weight.weight =
+								event.detail.value;
+							dispatch("update", e);
+						}}
+					/>
 
-				<span class="font-bold mx-2">X</span>
+					<span class="font-bold mx-2">X</span>
 
-				<InputNumber
-					placeholder="Reps"
-					className="input w-14 ml-0 text-center"
-					initValue={set.reps}
-					on:keyPress={() =>
-						dispatch("update", e)}
-					on:input={(event) => {
-						set.reps = Number(
-							event.detail["value"],
-						);
-						dispatch("update", e);
-					}}
-				/>
+					<InputNumber
+						placeholder="Reps"
+						className="input w-14 ml-0 text-center"
+						initValue={set.reps}
+						on:keyPress={() =>
+							dispatch("update", e)}
+						on:input={(event) => {
+							set.reps = Number(
+								event.detail[
+									"value"
+								],
+							);
+							dispatch("update", e);
+						}}
+					/>
+				</div>
 			</div>
+
 			<button
 				class="btn btn-ghost btn-xs"
 				on:click={() => {
@@ -168,18 +173,18 @@
 					width="25"
 					height="25"
 				/>
-				Add Lift
+				? Add Lift
 			</button>
 		</div>
 	{/if}
 
 	<div class="flex justify-center w-full mt-2">
-		<button class="btn btn-secondary w-36" on:click={addSet}>
+		<button class="btn btn-primary w-32" on:click={addSet}>
 			<Icon
 				icon={plusIcon}
 				color="white"
-				width="25"
-				height="25"
+				width="20"
+				height="20"
 			/>
 			Add Set
 		</button>
