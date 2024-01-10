@@ -19,6 +19,8 @@
 	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
 	import type { Weight } from "../../shared/class/Workout/Weight";
 	import { createEventDispatcher } from "svelte";
+	import { formatDateWithSpelledOutMonth } from "../../shared/functions/Utilitary";
+	import Workouts from "../../routes/Workouts.svelte";
 
 	const dispatch = createEventDispatcher();
 	export let id: number = null;
@@ -29,32 +31,48 @@
 	let isWorkoutLoaded: boolean = false;
 	let doesWorkoutExist: boolean = true;
 	let workout: Workout = null;
-	fetchWorkout();
+	if (!id) {
+		isWorkoutLoaded = true;
+		doesWorkoutExist = true;
+	} else {
+		fetchWorkout();
+	}
 
 	async function fetchWorkout() {
-		console.log(`workout id : ${id}`);
 		const fetchedWorkout = await getObjectById<Workout>(
 			StoreName.WORKOUT,
-			id,
+			Number(id),
 		);
 
 		if (!fetchedWorkout) {
+			isWorkoutLoaded = true;
 			doesWorkoutExist = false;
 			throw new Error(
 				`No workout if id=${id} found in the database`,
 			);
-			return;
 		}
 
-		console.log(fetchedWorkout);
 		workout = getRealWorkout(fetchedWorkout);
 		isWorkoutLoaded = true;
-		console.log(`END OF FETCHWORKOIUT`);
-		console.log(workout);
 	}
 
-	function updateWorkout() {
-		dispatch("update", workout);
+	async function updateWorkout() {
+		const fetchedWorkout = await updateInDatabase<Workout>(
+			StoreName.WORKOUT,
+			workout.id,
+			workout,
+			true,
+		);
+		workout = getRealWorkout(fetchedWorkout);
+	}
+
+	function updateExercice(e, event) {
+		console.log(
+			"update exercice",
+			e.lift.name,
+			event.detail.lift.name,
+		);
+		updateWorkout();
 	}
 
 	/** Add a new exercice to the workout and update it in the database. */
@@ -68,28 +86,6 @@
 		for (let i = 0; i < workout.el.length; i++) {
 			if (e === workout.el[i]) workout.el.splice(i, 1);
 		}
-		updateWorkout();
-	}
-
-	/** Close all of the other workouts open. */
-	function onOpenExercice(eToOpen: Exercice) {
-		eToOpen.isSelfOpen = !eToOpen.isSelfOpen;
-		updateWorkout();
-	}
-
-	function updateExerciceName(event: any, exercice: Exercice) {
-		console.log(`updateExerciceName`);
-		console.log(event);
-		console.log(exercice);
-		exercice.lift.name = event.detail;
-		exercice.checkIfItsNewLift(exercice.lift.name);
-		updateWorkout();
-	}
-
-	function openExerciceExtra(e: Exercice) {
-		console.log(e.isExtraOpen);
-		e.isExtraOpen = !e.isExtraOpen;
-		console.log(e.isExtraOpen);
 		updateWorkout();
 	}
 </script>
@@ -113,103 +109,100 @@
 
 {#if isWorkoutLoaded}
 	<div id="workout" class="flex flex-col items-center">
+		<h1 class="text-xl">
+			{formatDateWithSpelledOutMonth(
+				workout.createdAt.getDate(),
+			)}
+		</h1>
+
 		{#each workout.el as e}
-			<div
-				class="exercice-container collapse collapse-arrow bg-base-100 my-2 w-5/6 override-collapse w-full force-overflow-visible"
-			>
-				<input
-					type="checkbox"
-					name="exercice"
-					checked={e.isSelfOpen}
-					class="cursor-pointer"
-					on:click={() => {
-						onOpenExercice(e);
-					}}
-				/>
+			<ExerciceForm
+				{e}
+				on:update={(event) => updateExercice(e, event)}
+			/>
 
-				<!-- TITLE -->
-				<div
-					class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
-				>
-					<div
-						class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName"
-					>
-						<AutoCompleteInput
-							type="text"
-							value={e.lift.name}
-							placeholder="Exercice Name"
-							class="bg-base-500 input input-ghost input-lg text-primary z-10"
-							on:update={(event) =>
-								updateExerciceName(
-									event,
-									e,
-								)}
-						/>
-					</div>
-					{#if !e.isSelfOpen}
-						<span
-							class="text-secondary text-sm"
-							>{`${e.series.length} Sets`}
-						</span>
-						{#if e.getMaxWeight(settings.wm)}
-							<span
-								class="text-secondary text-sm"
-								>{` - Max : ${e.getMaxWeight(
-									settings.wm,
-								)}${getReducedStringMetric(
-									settings.wm,
-								)}`}
-								{e.isSelfOpen}
-								{e.isExtraOpen}
-							</span>
-						{/if}
-					{/if}
-				</div>
+			<!-- 	<div -->
+			<!-- 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title" -->
+			<!-- 	> -->
+			<!-- 		<div -->
+			<!-- 			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName" -->
+			<!-- 		> -->
+			<!-- 			<AutoCompleteInput -->
+			<!-- 				type="text" -->
+			<!-- 				value={e.lift.name} -->
+			<!-- 				placeholder="Exercice Name" -->
+			<!-- 				class="bg-base-500 input input-ghost input-lg text-primary z-10" -->
+			<!-- 				on:update={(event) => -->
+			<!-- 					updateExerciceName( -->
+			<!-- 						event, -->
+			<!-- 						e, -->
+			<!-- 					)} -->
+			<!-- 			/> -->
+			<!-- 		</div> -->
+			<!-- 		{#if !e.isSelfOpen} -->
+			<!-- 			<span -->
+			<!-- 				class="text-secondary text-sm" -->
+			<!-- 				>{`${e.series.length} Sets`} -->
+			<!-- 			</span> -->
+			<!-- 			{#if e.getMaxWeight(settings.wm)} -->
+			<!-- 				<span -->
+			<!-- 					class="text-secondary text-sm" -->
+			<!-- 					>{` - Max : ${e.getMaxWeight( -->
+			<!-- 						settings.wm, -->
+			<!-- 					)}${getReducedStringMetric( -->
+			<!-- 						settings.wm, -->
+			<!-- 					)}`} -->
+			<!-- 					{e.isSelfOpen} -->
+			<!-- 					{e.isExtraOpen} -->
+			<!-- 				</span> -->
+			<!-- 			{/if} -->
+			<!-- 		{/if} -->
+			<!-- 	</div> -->
+			<!---->
 
-				<!-- CONTENT -->
-				{#if e.isSelfOpen}
-					<!-- content here -->
-					<div class="collapse-content">
-						<ExerciceForm
-							{e}
-							on:update={(event) => {
-								/* console.log(event.detail); */
-								/* workoutGUI.el = event.detail; */
-								updateWorkout();
-							}}
-						/>
-
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<div
-							class="w-full flex justify-end cursor-pointer"
-							on:click={() =>
-								openExerciceExtra(
-									e,
-								)}
-						>
-							{#if e.isExtraOpen}
-								<Icon
-									icon={minusIcon}
-									color="blue"
-									width="15"
-									height="15"
-								/>
-							{:else}
-								<Icon
-									icon={plusIcon}
-									color="blue"
-									width="15"
-									height="15"
-								/>
-							{/if}
-						</div>
-					</div>
-				{/if}
-			</div>
+			<!-- 	{#if e.isSelfOpen} -->
+			<!-- 		<div class="collapse-content"> -->
+			<!-- 			<ExerciceForm -->
+			<!-- 				{e} -->
+			<!-- 				on:update={(event) => { -->
+			<!-- 					/* console.log(event.detail); */ -->
+			<!-- 					/* workoutGUI.el = event.detail; */ -->
+			<!-- 					updateWorkout(); -->
+			<!-- 				}} -->
+			<!-- 			/> -->
+			<!---->
+			<!-- 			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			-->
+			<!-- 			<div -->
+			<!-- 				class="w-full flex justify-end cursor-pointer" -->
+			<!-- 				on:click={() => -->
+			<!-- 					openExerciceExtra( -->
+			<!-- 						e, -->
+			<!-- 					)} -->
+			<!-- 			> -->
+			<!-- 				{#if e.isExtraOpen} -->
+			<!-- 					<Icon -->
+			<!-- 						icon={minusIcon} -->
+			<!-- 						color="blue" -->
+			<!-- 						width="15" -->
+			<!-- 						height="15" -->
+			<!-- 					/> -->
+			<!-- 				{:else} -->
+			<!-- 					<Icon -->
+			<!-- 						icon={plusIcon} -->
+			<!-- 						color="blue" -->
+			<!-- 						width="15" -->
+			<!-- 						height="15" -->
+			<!-- 					/> -->
+			<!-- 				{/if} -->
+			<!-- 			</div> -->
+			<!-- 		</div> -->
+			<!-- 	{/if} -->
+			<!-- </div> -->
 		{/each}
 
 		<button class="btn btn-primary w-30" on:click={newExercice}
-			>New Exercice</button
+			>Add Exercice</button
 		>
 	</div>
 {/if}

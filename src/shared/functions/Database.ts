@@ -110,7 +110,6 @@ export async function addToDatabase<T>(
 export async function getAllFromDatabase<T>(
 	storeName: StoreName
 ): Promise<T[]> {
-	console.log(`getAllFromDatabase : ${storeName}`);
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readonly");
 	const store = tx.objectStore(storeName);
@@ -129,26 +128,50 @@ export async function getObjectById<T>(
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readonly");
 	const store = tx.objectStore(storeName);
+
+	let cursor = await store.openCursor();
+	while (cursor) {
+		console.log(cursor.key, cursor.value);
+
+		cursor = await cursor.continue();
+	}
+
 	return store.get(id);
 }
 
 /**
  * Updates data in the IndexedDB database.
- * @param {number} key - The key of the data to be updated.
  * @param {any} updatedValue - The updated data.
  * @returns {Promise<void>} - Promise that resolves when the data is updated.
  */
 export async function updateInDatabase<T>(
 	storeName: StoreName,
 	id: number,
-	updatedValue: any
+	updatedValue: T,
+	ifNotInDatabaseCreate: boolean
 ): Promise<T> {
 	console.log("updatedValue");
 	console.log(updatedValue);
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readwrite");
 	const store = tx.objectStore(storeName);
-	await store.put(updatedValue, id);
+
+	if (!id && ifNotInDatabaseCreate) {
+		id = await store.add(updatedValue)
+	}
+
+	if (!id && !ifNotInDatabaseCreate) {
+		throw new Error("Id given is null !")
+	}
+
+	if (id) {
+		id = await store.put(updatedValue, id);
+
+		if (!id) {
+			throw new Error(`Object from StoreName ${storeName} of id=${id} was not found !`)
+		}
+	}
+
 	return store.get(id);
 }
 

@@ -3,7 +3,7 @@ import daisyui from 'daisyui'
 
 export default {
   plugins: [daisyui],
-    theme: {
+  theme: {
     extend: {},
   },
   daisyui: {
@@ -39,7 +39,7 @@ export default {
       "winter",
     ],
   },
-  content: ["./index.html",'./src/**/*.{svelte,js,ts}'], // for unused CSS
+  content: ["./index.html", './src/**/*.{svelte,js,ts}'], // for unused CSS
   variants: {
     extend: {},
   },

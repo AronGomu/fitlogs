@@ -13,8 +13,11 @@
 		StoreName,
 		getObjectById,
 	} from "../../shared/functions/Database";
+	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
 
 	const dispatch = createEventDispatcher();
+
+	export let e: Exercice;
 
 	/** Settings Imported form the store. */
 	let si: Settings;
@@ -23,9 +26,6 @@
 	// defining values
 	let isMounted: boolean = false;
 	let setToBeDeleted: Serie = null;
-
-	/** Exercice that must be passed in argument. */
-	export let e: Exercice;
 
 	onMount(() => {
 		console.log(e.isExtraOpen);
@@ -74,9 +74,36 @@
 			throw new Error(e);
 		}
 	}
+
+	function updateExerciceName(event: any, exercice: Exercice) {
+		console.log(`updateExerciceName`);
+		console.log(event);
+		console.log(exercice);
+		exercice.lift.name = event.detail;
+		exercice.checkIfItsNewLift(exercice.lift.name);
+		dispatch("update", e);
+	}
 </script>
 
 {#if isMounted && e}
+	<!-- TITLE -->
+	<div
+		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
+	>
+		<div
+			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName"
+		>
+			<AutoCompleteInput
+				type="text"
+				value={e.lift.name}
+				placeholder="Exercice Name"
+				class="bg-base-500 input input-ghost input-lg text-primary z-10"
+				on:update={(event) =>
+					updateExerciceName(event, e)}
+			/>
+		</div>
+	</div>
+
 	{#each e.series as set, i}
 		<div
 			class="flex justify-between items-center bg-base-300 p-2 rounded-xl"

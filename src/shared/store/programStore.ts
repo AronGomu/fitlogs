@@ -17,7 +17,7 @@ loadProgram();
 /** Load the list of programs stored locally. */
 function loadProgram() {
   getAllFromDatabase<Program>(StoreName.PROGRAM).then((fakePl) => {
-    console.log(fakePl);
+    console.log('Programs from DB', fakePl);
 
     let realPl = [];
 
