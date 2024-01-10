@@ -8,15 +8,17 @@
 	import InputNumber from "./inputs/InputNumber.svelte";
 	import type { Serie } from "../../shared/class/Workout/Serie";
 	import type { Exercice } from "../../shared/class/Workout/Exercice";
-	import type { Lift } from "../../shared/class/Lift/Lift";
+	import { getRealLift, Lift } from "../../shared/class/Lift/Lift";
 	import {
 		StoreName,
 		getObjectById,
 	} from "../../shared/functions/Database";
 	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
+	import LiftForm from "../LiftForm/LiftForm.svelte";
 
 	const dispatch = createEventDispatcher();
 
+	export let index: number = null;
 	export let e: Exercice;
 
 	/** Settings Imported form the store. */
@@ -28,7 +30,6 @@
 	let setToBeDeleted: Serie = null;
 
 	onMount(() => {
-		console.log(e.isExtraOpen);
 		isMounted = true;
 	});
 
@@ -62,7 +63,12 @@
 		}
 	}
 
-	function addLift() {
+	var liftToAdd: Lift = null;
+	function addLift(lift: Lift) {
+		liftToAdd = getRealLift(lift);
+
+		liftToAdd.setDefaultTargetsForForm();
+		console.log(liftToAdd);
 		showAddLiftDialog();
 	}
 
@@ -76,23 +82,21 @@
 	}
 
 	function updateExerciceName(event: any, exercice: Exercice) {
-		console.log(`updateExerciceName`);
-		console.log(event);
-		console.log(exercice);
 		exercice.lift.name = event.detail;
-		exercice.checkIfItsNewLift(exercice.lift.name);
 		dispatch("update", e);
 	}
 </script>
 
 {#if isMounted && e}
-	<!-- TITLE -->
 	<div
 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title"
 	>
 		<div
-			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName"
+			class="flex flex-row w-full overflow-visible override-input-exerciceName items-center"
 		>
+			{#if index !== null}
+				<span class="text-2xl">{index + 1}.</span>
+			{/if}
 			<AutoCompleteInput
 				type="text"
 				value={e.lift.name}
@@ -101,6 +105,19 @@
 				on:update={(event) =>
 					updateExerciceName(event, e)}
 			/>
+			{#if e.isNewLift}
+				<div class="flex justify-center w-full mt-2">
+					<button
+						class="btn btn-secondary w-32"
+						on:click={() => {
+							console.log(e);
+							addLift(e.lift);
+						}}
+					>
+						Add to Lifts
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -141,6 +158,8 @@
 							dispatch("update", e);
 						}}
 					/>
+
+					<span class="mx-2">rep</span>
 				</div>
 			</div>
 
@@ -161,23 +180,6 @@
 		</div>
 	{/each}
 
-	{#if e.isNewLift}
-		<div class="flex justify-center w-full mt-2">
-			<button
-				class="btn btn-secondary w-36"
-				on:click={addLift}
-			>
-				<Icon
-					icon={plusIcon}
-					color="green"
-					width="25"
-					height="25"
-				/>
-				? Add Lift
-			</button>
-		</div>
-	{/if}
-
 	<div class="flex justify-center w-full mt-2">
 		<button class="btn btn-primary w-32" on:click={addSet}>
 			<Icon
@@ -189,17 +191,6 @@
 			Add Set
 		</button>
 	</div>
-
-	{#if e.isExtraOpen}
-		<div class="mt-2">
-			<textarea
-				class="textarea textarea-bordered w-full"
-				placeholder="Add additionnal notes..."
-				bind:value={e.notes}
-				on:input={() => dispatch("update", e)}
-			/>
-		</div>
-	{/if}
 {/if}
 
 <dialog id="modal" class="modal" bind:this={deleteDialog}>
@@ -220,14 +211,7 @@
 
 <dialog id="modal" class="modal" bind:this={addLiftDialog}>
 	<form method="dialog" class="modal-box">
-		<div class="flex flex-col justify-center items-center">
-			<h3 class="font-bold text-lg mb-10">Delete Set ?</h3>
-			<button
-				class="btn btn-error"
-				on:click={() => deleteSet(setToBeDeleted)}
-				>CONFIRM</button
-			>
-		</div>
+		<LiftForm lift={liftToAdd} />
 	</form>
 	<form method="dialog" class="modal-backdrop">
 		<button>close</button>

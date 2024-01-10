@@ -131,8 +131,6 @@ export async function getObjectById<T>(
 
 	let cursor = await store.openCursor();
 	while (cursor) {
-		console.log(cursor.key, cursor.value);
-
 		cursor = await cursor.continue();
 	}
 

@@ -32,19 +32,20 @@ export class Exercice {
 		public isNewLift: boolean = false
 	) { }
 
-	public async checkIfItsNewLift(name: string): Promise<void> {
+	public async checkIfItsNewLift(): Promise<void> {
+		console.log(`checkIfItsNewLift`)
 		const retrieved = await getLiftByName(
-			name
+			this.lift.name
 		);
+		console.log("retrieved", retrieved)
 
 		if (!retrieved || !retrieved.id) {
 			this.isNewLift = true;
 			return;
-
 		}
+
 		this.isNewLift = false
 		this.lift = getRealLift(retrieved)
-
 	}
 
 	addSet(weightMetric: WeightMetric) {

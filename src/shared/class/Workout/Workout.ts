@@ -46,7 +46,7 @@ export class Workout {
 
 
 /** Create a real workout object and assign the values from the one fetched. */
-export function getRealWorkout(w: Workout): Workout {
+export async function getRealWorkout(w: Workout): Workout {
     const realCreatedAt: WorkoutDate = getRealWorkoutDate(w.createdAt);
 
     if (!w.el) return new Workout(w.id, realCreatedAt, [], w.isSelfOpen);
@@ -56,5 +56,11 @@ export function getRealWorkout(w: Workout): Workout {
         w.el[i] = getRealExercice(w.el[i]);
     }
 
-    return new Workout(w.id, realCreatedAt, w.el, w.isSelfOpen);
+    const realWorkout = new Workout(w.id, realCreatedAt, w.el, w.isSelfOpen);
+    for (let i = 0; i < realWorkout.el.length; i++) {
+        const e = realWorkout.el[i];
+        await e.checkIfItsNewLift()
+    }
+
+    return realWorkout;
 }

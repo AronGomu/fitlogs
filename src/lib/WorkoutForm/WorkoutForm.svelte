@@ -38,6 +38,10 @@
 		fetchWorkout();
 	}
 
+	async function setWorkout(fetchedWorkout: Workout) {
+		workout = await getRealWorkout(fetchedWorkout);
+	}
+
 	async function fetchWorkout() {
 		const fetchedWorkout = await getObjectById<Workout>(
 			StoreName.WORKOUT,
@@ -52,7 +56,8 @@
 			);
 		}
 
-		workout = getRealWorkout(fetchedWorkout);
+		await setWorkout(fetchedWorkout);
+
 		isWorkoutLoaded = true;
 	}
 
@@ -63,15 +68,11 @@
 			workout,
 			true,
 		);
-		workout = getRealWorkout(fetchedWorkout);
+
+		setWorkout(fetchedWorkout);
 	}
 
 	function updateExercice(e, event) {
-		console.log(
-			"update exercice",
-			e.lift.name,
-			event.detail.lift.name,
-		);
 		updateWorkout();
 	}
 
@@ -115,9 +116,11 @@
 			)}
 		</h1>
 
-		{#each workout.el as e}
+		{#each workout.el as e, index}
+			<span>index : {index}</span>
 			<ExerciceForm
 				{e}
+				{index}
 				on:update={(event) => updateExercice(e, event)}
 			/>
 

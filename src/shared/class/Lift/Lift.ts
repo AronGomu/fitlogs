@@ -1,5 +1,5 @@
 import { isStringNotEmpty } from "../../functions/Utilitary";
-import { getRealMuscleWork, type MuscleWork } from "./MuscleWork";
+import { MuscleWork, getRealMuscleWork } from "./MuscleWork";
 
 /** Exercice suggestions that pops out when filling out a auto complete form of the exercice name.  */
 export class Lift {
@@ -12,7 +12,15 @@ export class Lift {
 		public variation?: string,
 		/** List of muscle targeted by the exercice with the estimated average percentage of work for each. */
 		public targets: MuscleWork[] = []
-	) { }
+	) { this.setDefaultTargetsForForm() }
+
+	public setDefaultTargetsForForm() {
+		this.targets = []
+		for (let i = 0; i < 4; i++) {
+			this.targets.push(new MuscleWork(null, 0))
+
+		}
+	}
 
 	/** Return true if they have the same id. False otherwise. */
 	compareById(l: Lift): boolean {
@@ -32,7 +40,7 @@ export class Lift {
 }
 
 export function getRealLift(l: Lift) {
-	let realTargets: MuscleWork[] = [];
+	let realTargets: MuscleWork[] = []
 	for (const t of l.targets) {
 		realTargets.push(getRealMuscleWork(t));
 	}
