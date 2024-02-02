@@ -8,6 +8,7 @@
 
   const dispatch = createEventDispatcher();
 
+  export let label: string = null;
   /** Default placeholder of the input. */
   export let placeholder: string = "";
   /** Add css class to the input. */
@@ -60,18 +61,11 @@
   }
 </script>
 
-{#if !metric}
-  <input
-    type="text"
-    {placeholder}
-    class={className}
-    bind:value={initValue}
-    on:focus={handleFocus}
-    on:keypress={handleKeyPress}
-    on:input={handleInput}
-  />
-{:else if metric}
-  <div class="relative">
+<div class="form-control">
+  {#if label}
+    <span class="label-text">{label}</span>
+  {/if}
+  {#if !metric}
     <input
       type="text"
       {placeholder}
@@ -81,15 +75,27 @@
       on:keypress={handleKeyPress}
       on:input={handleInput}
     />
-    {#if initValue}
-      <div
-        class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
-      >
-        {getReducedStringMetric(metric)}
-      </div>
-    {/if}
-  </div>
-{/if}
+  {:else if metric}
+    <div class="relative">
+      <input
+        type="text"
+        {placeholder}
+        class={className}
+        bind:value={initValue}
+        on:focus={handleFocus}
+        on:keypress={handleKeyPress}
+        on:input={handleInput}
+      />
+      {#if initValue}
+        <div
+          class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
+        >
+          {getReducedStringMetric(metric)}
+        </div>
+      {/if}
+    </div>
+  {/if}
+</div>
 
 <style>
   /** Style to add for the base input. */
