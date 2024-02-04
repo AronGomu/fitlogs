@@ -9,12 +9,8 @@
 	import type { Serie } from "../../shared/class/Workout/Serie";
 	import type { Exercice } from "../../shared/class/Workout/Exercice";
 	import { getRealLift, Lift } from "../../shared/class/Lift/Lift";
-	import {
-		StoreName,
-		getObjectById,
-	} from "../../shared/functions/Database";
+	import { StoreName } from "../../shared/functions/Database";
 	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
-	import LiftForm from "../LiftForm/LiftForm.svelte";
 
 	const dispatch = createEventDispatcher();
 

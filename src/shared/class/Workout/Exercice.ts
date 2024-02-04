@@ -1,5 +1,4 @@
 import type { WeightMetric } from "../../enum/WeightMetrics";
-import { StoreName, getObjectById } from "../../functions/Database";
 import { isArrayWithElements, last } from "../../functions/Utilitary";
 import { getLiftByName } from "../../functions/database/lift";
 import { Lift, getRealLift } from "../Lift/Lift";

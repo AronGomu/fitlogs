@@ -12,7 +12,7 @@
 	import {
 		StoreName,
 		fetchSettings,
-		getObjectById,
+		getObjectByIdInDatabase,
 		updateInDatabase,
 	} from "../../shared/functions/Database";
 	import ExerciceForm from "./ExerciceForm.svelte";
@@ -43,7 +43,7 @@
 	}
 
 	async function fetchWorkout() {
-		const fetchedWorkout = await getObjectById<Workout>(
+		const fetchedWorkout = await getObjectByIdInDatabase<Workout>(
 			StoreName.WORKOUT,
 			Number(id),
 		);

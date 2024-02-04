@@ -6,7 +6,7 @@
 		addNewWorkout,
 		deleteFromDatabase,
 		fetchWorkoutList,
-		getObjectById,
+		getObjectByIdInDatabase,
 		updateInDatabase,
 	} from "../shared/functions/Database";
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";

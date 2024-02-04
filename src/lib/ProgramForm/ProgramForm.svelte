@@ -8,7 +8,11 @@
 	import { RepRange } from "../../shared/class/Program/RepRange";
 	import { Superset } from "../../shared/class/Program/Superset";
 	import { Exercice } from "../../shared/class/Workout/Exercice";
-	import { StoreName, getObjectById } from "../../shared/functions/Database";
+	import { ProgramType } from "../../shared/enum/ProgramType";
+	import {
+		StoreName,
+		getObjectByIdInDatabase,
+	} from "../../shared/functions/Database";
 	import { isPositive } from "../../shared/functions/Utilitary";
 	import { lifts } from "../../shared/store/liftStore";
 	import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
@@ -26,11 +30,13 @@
 
 	// If no program has been given and we receive an id from the url, we go fetch the program and instanciate it for the form
 	if (!p && isPositive(id)) {
-		getObjectById<Program>(StoreName.PROGRAM, id).then((pFetched) => {
-			p = getRealProgram(pFetched);
-		});
+		getObjectByIdInDatabase<Program>(StoreName.PROGRAM, id).then(
+			(pFetched) => {
+				p = getRealProgram(pFetched);
+			},
+		);
 	} else {
-		p = new Program(null, "", []);
+		p = new Program(null, "", null, null, null);
 	}
 
 	// !! MOCK
@@ -38,7 +44,9 @@
 	p.days = p.days;
 
 	p.days[0].supersets.push(
-		new Superset([new Exercice(new Lift(), null, "", new RepRange(6, 10))])
+		new Superset([
+			new Exercice(new Lift(), null, "", new RepRange(6, 10)),
+		]),
 	);
 	p.days = p.days;
 	// !! MOCK
@@ -100,8 +108,13 @@
 			on:click={() => {
 				day.supersets.push(
 					new Superset([
-						new Exercice(new Lift(), null, "", new RepRange(6, 10)),
-					])
+						new Exercice(
+							new Lift(),
+							null,
+							"",
+							new RepRange(6, 10),
+						),
+					]),
 				);
 				p.days = p.days;
 				console.log(p.days);

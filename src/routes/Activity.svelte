@@ -1,59 +1,77 @@
 <script lang="ts">
-  import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
-  import type { Settings } from "../shared/class/Settings";
-  import { settings } from "../shared/store/settingsStore";
+  import ActivityForm from "../lib/WorkoutForm/ActivityForm/ActivityForm.svelte";
+  import type { Activity } from "../shared/class/Activity/Activity";
+  import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
-  let si: Settings;
-  settings.subscribe((s) => (si = s));
+  let activities: Activity[] = null;
 
-  let date: Date = new Date();
-  console.log(date);
-  let weight: number;
-  let calories: number;
-  let steps: number;
+  // UI Stuff
+  let activityFormDialog: HTMLElement;
+  function showActivityFormDialog(asModal = true) {
+    try {
+      activityFormDialog[asModal ? "showModal" : "show"]();
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
 
-  function saveActivity(): void {
-    console.log(
-      `TO SAVE : ${date.getFullYear()}-${date.getMonth()}-${date.getDay()}, ${weight}${
-        si.wm
-      }, ${calories}, ${steps}`,
-    );
+  setActivities();
+
+  async function setActivities() {
+    activities = await getActivitiesFromDatabase();
   }
 </script>
 
-<div class="flex flex-col">
-  <input class="input" type="date" bind:value={date} />
+<button class="btn btn-primary" on:click={() => showActivityFormDialog()}
+  >Log Activity</button
+>
 
-  <InputNumber
-    label="Weight"
-    placeholder="Weight"
-    className="input w-24 mr-0 text-left"
-    initValue={weight}
-    metric={si.wm}
-    on:input={(event) => {
-      weight = event.detail.value;
-    }}
-  />
+{#if activities}
+  <div class="h-full flex flex-col overflow-hidden">
+    <div class="flex-1 overflow-y-auto">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>
+              <span class="font-bold">Date</span>
+            </th>
+            <th>
+              <span class="font-bold">Weight</span>
+            </th>
+            <th>
+              <span class="font-bold">Calories</span>
+            </th>
+            <th>
+              <span class="font-bold">Steps</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each activities as a}
+            <tr>
+              <td>{a.year}-{a.month}-{a.day}</td>
+              <td>{a.weight}</td>
+              <td>{a.calories}</td>
+              <td>{a.steps}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- content here -->
+{/if}
 
-  <InputNumber
-    label="Calories"
-    placeholder="Calories"
-    className="input w-24 mr-0 text-left"
-    initValue={calories}
-    on:input={(event) => {
-      calories = event.detail.value;
-    }}
-  />
-
-  <InputNumber
-    label="Steps"
-    placeholder="Steps"
-    className="input w-24 mr-0 text-left"
-    initValue={steps}
-    on:input={(event) => {
-      steps = event.detail.value;
-    }}
-  />
-</div>
-
-<button class="btn" on:click={() => saveActivity()}>Save Today Activity</button>
+<dialog id="modal" class="modal" bind:this={activityFormDialog}>
+  <form method="dialog" class="modal-box">
+    <ActivityForm />
+  </form>
+  <form method="dialog" class="modal-backdrop">
+    <button
+      on:click={() => {
+        setActivities();
+      }}>close</button
+    >
+  </form>
+</dialog>

@@ -1,0 +1,126 @@
+<script lang="ts">
+  import DateInput from "../lib/DateInput.svelte";
+  import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
+  import { Activity } from "../shared/class/Activity/Activity";
+  import type { Settings } from "../shared/class/Settings";
+  import {
+    StoreName,
+    getActivityFromDatabase,
+    getActivitiesFromDatabase,
+    putActivityInDatabase,
+    deleteActivityFromDatabase,
+  } from "../shared/functions/Database";
+  import { settings } from "../shared/store/settingsStore";
+
+  let si: Settings;
+  settings.subscribe((s) => (si = s));
+
+  let date = new Date();
+  console.log(date);
+  let weight: number;
+  let calories: number;
+  let steps: number;
+
+  let doesActivityAlreadyExist: boolean = false;
+
+  checkActivityExistence();
+
+  async function checkActivityExistence() {
+    const activity = await getActivityFromDatabase(
+      Number(date.getFullYear()),
+      Number(date.getMonth()),
+      Number(date.getDay()),
+    );
+    console.log(activity);
+    if (!activity) {
+      doesActivityAlreadyExist = false;
+    } else {
+      weight = activity.weight;
+      calories = activity.calories;
+      steps = activity.steps;
+      doesActivityAlreadyExist = true;
+    }
+  }
+
+  function formatDate(date: Date): string {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  }
+
+  function saveActivity(): void {
+    //console.log(`TO SAVE : ${date}, ${weight}${si.wm}, ${calories}, ${steps}`);
+    const activity = new Activity(
+      Number(date.getFullYear()),
+      Number(date.getMonth()),
+      Number(date.getDay()),
+      Number(weight),
+      Number(calories),
+      Number(steps),
+    );
+    putActivityInDatabase(activity);
+  }
+
+  async function deleteActivity(): void {
+    const activity = await deleteActivityFromDatabase(
+      Number(date.getFullYear()),
+      Number(date.getMonth()),
+      Number(date.getDay()),
+    );
+    console.log(`deleteActivity`);
+    console.log(activity);
+  }
+</script>
+
+<div class="flex flex-col">
+  <DateInput
+    bind:date
+    on:input={(event) => {
+      console.log(`WORKING ON INPOUt`);
+      checkActivityExistence();
+    }}
+  />
+
+  <InputNumber
+    label="Weight"
+    placeholder="Weight"
+    className="input w-24 mr-0 text-left"
+    initValue={weight}
+    metric={si.wm}
+    on:input={(event) => {
+      weight = event.detail.value;
+    }}
+  />
+
+  <InputNumber
+    label="Calories"
+    placeholder="Calories"
+    className="input w-24 mr-0 text-left"
+    initValue={calories}
+    on:input={(event) => {
+      calories = event.detail.value;
+    }}
+  />
+
+  <InputNumber
+    label="Steps"
+    placeholder="Steps"
+    className="input w-24 mr-0 text-left"
+    initValue={steps}
+    on:input={(event) => {
+      steps = event.detail.value;
+    }}
+  />
+</div>
+
+{#if doesActivityAlreadyExist}
+  <button class="btn btn-warning" on:click={() => saveActivity()}
+    >Update Activity</button
+  >
+{:else}
+  <button class="btn btn-success" on:click={() => saveActivity()}
+    >Log Today's Activity</button
+  >
+{/if}
+
+<button class="btn btn-error" on:click={() => deleteActivity()}
+  >Delete Activity</button
+>
