@@ -312,6 +312,7 @@ export async function putActivityInDatabase(activity: Activity): Promise<Activit
 
 		if (activityDB.year == activity.year && activityDB.month == activity.month && activityDB.day == activity.day) {
 			cursor.update(activity)
+			return;
 		}
 
 		cursor = await cursor.continue();

@@ -53,10 +53,6 @@
   // On input trigger the input event for this component.
   function handleInput(event: any) {
     // todo : check why reseting value then inputing again prevent new characters to be inputed
-    console.log(`\n\nhandleInput InputNumber`);
-    console.log(event.target.value);
-    console.log(initValue);
-    // initValue = Number(event.target.value);
     dispatch("input", { input: event.data, value: event.target.value });
   }
 </script>

@@ -47,9 +47,9 @@
 
 	async function checkActivityExistence() {
 		const activity = await getActivityFromDatabase(
-			Number(date.getFullYear()),
-			Number(date.getMonth()),
-			Number(date.getDay()),
+			date.getFullYear(),
+			date.getMonth() + 1,
+			date.getDate(),
 		);
 		console.log(activity);
 		if (!activity) {
@@ -70,11 +70,10 @@
 	}
 
 	function saveActivity(): void {
-		//console.log(`TO SAVE : ${date}, ${weight}${si.wm}, ${calories}, ${steps}`);
 		const activity = new Activity(
-			Number(date.getFullYear()),
-			Number(date.getMonth()),
-			Number(date.getDay()),
+			date.getFullYear(),
+			date.getMonth() + 1, // month start at zero in js
+			date.getDate(),
 			Number(weight),
 			Number(calories),
 			Number(steps),
