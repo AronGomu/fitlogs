@@ -1,77 +1,50 @@
 <script lang="ts">
-  import ActivityForm from "../lib/WorkoutForm/ActivityForm/ActivityForm.svelte";
+  import ActivityList from "../lib/Activity/ActivityList.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
   let activities: Activity[] = null;
+  type TabType = "list" | "graph";
+  let selectedTab: TabType = "list";
 
-  // UI Stuff
-  let activityFormDialog: HTMLElement;
-  function showActivityFormDialog(asModal = true) {
-    try {
-      activityFormDialog[asModal ? "showModal" : "show"]();
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
+  const tabs = {
+    list: {
+      class: "tab-active",
+    },
+    graph: {
+      class: "",
+    },
+  };
 
   setActivities();
 
   async function setActivities() {
     activities = await getActivitiesFromDatabase();
   }
+
+  function setTabs(activeTab: TabType) {
+    for (const key of Object.keys(tabs)) {
+      if (activeTab == key) tabs[key].class = "tab-active";
+      else tabs[key].class = "";
+    }
+  }
 </script>
 
-<button class="btn btn-primary" on:click={() => showActivityFormDialog()}
-  >Log Activity</button
->
+<div role="tablist" class="tabs tabs-boxed">
+  <a role="tab" class="tab {tabs.list.class}" on:click={() => setTabs("list")}
+    >List</a
+  >
+  <a role="tab" class="tab {tabs.graph.class}" on:click={() => setTabs("graph")}
+    >Graphs</a
+  >
+</div>
 
-{#if activities}
-  <div class="h-full flex flex-col overflow-hidden">
-    <div class="flex-1 overflow-y-auto">
-      <table class="table">
-        <!-- head -->
-        <thead>
-          <tr>
-            <th>
-              <span class="font-bold">Date</span>
-            </th>
-            <th>
-              <span class="font-bold">Weight</span>
-            </th>
-            <th>
-              <span class="font-bold">Calories</span>
-            </th>
-            <th>
-              <span class="font-bold">Steps</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each activities as a}
-            <tr>
-              <td>{a.year}-{a.month}-{a.day}</td>
-              <td>{a.weight}</td>
-              <td>{a.calories}</td>
-              <td>{a.steps}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- content here -->
-{/if}
-
-<dialog id="modal" class="modal" bind:this={activityFormDialog}>
-  <form method="dialog" class="modal-box">
-    <ActivityForm />
-  </form>
-  <form method="dialog" class="modal-backdrop">
-    <button
-      on:click={() => {
-        setActivities();
-      }}>close</button
-    >
-  </form>
-</dialog>
+<div class="mt-4">
+  {#if tabs.list.class == "tab-active"}
+    <ActivityList {activities} on:refreshActivities={() => setActivities()} />
+  {:else if tabs.graph.class == "tab-active"}
+    <!-- <ActivityGraph on:refresh={() => setActivities()} /> -->
+  {:else}
+    <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
+  {/if}
+</div>
