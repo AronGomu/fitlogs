@@ -1,15 +1,13 @@
 <script lang="ts">
 	import type { Activity } from "../../shared/class/Activity/Activity";
-	import { getActivitiesFromDatabase } from "../../shared/functions/Database";
 	import ActivityForm from "./ActivityForm.svelte";
 	import { ActivityDate } from "../../shared/class/Activity/ActivityDate";
 
-	import { createEventDispatcher } from "svelte";
-	const dispatch = createEventDispatcher();
-
 	export let activities: Activity[] = null;
 
-	let selectedDate: ActivityDate = null;
+	let activityFormFunctions: {
+		refresh(updatedActivityDate: ActivityDate): void;
+	};
 
 	// UI Stuff
 	let activityFormDialog: HTMLElement;
@@ -20,16 +18,16 @@
 		asModal = true,
 	) {
 		try {
-			selectedDate = new ActivityDate(year, month, day);
+			activityFormFunctions.refresh(
+				new ActivityDate(year, month, day),
+			);
 			activityFormDialog[asModal ? "showModal" : "show"]();
 		} catch (e) {
 			throw new Error(e);
 		}
 	}
 
-	function refreshActivities() {
-		dispatch("refreshActivities");
-	}
+	function refreshActivities() {}
 </script>
 
 <button
@@ -70,6 +68,7 @@
 				<tbody>
 					{#each activities as a}
 						<tr
+							class="cursor-pointer"
 							on:click={() =>
 								showActivityFormDialog(
 									a.year,
@@ -95,7 +94,7 @@
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
 	<form method="dialog" class="modal-box">
 		<ActivityForm
-			activityDate={selectedDate}
+			bind:functions={activityFormFunctions}
 			on:saveActivity={() => refreshActivities()}
 		/>
 	</form>

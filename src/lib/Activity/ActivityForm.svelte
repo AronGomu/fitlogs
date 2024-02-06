@@ -15,6 +15,12 @@
 	const dispatch = createEventDispatcher();
 
 	export let activityDate: ActivityDate;
+	export const functions = {
+		refresh(updatedActivityDate: ActivityDate) {
+			activityDate = updatedActivityDate;
+			checkActivityExistence();
+		},
+	};
 
 	let si: Settings;
 	settings.subscribe((s) => (si = s));
@@ -26,23 +32,27 @@
 	let steps: number;
 
 	// UI Stuff
-	const todayDate = new Date();
+	const today = new Date();
 	let doesActivityAlreadyExist: boolean = false;
 	let isItToday = false;
 
-	checkActivityExistence();
-	checkIfIsItToday();
+	init();
+
+	function init() {
+		checkActivityExistence();
+		checkIfIsItToday();
+	}
 
 	function checkIfIsItToday(): void {
-		if (date.getFullYear() !== todayDate.getFullYear()) {
+		if (date.getFullYear() !== today.getFullYear()) {
 			isItToday = false;
 			return;
 		}
-		if (date.getMonth() !== todayDate.getMonth()) {
+		if (date.getMonth() !== today.getMonth()) {
 			isItToday = false;
 			return;
 		}
-		if (date.getDay() !== todayDate.getDay()) {
+		if (date.getDay() !== today.getDay()) {
 			isItToday = false;
 			return;
 		}
@@ -50,12 +60,16 @@
 	}
 
 	async function checkActivityExistence() {
+		if (activityDate) {
+			date = activityDate.toDate();
+		}
+
 		const activity = await getActivityFromDatabase(
 			date.getFullYear(),
 			date.getMonth() + 1,
 			date.getDate(),
 		);
-		console.log(activity);
+
 		if (!activity) {
 			doesActivityAlreadyExist = false;
 			weight = null;
@@ -67,10 +81,6 @@
 			steps = activity.steps;
 			doesActivityAlreadyExist = true;
 		}
-	}
-
-	function formatDate(date: Date): string {
-		return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
 	}
 
 	function saveActivity(): void {

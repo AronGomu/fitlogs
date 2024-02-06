@@ -20,6 +20,18 @@
 
   async function setActivities() {
     activities = await getActivitiesFromDatabase();
+    activities.sort((a: Activity, b: Activity) => {
+      let total: number = 0;
+
+      total = a.year - b.year;
+      if (total !== 0) return total;
+
+      total = a.month - b.month;
+      if (total !== 0) return total;
+
+      total = a.day - b.day;
+      return -total;
+    });
   }
 
   function setTabs(activeTab: TabType) {
