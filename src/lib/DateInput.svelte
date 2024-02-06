@@ -2,6 +2,8 @@
 	import dayjs from "dayjs";
 	import { createEventDispatcher } from "svelte";
 
+	const dispatch = createEventDispatcher();
+
 	export let format = "YYYY-MM-DD";
 	export let date = new Date();
 
@@ -12,8 +14,6 @@
 
 	$: input(date);
 	$: output(internal);
-
-	const dispatch = createEventDispatcher();
 
 	function handleInput(event: any) {
 		console.log(`\n\nhandleInput InputDate`);
