@@ -1,5 +1,5 @@
 export class Activity {
-    constructor(public year: number, public month: number, public day: number, public weight: number, public calories: number, public steps: number) { }
+    constructor(public year: number, public month: number, public day: number, public weight: number | null, public calories: number | null, public steps: number | null) { }
 }
 
 export function getRealActivity(activity: Activity): Activity {

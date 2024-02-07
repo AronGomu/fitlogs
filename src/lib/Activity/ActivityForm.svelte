@@ -108,14 +108,20 @@
 		}
 	}
 
+	function getNumberOrNull(n: any): number | null {
+		n = Number(n);
+		if (n === 0) return null;
+		return n;
+	}
+
 	async function saveActivity(): Promise<void> {
 		const activity = new Activity(
 			date.getFullYear(),
 			date.getMonth() + 1, // month start at zero in js
 			date.getDate(),
-			Number(weight),
-			Number(calories),
-			Number(steps),
+			getNumberOrNull(weight),
+			getNumberOrNull(calories),
+			getNumberOrNull(steps),
 		);
 		await putActivityInDatabase(activity);
 		checkActivityExistence();

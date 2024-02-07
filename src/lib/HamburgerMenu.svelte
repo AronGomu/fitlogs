@@ -62,6 +62,11 @@
 >
 	<li>
 		<button class="btn">
+			<a href="/fitlogs/activity">Activity</a>
+		</button>
+	</li>
+	<li>
+		<button class="btn">
 			<a href="/fitlogs/lifts">Lifts</a>
 		</button>
 	</li>
