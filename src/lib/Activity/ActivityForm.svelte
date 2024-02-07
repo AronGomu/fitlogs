@@ -130,9 +130,9 @@
 
 	async function deleteActivity(): Promise<void> {
 		await deleteActivityFromDatabase(
-			Number(date.getFullYear()),
-			Number(date.getMonth()),
-			Number(date.getDay()),
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDay(),
 		);
 		checkActivityExistence();
 		dispatch("saveActivity");

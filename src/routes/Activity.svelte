@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ActivityGraph from "../lib/Activity/ActivityGraph.svelte";
   import ActivityList from "../lib/Activity/ActivityList.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
@@ -51,11 +52,11 @@
   >
 </div>
 
-<div class="mt-4">
+<div class="w-full h-full mt-4">
   {#if tabs.list.class == "tab-active"}
     <ActivityList {activities} on:refreshActivities={() => setActivities()} />
   {:else if tabs.graph.class == "tab-active"}
-    <!-- <ActivityGraph on:refresh={() => setActivities()} /> -->
+    <ActivityGraph {activities} />
   {:else}
     <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
   {/if}
