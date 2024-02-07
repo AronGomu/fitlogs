@@ -2,6 +2,9 @@
 	import type { Activity } from "../../shared/class/Activity/Activity";
 	import ActivityForm from "./ActivityForm.svelte";
 	import { ActivityDate } from "../../shared/class/Activity/ActivityDate";
+	import { createEventDispatcher } from "svelte";
+
+	const dispatch = createEventDispatcher();
 
 	export let activities: Activity[] = null;
 
@@ -27,14 +30,18 @@
 		}
 	}
 
-	function refreshActivities() {}
+	function refreshActivities() {
+		dispatch("refreshActivities");
+	}
 </script>
 
-<button
-	class="btn btn-primary"
-	on:click={() => showActivityFormDialog(null, null, null)}
-	>Log Activity</button
->
+<div class="flex items-center justify-center w-full">
+	<button
+		class="btn btn-primary"
+		on:click={() => showActivityFormDialog(null, null, null)}
+		>Log Today's Activity</button
+	>
+</div>
 
 {#if activities}
 	<div class="h-full flex flex-col overflow-hidden">

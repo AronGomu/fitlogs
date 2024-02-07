@@ -15,9 +15,12 @@
 	const dispatch = createEventDispatcher();
 
 	export let activityDate: ActivityDate;
-	export const functions = {
+	export const functions: {
+		refresh(updatedActivityDate: ActivityDate): void;
+	} = {
 		refresh(updatedActivityDate: ActivityDate) {
 			activityDate = updatedActivityDate;
+			initialLoad = true;
 			checkActivityExistence();
 		},
 	};
@@ -30,6 +33,10 @@
 	let weight: number;
 	let calories: number;
 	let steps: number;
+
+	// form logic
+	let initialLoad: boolean = true;
+	let isOverridingData: boolean = false;
 
 	// UI Stuff
 	const today = new Date();
@@ -62,13 +69,31 @@
 	async function checkActivityExistence() {
 		if (activityDate) {
 			date = activityDate.toDate();
+			activityDate = null;
 		}
+
+		console.log(initialLoad);
 
 		const activity = await getActivityFromDatabase(
 			date.getFullYear(),
 			date.getMonth() + 1,
 			date.getDate(),
 		);
+
+		if (activity) {
+			isOverridingData = true;
+		} else {
+			isOverridingData = false;
+		}
+
+		if (!initialLoad) return;
+
+		initialLoad = false;
+		assignFetchedData(activity);
+	}
+
+	function assignFetchedData(activity: Activity) {
+		console.log(`loadDataFetched`);
 
 		if (!activity) {
 			doesActivityAlreadyExist = false;
@@ -83,7 +108,7 @@
 		}
 	}
 
-	function saveActivity(): void {
+	async function saveActivity(): Promise<void> {
 		const activity = new Activity(
 			date.getFullYear(),
 			date.getMonth() + 1, // month start at zero in js
@@ -92,27 +117,26 @@
 			Number(calories),
 			Number(steps),
 		);
-		putActivityInDatabase(activity);
+		await putActivityInDatabase(activity);
 		checkActivityExistence();
 		dispatch("saveActivity");
 	}
 
 	async function deleteActivity(): Promise<void> {
-		const activity = await deleteActivityFromDatabase(
+		await deleteActivityFromDatabase(
 			Number(date.getFullYear()),
 			Number(date.getMonth()),
 			Number(date.getDay()),
 		);
 		checkActivityExistence();
-		console.log(`deleteActivity`);
-		console.log(activity);
+		dispatch("saveActivity");
 	}
 </script>
 
 <div class="flex flex-col">
 	<DateInput
 		bind:date
-		on:input={(event) => {
+		on:input={() => {
 			checkActivityExistence();
 			checkIfIsItToday();
 		}}
@@ -165,4 +189,10 @@
 	<button class="btn btn-warning" on:click={() => saveActivity()}
 		>Log Activity</button
 	>
+{/if}
+
+{#if isOverridingData}
+	<div class="text-warning">
+		<span>You are overriding existing data.</span>
+	</div>
 {/if}
