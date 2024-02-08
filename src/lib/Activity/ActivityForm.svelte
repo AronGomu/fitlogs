@@ -129,11 +129,19 @@
 	}
 
 	async function deleteActivity(): Promise<void> {
-		await deleteActivityFromDatabase(
+		console.log(activityDate);
+		const activity = await deleteActivityFromDatabase(
 			date.getFullYear(),
-			date.getMonth(),
-			date.getDay(),
+			date.getMonth() + 1,
+			date.getDate(),
 		);
+
+		if (!activity) {
+			throw new Error(
+				"Activity to delete is not found in the database !",
+			);
+		}
+
 		checkActivityExistence();
 		dispatch("saveActivity");
 	}
