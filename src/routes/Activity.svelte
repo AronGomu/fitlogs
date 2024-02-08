@@ -22,15 +22,23 @@
   async function setActivities() {
     activities = await getActivitiesFromDatabase();
     activities.sort((a: Activity, b: Activity) => {
+      if (!a && b) return -1;
+      if (a && !b) return 1;
+      if (!a && !b) return 0;
+
       let total: number = 0;
+      console.log(`${a.printDate()}\n${b.printDate()}`);
 
       total = a.year - b.year;
-      if (total !== 0) return total;
+      if (total !== 0) return -total;
+      console.log(`total year : ${total}`);
 
       total = a.month - b.month;
-      if (total !== 0) return total;
+      if (total !== 0) return -total;
+      console.log(`total month : ${total}`);
 
       total = a.day - b.day;
+      console.log(`total day : ${total}`);
       return -total;
     });
   }

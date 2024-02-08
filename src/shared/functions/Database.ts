@@ -276,7 +276,11 @@ export async function getActivitiesFromDatabase(): Promise<Activity[]> {
 	const db = await openDatabase();
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);
-	return store.getAll();
+	let activities = await store.getAll();
+	for (let i = 0; i < activities.length; i++) {
+		activities[i] = getRealActivity(activities[i]);
+	}
+	return activities;
 }
 
 export async function getActivityFromDatabase(year: number, month: number, day: number): Promise<Activity> {
