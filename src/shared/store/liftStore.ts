@@ -23,8 +23,6 @@ function loadEsl() {
 			loadLiftsMock().then(() => loadEsl());
 		}
 
-		console.log('Exercices from DB', fakeEsl);
-
 		let realEsl = [];
 
 		for (const fakeEs of fakeEsl) realEsl.push(getRealLift(fakeEs));

@@ -1,0 +1,33 @@
+import { Activity } from "../class/Activity/Activity"
+
+export const baseActivities: Activity[] = [
+	new Activity(2024, 1, 11, 86.3, 2600, 17041),
+	new Activity(2024, 1, 12, 85.4, 2500, 19975),
+	new Activity(2024, 1, 13, 85.4, 4000, 15424),
+	new Activity(2024, 1, 14, 85.4, 2150, 15744),
+	new Activity(2024, 1, 15, 84.5, 2500, 22556),
+	new Activity(2024, 1, 16, 84, 3300, 18913),
+	new Activity(2024, 1, 17, 84, 3500, 19909),
+	new Activity(2024, 1, 18, 84.4, 2400, 16658),
+	new Activity(2024, 1, 19, 84, 2600, 27013,),
+	new Activity(2024, 1, 20, 83.5, 2500, 20698,),
+	new Activity(2024, 1, 21, 83.5, 2800, 25577),
+	new Activity(2024, 1, 22, 84, 3000, 18943),
+	new Activity(2024, 1, 23, 84.6, 3000, 21845),
+	new Activity(2024, 1, 24, 84.6, 4000, 21707),
+	new Activity(2024, 1, 25, 84.9, 2200, 26092),
+	new Activity(2024, 1, 26, 83.3, 3000, 21498),
+	new Activity(2024, 1, 27, 83.3, 2400, 19979),
+	new Activity(2024, 1, 28, 83.3, 3000, 27957),
+	new Activity(2024, 1, 29, 83.3, 4409, 21981),
+	new Activity(2024, 1, 30, 84.3, 2815, 16968),
+	new Activity(2024, 1, 31, 84.3, 2388, 22430),
+	new Activity(2024, 2, 1, 84.3, 2420, 23274),
+	new Activity(2024, 2, 2, 84, 2245, 30209),
+	new Activity(2024, 2, 3, 84, 3328, 23402),
+	new Activity(2024, 2, 4, 83, 3500, 18780),
+	new Activity(2024, 2, 5, 83, 2200, 26727),
+	new Activity(2024, 2, 6, 83.3, 2300, 25182),
+	new Activity(2024, 2, 7, 83.3, 2050, 21957),
+]
+

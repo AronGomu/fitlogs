@@ -42,6 +42,7 @@
 	const today = new Date();
 	let doesActivityAlreadyExist: boolean = false;
 	let isItToday = false;
+	let isActivityValid: boolean = false;
 
 	init();
 
@@ -93,8 +94,6 @@
 	}
 
 	function assignFetchedData(activity: Activity) {
-		console.log(`loadDataFetched`);
-
 		if (!activity) {
 			doesActivityAlreadyExist = false;
 			weight = null;
@@ -160,7 +159,7 @@
 		label="Weight"
 		placeholder="Weight"
 		className="input w-24 mr-0 text-left"
-		initValue={weight}
+		value={weight}
 		metric={si.wm}
 		on:input={(event) => {
 			weight = event.detail.value;
@@ -171,7 +170,7 @@
 		label="Calories"
 		placeholder="Calories"
 		className="input w-24 mr-0 text-left"
-		initValue={calories}
+		value={calories}
 		on:input={(event) => {
 			calories = event.detail.value;
 		}}
@@ -181,7 +180,7 @@
 		label="Steps"
 		placeholder="Steps"
 		className="input w-24 mr-0 text-left"
-		initValue={steps}
+		value={steps}
 		on:input={(event) => {
 			steps = event.detail.value;
 		}}
@@ -189,19 +188,25 @@
 </div>
 
 {#if doesActivityAlreadyExist}
-	<button class="btn btn-warning" on:click={() => saveActivity()}
-		>Update Activity</button
+	<button
+		class="btn btn-warning"
+		disabled={isActivityValid}
+		on:click={() => saveActivity()}>Update Activity</button
 	>
 	<button class="btn btn-error" on:click={() => deleteActivity()}
 		>Delete Activity</button
 	>
 {:else if isItToday}
-	<button class="btn btn-success" on:click={() => saveActivity()}
-		>Log Today's Activity</button
+	<button
+		class="btn btn-success"
+		disabled={isActivityValid}
+		on:click={() => saveActivity()}>Log Today's Activity</button
 	>
 {:else}
-	<button class="btn btn-warning" on:click={() => saveActivity()}
-		>Log Activity</button
+	<button
+		class="btn btn-warning"
+		disabled={isActivityValid}
+		on:click={() => saveActivity()}>Log Activity</button
 	>
 {/if}
 

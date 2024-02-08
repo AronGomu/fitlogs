@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { baseActivities } from "../shared/data/ActivityBase";
 	import {
 		deleteDatabase,
 		fetchWorkoutList,
+		loadActivities,
 	} from "../shared/functions/Database";
 	import { downloadAsJson } from "../shared/functions/Utilitary";
 	import { menuPath } from "../shared/store/menuPath";
@@ -83,6 +85,15 @@
 					downloadAsJson(wl, "data");
 				});
 			}}>Export Data</button
+		>
+	</li>
+	<li>
+		<button
+			class="btn btn-warning"
+			on:click={() => {
+				loadActivities(baseActivities, true);
+				location.reload();
+			}}>Set Default Activity</button
 		>
 	</li>
 	<li>

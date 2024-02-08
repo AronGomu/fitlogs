@@ -16,7 +16,7 @@
   /** Text to put next to the number in the template. */
   export let metric: WeightMetric = null;
   /** Initial value of the input. */
-  export let initValue: number;
+  export let value: number;
 
   onMount(() => {
     className += " base-override";
@@ -42,7 +42,7 @@
       key = String.fromCharCode(key);
     }
 
-    var regex = /^[0-9]\d*$/;
+    var regex = /^[0-9.]+$/;
 
     if (!regex.test(key)) {
       event.returnValue = false;
@@ -66,7 +66,7 @@
       type="text"
       {placeholder}
       class={className}
-      bind:value={initValue}
+      bind:value
       on:focus={handleFocus}
       on:keypress={handleKeyPress}
       on:input={handleInput}
@@ -77,12 +77,12 @@
         type="text"
         {placeholder}
         class={className}
-        bind:value={initValue}
+        bind:value
         on:focus={handleFocus}
         on:keypress={handleKeyPress}
         on:input={handleInput}
       />
-      {#if initValue}
+      {#if value}
         <div
           class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
         >

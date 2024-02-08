@@ -50,7 +50,7 @@
 
 {#if activities}
 	<div class="h-full flex flex-col overflow-hidden">
-		<div class="flex-1 overflow-y-auto">
+		<div class="flex-1">
 			<table class="table">
 				<!-- head -->
 				<thead>

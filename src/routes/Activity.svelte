@@ -1,18 +1,18 @@
 <script lang="ts">
-  import ActivityGraph from "../lib/Activity/ActivityGraph.svelte";
   import ActivityList from "../lib/Activity/ActivityList.svelte";
+  import ActivityStats from "../lib/Activity/ActivityStats.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
   let activities: Activity[] = null;
-  type TabType = "list" | "graph";
+  type TabType = "list" | "stats";
   let selectedTab: TabType = "list";
 
   const tabs = {
     list: {
       class: "tab-active",
     },
-    graph: {
+    stats: {
       class: "",
     },
   };
@@ -27,18 +27,14 @@
       if (!a && !b) return 0;
 
       let total: number = 0;
-      console.log(`${a.printDate()}\n${b.printDate()}`);
 
       total = a.year - b.year;
       if (total !== 0) return -total;
-      console.log(`total year : ${total}`);
 
       total = a.month - b.month;
       if (total !== 0) return -total;
-      console.log(`total month : ${total}`);
 
       total = a.day - b.day;
-      console.log(`total day : ${total}`);
       return -total;
     });
   }
@@ -55,16 +51,16 @@
   <a role="tab" class="tab {tabs.list.class}" on:click={() => setTabs("list")}
     >List</a
   >
-  <a role="tab" class="tab {tabs.graph.class}" on:click={() => setTabs("graph")}
-    >Graphs</a
+  <a role="tab" class="tab {tabs.stats.class}" on:click={() => setTabs("stats")}
+    >Stats</a
   >
 </div>
 
 <div class="w-full h-full mt-4">
   {#if tabs.list.class == "tab-active"}
     <ActivityList {activities} on:refreshActivities={() => setActivities()} />
-  {:else if tabs.graph.class == "tab-active"}
-    <ActivityGraph {activities} />
+  {:else if tabs.stats.class == "tab-active"}
+    <ActivityStats {activities} />
   {:else}
     <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
   {/if}

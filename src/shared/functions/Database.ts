@@ -352,3 +352,22 @@ export async function deleteActivityFromDatabase(year: number, month: number, da
 
 	return null;
 }
+
+export async function loadActivities(activities: Activity[], resetDB: boolean): Promise<void> {
+	const db = await openDatabase();
+	const tx = db.transaction(StoreName.ACTIVITY, "readwrite");
+	const store = tx.objectStore(StoreName.ACTIVITY);
+
+	if (resetDB) {
+		let cursor = await store.openCursor();
+		while (cursor) {
+			cursor.delete();
+			cursor = await cursor.continue();
+		}
+	}
+
+	for (let i = 0; i < activities.length; i++) {
+		const a = activities[i];
+		store.add(a);
+	}
+}

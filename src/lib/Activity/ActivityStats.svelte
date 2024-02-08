@@ -9,7 +9,7 @@
 	export let activities: Activity[] = null;
 
 	// parameters
-	let nbDays: number = 5;
+	let nbDays: number = 15;
 
 	// info to show
 	let averageCalories: number;
