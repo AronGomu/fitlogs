@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { navigate } from "svelte-routing";
 	import { baseActivities } from "../shared/data/ActivityBase";
 	import {
 		deleteDatabase,
@@ -7,6 +8,7 @@
 	} from "../shared/functions/Database";
 	import { downloadAsJson } from "../shared/functions/Utilitary";
 	import { menuPath } from "../shared/store/menuPath";
+	import Workouts from "../routes/Workouts.svelte";
 
 	let showMenu: boolean = false;
 
@@ -63,20 +65,39 @@
 	class:menu-expanded={showMenu}
 >
 	<li>
-		<button class="btn">
-			<a href="/fitlogs/activity">Activity</a>
+		<button
+			class="btn"
+			on:click={() => {
+				navigate("/fitlogs/activity");
+				toggleMenu();
+			}}
+		>
+			<span>Activity</span>
 		</button>
 	</li>
 	<li>
-		<button class="btn">
-			<a href="/fitlogs/lifts">Lifts</a>
+		<button
+			class="btn"
+			on:click={() => {
+				navigate("/fitlogs/lifts");
+				toggleMenu();
+			}}
+		>
+			<span>Lifts</span>
 		</button>
 	</li>
 	<li>
-		<button class="btn">
-			<a href="/fitlogs/programs">Programs</a>
+		<button
+			class="btn"
+			on:click={() => {
+				navigate("/fitlogs/programs");
+				toggleMenu();
+			}}
+		>
+			<span>Programs</span>
 		</button>
 	</li>
+
 	<li>
 		<button
 			class="btn btn-primary btn-sm"
