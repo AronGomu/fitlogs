@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { settings } from "../../shared/store/settingsStore";
-	import type { Activity } from "../../shared/class/Activity/Activity";
+	import { Activity } from "../../shared/class/Activity/Activity";
 	import type { Settings } from "../../shared/class/Settings";
 
 	let si: Settings;
@@ -10,7 +10,7 @@
 
 	// parameters
 
-	let nbDays: number = 15;
+	let nbDays: number = 7;
 	const nbDaysChoice = {
 		one: {
 			label: "1 Week",
@@ -63,8 +63,12 @@
 	let averageCalories: number;
 	let averageWeight: number;
 	let averageSteps: number;
+	let averageActivities: Activity[];
 	let averageCaloriesBurned: number;
-	let averageWeightLoss: number;
+	let averageTDEE: number;
+
+	let totalAverageCaloriesBurned: number;
+	let totalAverageWeightLoss: number;
 
 	type AverageProperty = "calories" | "weight" | "steps";
 
@@ -78,10 +82,23 @@
 		averageCalories = Math.trunc(getAverage("calories", 0));
 		averageWeight = Number(getAverage("weight", 0).toFixed(1));
 		averageSteps = Math.trunc(getAverage("steps", 0));
-		averageWeightLoss = Number(getAverageWeightLoss().toFixed(1));
-		console.log(averageWeightLoss);
-		averageCaloriesBurned =
-			convertWeightIntoCalories(averageWeightLoss);
+
+		averageActivities = setAverageActivities(nbDays);
+
+		totalAverageWeightLoss =
+			averageActivities[nbDays].weight -
+			averageActivities[0].weight;
+		totalAverageWeightLoss = Number(
+			totalAverageWeightLoss.toFixed(1),
+		);
+
+		totalAverageCaloriesBurned = convertWeightIntoCalories(
+			totalAverageWeightLoss,
+		);
+
+		averageCaloriesBurned = totalAverageCaloriesBurned / nbDays;
+
+		averageTDEE = averageCalories + averageCaloriesBurned;
 	}
 
 	function setNbDays(nb: number): void {
@@ -106,7 +123,7 @@
 		let nbElements: number = 0;
 
 		let startingDay = 0 + nbDaysBefore;
-		let len = nbDays;
+		let len = nbDays + nbDaysBefore;
 
 		if (startingDay > activities.length) return 0;
 		if (len > activities.length) len = activities.length;
@@ -120,15 +137,52 @@
 			nbElements += 1;
 		}
 
+		// if (propertyName === "weight") {
+		// 	console.log(`nbDaysBefore: `, nbDaysBefore);
+		// 	console.log(`startingDay: `, startingDay);
+		// 	console.log(`len: `, len);
+		// 	console.log(`total : `, total);
+		// 	console.log(`nbElements: `, nbElements);
+		// 	console.log(`total / nbElements: `, total / nbElements);
+		// }
+
 		return total / nbElements;
 	}
 
-	function getAverageWeightLoss(): number {
-		const nbDaysAverageWeight = getAverage("weight", nbDays);
-		if (nbDaysAverageWeight == 0) return 0;
-		const todayAverageWeight = getAverage("weight", 0);
-		return nbDaysAverageWeight - todayAverageWeight;
+	function setAverageActivities(nbDays: number): Activity[] {
+		let r: Activity[] = [];
+
+		for (let i = 0; i < activities.length; i++) {
+			const a = activities[i];
+
+			averageCalories = Math.trunc(getAverage("calories", i));
+			averageWeight = Number(
+				getAverage("weight", i).toFixed(1),
+			);
+			averageSteps = Math.trunc(getAverage("steps", i));
+			const newA = new Activity(
+				a.year,
+				a.month,
+				a.day,
+				averageWeight,
+				averageCalories,
+				averageSteps,
+			);
+			r.push(newA);
+		}
+
+		console.log(r);
+
+		return r;
 	}
+
+	// function getAverageWeightLoss(): number {
+	// 	const nbDaysAverageWeight = getAverage("weight", nbDays);
+	// 	console.log("averageCaloriesBurned", nbDaysAverageWeight);
+	// 	if (nbDaysAverageWeight == 0) return 0;
+	// 	const todayAverageWeight = getAverage("weight", 0);
+	// 	return nbDaysAverageWeight - todayAverageWeight;
+	// }
 
 	function convertWeightIntoCalories(weight: number): number {
 		return weight * 7700;
@@ -184,13 +238,11 @@
 		>
 	</div>
 
-	{#if nbDays}
-		<div class="w-full flex items-center justify-center mb-8">
-			<span class="text-3xl text-secondary"
-				>Averages on Last {nbDays} Days</span
-			>
-		</div>
-	{/if}
+	<div class="w-full flex items-center justify-center mt-6 mb-4">
+		<span class="text-3xl text-secondary"
+			>Averages on Last {nbDays} Days</span
+		>
+	</div>
 
 	{#if averageWeight}
 		<div class="w-full flex justify-center">
@@ -223,19 +275,49 @@
 		</div>
 	{/if}
 
-	{#if averageCaloriesBurned && averageWeightLoss}
-		<div class="w-full flex items-center justify-left">
-			<span class="text-2xl text-neutral-content"
-				>Weight Progression :</span
+	{#if averageTDEE}
+		<div class="w-full flex items-center justify-center">
+			<span class="text-6xl text-neutral-content ml-4">
+				TDEE :
+			</span>
+			<span class="text-6xl text-accent ml-4">
+				{averageTDEE}</span
 			>
-			<span class="text-6xl text-accent ml-4">
-				{averageCaloriesBurned}
-			</span>
-			<span class="text-xl text-accent">cal</span>
-			<span class="text-6xl text-accent ml-4">
-				/ {averageWeightLoss}
-			</span>
-			<span class="text-xl text-accent">{si.wm}</span>
+		</div>
+	{/if}
+
+	<div class="w-full flex items-center justify-center mt-12 mb-4">
+		<span class="text-3xl text-secondary">Totals</span>
+	</div>
+
+	{#if totalAverageCaloriesBurned && totalAverageWeightLoss}
+		<div class="w-full flex flex-col items-center justify-left">
+			<div>
+				<span class="text-6xl text-accent ml-4">
+					{totalAverageCaloriesBurned}
+				</span>
+				<span
+					class="text-xl text-neutral-content mt-auto"
+				>
+					cals burned</span
+				>
+			</div>
+
+			<div>
+				<span class="text-6xl text-accent ml-4">
+					{totalAverageWeightLoss}
+				</span>
+				<span
+					class="text-xl text-neutral-content mt-auto"
+				>
+					kilo
+					{#if totalAverageWeightLoss > 0}
+						gained
+					{:else if totalAverageWeightLoss < 0}
+						losed
+					{/if}
+				</span>
+			</div>
 		</div>
 	{/if}
 

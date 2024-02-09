@@ -1,4 +1,3 @@
-1. Make the buttons days choice being scrollable
 1. Add to average stats : cals burned / weight loss, total, TDEE
 2. Add to total stats section for everything except kilos : cals burned / weight loss, total, TDEE
 3. Add data export to csv
