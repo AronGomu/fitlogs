@@ -206,7 +206,7 @@
 			<span class="text-6xl text-accent ml-4">
 				{averageCalories}</span
 			><span class="text-xl text-neutral-content mt-auto">
-				cal</span
+				cals eaten</span
 			>
 		</div>
 	{/if}
