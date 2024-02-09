@@ -9,7 +9,55 @@
 	export let activities: Activity[] = null;
 
 	// parameters
+
 	let nbDays: number = 15;
+	const nbDaysChoice = {
+		one: {
+			label: "1 Week",
+			value: 7,
+			class: "",
+		},
+		two: {
+			label: "2 Weeks",
+			value: 15,
+			class: "",
+		},
+		three: {
+			label: "1 Month",
+			value: 30,
+			class: "",
+		},
+		four: {
+			label: "2 Month",
+			value: 60,
+			class: "",
+		},
+		five: {
+			label: "3 Month",
+			value: 90,
+			class: "",
+		},
+		six: {
+			label: "6 Month",
+			value: 180,
+			class: "",
+		},
+		seven: {
+			label: "1 Year",
+			value: 365,
+			class: "",
+		},
+		eight: {
+			label: "2 Year",
+			value: 730,
+			class: "",
+		},
+		nine: {
+			label: "3 Year",
+			value: 1045,
+			class: "",
+		},
+	};
 
 	// info to show
 	let averageCalories: number;
@@ -23,6 +71,10 @@
 	init();
 
 	function init() {
+		setNbDays(nbDays);
+	}
+
+	function calculateValues() {
 		averageCalories = Math.trunc(getAverage("calories", 0));
 		averageWeight = Number(getAverage("weight", 0).toFixed(1));
 		averageSteps = Math.trunc(getAverage("steps", 0));
@@ -30,6 +82,18 @@
 		console.log(averageWeightLoss);
 		averageCaloriesBurned =
 			convertWeightIntoCalories(averageWeightLoss);
+	}
+
+	function setNbDays(nb: number): void {
+		nbDays = nb;
+		for (const key of Object.keys(nbDaysChoice)) {
+			nbDaysChoice[key].class = "";
+			if (nbDaysChoice[key].value == nb) {
+				nbDaysChoice[key].class = "btn-primary";
+			}
+		}
+
+		calculateValues();
 	}
 
 	function getAverage(
@@ -72,6 +136,52 @@
 </script>
 
 <div class="h-full w-full">
+	<button
+		class="btn {nbDaysChoice.one.class}"
+		on:click={() => setNbDays(nbDaysChoice.one.value)}
+		>{nbDaysChoice.one.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.two.class}"
+		on:click={() => setNbDays(nbDaysChoice.two.value)}
+		>{nbDaysChoice.two.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.three.class}"
+		on:click={() => setNbDays(nbDaysChoice.three.value)}
+		>{nbDaysChoice.three.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.four.class}"
+		on:click={() => setNbDays(nbDaysChoice.four.value)}
+		>{nbDaysChoice.four.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.five.class}"
+		on:click={() => setNbDays(nbDaysChoice.five.value)}
+		>{nbDaysChoice.five.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.six.class}"
+		on:click={() => setNbDays(nbDaysChoice.six.value)}
+		>{nbDaysChoice.six.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.seven.class}"
+		on:click={() => setNbDays(nbDaysChoice.seven.value)}
+		>{nbDaysChoice.seven.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.eight.class}"
+		on:click={() => setNbDays(nbDaysChoice.eight.value)}
+		>{nbDaysChoice.eight.label}</button
+	>
+	<button
+		class="btn {nbDaysChoice.nine.class}"
+		on:click={() => setNbDays(nbDaysChoice.nine.value)}
+		>{nbDaysChoice.nine.label}</button
+	>
+
 	{#if nbDays}
 		<div class="w-full flex items-center justify-center mb-8">
 			<span class="text-3xl text-secondary"

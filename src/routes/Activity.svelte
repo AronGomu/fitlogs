@@ -6,7 +6,7 @@
 
   let activities: Activity[] = null;
   type TabType = "list" | "stats";
-  let selectedTab: TabType = "list";
+  let selectedTab: TabType = "stats";
 
   const tabs = {
     list: {
