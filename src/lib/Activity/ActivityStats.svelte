@@ -136,51 +136,53 @@
 </script>
 
 <div class="h-full w-full">
-	<button
-		class="btn {nbDaysChoice.one.class}"
-		on:click={() => setNbDays(nbDaysChoice.one.value)}
-		>{nbDaysChoice.one.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.two.class}"
-		on:click={() => setNbDays(nbDaysChoice.two.value)}
-		>{nbDaysChoice.two.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.three.class}"
-		on:click={() => setNbDays(nbDaysChoice.three.value)}
-		>{nbDaysChoice.three.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.four.class}"
-		on:click={() => setNbDays(nbDaysChoice.four.value)}
-		>{nbDaysChoice.four.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.five.class}"
-		on:click={() => setNbDays(nbDaysChoice.five.value)}
-		>{nbDaysChoice.five.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.six.class}"
-		on:click={() => setNbDays(nbDaysChoice.six.value)}
-		>{nbDaysChoice.six.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.seven.class}"
-		on:click={() => setNbDays(nbDaysChoice.seven.value)}
-		>{nbDaysChoice.seven.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.eight.class}"
-		on:click={() => setNbDays(nbDaysChoice.eight.value)}
-		>{nbDaysChoice.eight.label}</button
-	>
-	<button
-		class="btn {nbDaysChoice.nine.class}"
-		on:click={() => setNbDays(nbDaysChoice.nine.value)}
-		>{nbDaysChoice.nine.label}</button
-	>
+	<div class="flex flex-row overflow-x-auto">
+		<button
+			class="btn {nbDaysChoice.one.class}"
+			on:click={() => setNbDays(nbDaysChoice.one.value)}
+			>{nbDaysChoice.one.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.two.class}"
+			on:click={() => setNbDays(nbDaysChoice.two.value)}
+			>{nbDaysChoice.two.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.three.class}"
+			on:click={() => setNbDays(nbDaysChoice.three.value)}
+			>{nbDaysChoice.three.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.four.class}"
+			on:click={() => setNbDays(nbDaysChoice.four.value)}
+			>{nbDaysChoice.four.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.five.class}"
+			on:click={() => setNbDays(nbDaysChoice.five.value)}
+			>{nbDaysChoice.five.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.six.class}"
+			on:click={() => setNbDays(nbDaysChoice.six.value)}
+			>{nbDaysChoice.six.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.seven.class}"
+			on:click={() => setNbDays(nbDaysChoice.seven.value)}
+			>{nbDaysChoice.seven.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.eight.class}"
+			on:click={() => setNbDays(nbDaysChoice.eight.value)}
+			>{nbDaysChoice.eight.label}</button
+		>
+		<button
+			class="btn {nbDaysChoice.nine.class}"
+			on:click={() => setNbDays(nbDaysChoice.nine.value)}
+			>{nbDaysChoice.nine.label}</button
+		>
+	</div>
 
 	{#if nbDays}
 		<div class="w-full flex items-center justify-center mb-8">
