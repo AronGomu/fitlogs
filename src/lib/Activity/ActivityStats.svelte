@@ -72,8 +72,6 @@
 	let totalAverageWeightLoss: number;
 	let totalAverageSteps: number;
 
-	type AverageProperty = "calories" | "weight" | "steps";
-
 	init();
 
 	function init() {
@@ -131,79 +129,6 @@
 		}
 
 		calculateValues();
-	}
-
-	function getAverage(
-		propertyName: AverageProperty,
-		nbDaysBefore: number,
-	): number {
-		if (!activities || activities.length < 1) return 0;
-
-		let total: number = 0;
-		let nbElements: number = 0;
-
-		let startingDay = 0 + nbDaysBefore;
-		let len = nbDays + nbDaysBefore;
-
-		if (startingDay > activities.length) return 0;
-		if (len > activities.length) len = activities.length;
-
-		for (let i = startingDay; i < len; i++) {
-			const a = activities[i];
-			if (!a) continue;
-			if (!a[propertyName]) continue;
-
-			total += a[propertyName];
-			nbElements += 1;
-		}
-
-		// if (propertyName === "weight") {
-		// 	console.log(`nbDaysBefore: `, nbDaysBefore);
-		// 	console.log(`startingDay: `, startingDay);
-		// 	console.log(`len: `, len);
-		// 	console.log(`total : `, total);
-		// 	console.log(`nbElements: `, nbElements);
-		// 	console.log(`total / nbElements: `, total / nbElements);
-		// }
-
-		return total / nbElements;
-	}
-
-	function setAverageActivities(nbDays: number): Activity[] {
-		let r: Activity[] = [];
-
-		if (nbDays > activities.length) {
-			nbDays = activities.length;
-		}
-
-		for (let i = 0; i < nbDays; i++) {
-			const a = activities[i];
-
-			averageCalories = truncateNumber(
-				getAverage("calories", i),
-				0,
-			);
-			averageWeight = truncateNumber(
-				getAverage("weight", i),
-				1,
-			);
-			averageSteps = truncateNumber(
-				getAverage("steps", i),
-				0,
-			);
-
-			const newA = new Activity(
-				a.year,
-				a.month,
-				a.day,
-				averageWeight,
-				averageCalories,
-				averageSteps,
-			);
-			r.push(newA);
-		}
-
-		return r;
 	}
 
 	// function getAverageWeightLoss(): number {

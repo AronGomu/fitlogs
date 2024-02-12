@@ -2,6 +2,7 @@
   import ActivityList from "../lib/Activity/ActivityList.svelte";
   import ActivityStats from "../lib/Activity/ActivityStats.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
+  import { exportActivities } from "../shared/functions/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
   let activities: Activity[] = null;
@@ -65,3 +66,5 @@
     <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
   {/if}
 </div>
+
+<div></div>

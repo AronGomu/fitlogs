@@ -1,5 +1,3 @@
-1. Add to average stats : cals burned / weight loss, total, TDEE
-2. Add to total stats section for everything except kilos : cals burned / weight loss, total, TDEE
 3. Add data export to csv
 4. Implement plan
     1. Define target average for cals eaten + steps in plan form

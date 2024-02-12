@@ -9,6 +9,7 @@
 	import { downloadAsJson } from "../shared/functions/Utilitary";
 	import { menuPath } from "../shared/store/menuPath";
 	import Workouts from "../routes/Workouts.svelte";
+	import { exportActivities } from "../shared/functions/Activity";
 
 	let showMenu: boolean = false;
 
@@ -106,6 +107,15 @@
 					downloadAsJson(wl, "data");
 				});
 			}}>Export Data</button
+		>
+	</li>
+
+	<li>
+		<button
+			class="btn btn-warning"
+			on:click={() => {
+				exportActivities();
+			}}>Export Activities Data</button
 		>
 	</li>
 	<li>
