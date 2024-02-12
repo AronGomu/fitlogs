@@ -7,6 +7,7 @@
 	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
 	import WorkoutForm from "./lib/WorkoutForm/WorkoutForm.svelte";
 	import Activity from "./routes/Activity.svelte";
+	import Admin from "./routes/Admin.svelte";
 </script>
 
 <div class="h-screen flex flex-col overflow-auto">
@@ -17,6 +18,10 @@
 	<div class="flex flex-auto justify-center h-full overflow-y-scroll">
 		<div class="page-content">
 			<Router>
+				<Route
+					path="/fitlogs/admin"
+					component={Admin}
+				/>
 				<Route
 					path="/fitlogs/activity"
 					component={Activity}
@@ -43,6 +48,10 @@
 				<Route
 					path="/fitlogs/lifts"
 					component={Lifts}
+				/>
+				<Route
+					path="/fitlogs/workouts"
+					component={Workouts}
 				/>
 				<Route
 					path="/fitlogs/workout/:id"

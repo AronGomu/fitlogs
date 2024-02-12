@@ -13,7 +13,8 @@ export enum StoreName {
 	LIFT = "lift-store",
 	PROGRAM = "program-store",
 	SETTINGS = "settings-store",
-	ACTIVITY = "activity-store"
+	ACTIVITY = "activity-store",
+	PLAN = "plan-store"
 }
 
 export type databaseObject = Workout | Lift | Program | Activity;
@@ -369,3 +370,5 @@ export async function loadActivities(activities: Activity[], resetDB: boolean): 
 		store.add(a);
 	}
 }
+
+

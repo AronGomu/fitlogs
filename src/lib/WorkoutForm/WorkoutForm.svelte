@@ -209,27 +209,3 @@
 		>
 	</div>
 {/if}
-
-<style>
-	.force-overflow-visible {
-		overflow: visible !important;
-	}
-
-	.override-input-exerciceName {
-		padding: 0.5rem 0 0 0 !important;
-		font-size: 1.125rem !important;
-	}
-
-	.override-input-advancedOptions {
-		padding: 0 0 0 0;
-		min-height: 2rem;
-	}
-
-	.override-collapse {
-		width: 90%;
-	}
-
-	.override-collapse-title {
-		padding: 1rem;
-	}
-</style>
