@@ -3,6 +3,7 @@
 	import { Activity } from "../../shared/class/Activity/Activity";
 	import type { Settings } from "../../shared/class/Settings";
 	import { truncateNumber } from "../../shared/functions/Utilitary";
+    import { setAverageActivities } from "../../shared/functions/Activity";
 
 	let si: Settings;
 	settings.subscribe((s) => (si = s));
@@ -79,7 +80,7 @@
 	}
 
 	function calculateValues() {
-		averageActivities = setAverageActivities(nbDays);
+		averageActivities = setAverageActivities(activities, nbDays);
 
 		averageCalories = averageActivities[0].calories;
 		averageWeight = averageActivities[0].weight;

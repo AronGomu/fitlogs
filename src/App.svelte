@@ -52,8 +52,8 @@
 					<WorkoutForm id={Number(params.id)} />
 				</Route>
 
-				<Route path="/fitlogs" component={Workouts} />
-				<Route path="/" component={Workouts} />
+				<Route path="/fitlogs" component={Activity} />
+				<Route path="/" component={Activity} />
 			</Router>
 		</div>
 	</div>

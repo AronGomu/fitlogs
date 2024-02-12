@@ -10,9 +10,9 @@ export function setAverageActivities(activities: Activity[], nbDays: number): Ac
 		nbDays = activities.length;
 	}
 
-	let averageCalories;
-	let averageWeight;
-	let averageSteps;
+	let averageCalories: number;
+	let averageWeight: number;
+	let averageSteps: number;
 
 	for (let i = 0; i < nbDays; i++) {
 		const a = activities[i];
@@ -44,7 +44,7 @@ export function setAverageActivities(activities: Activity[], nbDays: number): Ac
 	return r;
 }
 
-type AverageProperty = "calories" | "weight" | "steps";
+export type AverageProperty = "calories" | "weight" | "steps";
 export function getAverage(
 	activities: Activity[],
 	nbDays: number,
