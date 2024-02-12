@@ -276,3 +276,8 @@ export function compare(o1: any, o2: any): boolean {
 	if (JSON.stringify(o1) == JSON.stringify(o2)) return true;
 	return false;
 }
+
+export function truncateNumber(n: number, decimals: number): number {
+	const s = n.toFixed(decimals)
+	return Number(s);
+}

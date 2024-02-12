@@ -2,6 +2,7 @@
 	import { settings } from "../../shared/store/settingsStore";
 	import { Activity } from "../../shared/class/Activity/Activity";
 	import type { Settings } from "../../shared/class/Settings";
+	import { truncateNumber } from "../../shared/functions/Utilitary";
 
 	let si: Settings;
 	settings.subscribe((s) => (si = s));
@@ -69,6 +70,7 @@
 
 	let totalAverageCaloriesBurned: number;
 	let totalAverageWeightLoss: number;
+	let totalAverageSteps: number;
 
 	type AverageProperty = "calories" | "weight" | "steps";
 
@@ -79,10 +81,6 @@
 	}
 
 	function calculateValues() {
-		averageCalories = Math.trunc(getAverage("calories", 0));
-		averageWeight = Number(getAverage("weight", 0).toFixed(1));
-		averageSteps = Math.trunc(getAverage("steps", 0));
-
 		averageActivities = setAverageActivities(nbDays);
 
 		averageCalories = averageActivities[0].calories;
@@ -96,13 +94,31 @@
 			totalAverageWeightLoss.toFixed(1),
 		);
 
-		totalAverageCaloriesBurned = convertWeightIntoCalories(
-			totalAverageWeightLoss,
+		totalAverageCaloriesBurned = truncateNumber(
+			convertWeightIntoCalories(totalAverageWeightLoss),
+			0,
 		);
 
-		averageCaloriesBurned = totalAverageCaloriesBurned / nbDays;
+		totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0);
 
-		averageTDEE = averageCalories + averageCaloriesBurned;
+		averageCaloriesBurned = truncateNumber(
+			totalAverageCaloriesBurned / nbDays,
+			0,
+		);
+
+		averageTDEE = truncateNumber(
+			averageCalories + averageCaloriesBurned,
+			0,
+		);
+	}
+
+	function getTotalAverageSteps(): number {
+		let total = 0;
+		for (let i = 0; i < averageActivities.length; i++) {
+			const a = averageActivities[i];
+			total += a.steps;
+		}
+		return total;
 	}
 
 	function setNbDays(nb: number): void {
@@ -163,11 +179,19 @@
 		for (let i = 0; i < nbDays; i++) {
 			const a = activities[i];
 
-			averageCalories = Math.trunc(getAverage("calories", i));
-			averageWeight = Number(
-				getAverage("weight", i).toFixed(1),
+			averageCalories = truncateNumber(
+				getAverage("calories", i),
+				0,
 			);
-			averageSteps = Math.trunc(getAverage("steps", i));
+			averageWeight = truncateNumber(
+				getAverage("weight", i),
+				1,
+			);
+			averageSteps = truncateNumber(
+				getAverage("steps", i),
+				0,
+			);
+
 			const newA = new Activity(
 				a.year,
 				a.month,
@@ -251,7 +275,7 @@
 	</div>
 
 	{#if averageWeight}
-		<div class="w-full flex justify-center">
+		<div class="w-full flex justify-left">
 			<span class="text-6xl text-accent ml-4">
 				{averageWeight}</span
 			>
@@ -262,7 +286,7 @@
 	{/if}
 
 	{#if averageCalories}
-		<div class="w-full flex items-center justify-center">
+		<div class="w-full flex items-center justify-left">
 			<span class="text-6xl text-accent ml-4">
 				{averageCalories}</span
 			><span class="text-xl text-neutral-content mt-auto">
@@ -271,23 +295,36 @@
 		</div>
 	{/if}
 
-	{#if averageSteps}
-		<div class="w-full flex items-center justify-center">
+	{#if averageCaloriesBurned}
+		<div class="w-full flex items-center justify-left">
 			<span class="text-6xl text-accent ml-4">
-				{averageSteps}</span
+				{averageCaloriesBurned}</span
 			><span class="text-xl text-neutral-content mt-auto">
-				steps</span
+				cals burned</span
 			>
 		</div>
 	{/if}
 
 	{#if averageTDEE}
-		<div class="w-full flex items-center justify-center">
-			<span class="text-6xl text-neutral-content ml-4">
-				TDEE :
-			</span>
+		<div class="w-full flex items-center justify-left">
+			<!-- <span class="text-6xl text-neutral-content ml-4"> -->
+			<!-- 	TDEE : -->
+			<!-- </span> -->
 			<span class="text-6xl text-accent ml-4">
 				{averageTDEE}</span
+			>
+			<span class="text-xl text-neutral-content mt-auto">
+				cals total / TDEE</span
+			>
+		</div>
+	{/if}
+
+	{#if averageSteps}
+		<div class="w-full flex items-center justify-left">
+			<span class="text-6xl text-accent ml-4">
+				{averageSteps}</span
+			><span class="text-xl text-neutral-content mt-auto">
+				steps</span
 			>
 		</div>
 	{/if}
@@ -297,7 +334,7 @@
 	</div>
 
 	{#if totalAverageCaloriesBurned && totalAverageWeightLoss}
-		<div class="w-full flex flex-col items-center justify-left">
+		<div class="w-full flex flex-col justify-left">
 			<div>
 				<span class="text-6xl text-accent ml-4">
 					{totalAverageCaloriesBurned}
@@ -324,7 +361,79 @@
 					{/if}
 				</span>
 			</div>
+
+			<div>
+				<span class="text-6xl text-accent ml-4">
+					{totalAverageSteps}
+				</span>
+				<span
+					class="text-xl text-neutral-content mt-auto"
+				>
+					steps
+				</span>
+			</div>
 		</div>
+	{/if}
+
+	<div class="w-full flex items-center justify-center mt-12 mb-4">
+		<span class="text-3xl text-secondary">All the Averages</span>
+	</div>
+
+	{#if averageActivities}
+		<div class="h-full flex flex-col overflow-hidden">
+			<div class="flex-1">
+				<table class="table">
+					<!-- head -->
+					<thead>
+						<tr>
+							<th>
+								<span
+									class="font-bold"
+									>Date</span
+								>
+							</th>
+							<th>
+								<span
+									class="font-bold"
+									>Weight</span
+								>
+							</th>
+							<th>
+								<span
+									class="font-bold"
+									>Calories</span
+								>
+							</th>
+							<th>
+								<span
+									class="font-bold"
+									>Steps</span
+								>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each averageActivities as a}
+							<tr>
+								<td
+									>{a.year}-{a.month}-{a.day}</td
+								>
+								<td
+									>{a.weight}</td
+								>
+								<td
+									>{a.calories}</td
+								>
+								<td
+									>{a.steps}</td
+								>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- content here -->
 	{/if}
 
 	{#if !activities}
