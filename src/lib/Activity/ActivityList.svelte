@@ -7,10 +7,11 @@
 	const dispatch = createEventDispatcher();
 
 	export let activities: Activity[] = null;
-	export const today = new Date();
-	export const todayYear = today.getFullYear();
-	export const todayMonth = today.getMonth() + 1;
-	export const todayDay = today.getDate();
+	export const yesterday = new Date();
+	yesterday.setDate(yesterday.getDate() - 1);
+	export const yesterdayYear = yesterday.getFullYear();
+	export const yesterdayMonth = yesterday.getMonth() + 1;
+	export const yesterdayDay = yesterday.getDate();
 
 	let activityFormFunctions: {
 		refresh(updatedActivityDate: ActivityDate): void;
@@ -43,8 +44,11 @@
 	<button
 		class="btn btn-primary"
 		on:click={() =>
-			showActivityFormDialog(todayYear, todayMonth, todayDay)}
-		>Log Today's Activity</button
+			showActivityFormDialog(
+				yesterdayYear,
+				yesterdayMonth,
+				yesterdayDay,
+			)}>Log Yesterday's Activity</button
 	>
 </div>
 

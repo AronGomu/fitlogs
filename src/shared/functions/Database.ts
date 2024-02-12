@@ -272,7 +272,6 @@ export async function saveSettings(s: Settings): Promise<Settings> {
 
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY 
 export async function getActivitiesFromDatabase(): Promise<Activity[]> {
-	console.log(`fetch Activities`);
 	const db = await openDatabase();
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);
@@ -284,7 +283,6 @@ export async function getActivitiesFromDatabase(): Promise<Activity[]> {
 }
 
 export async function getActivityFromDatabase(year: number, month: number, day: number): Promise<Activity> {
-	console.log(`fetch Activity ${year}-${month}-${day}`);
 	const db = await openDatabase();
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);

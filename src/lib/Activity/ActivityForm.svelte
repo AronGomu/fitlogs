@@ -39,32 +39,33 @@
 	let isOverridingData: boolean = false;
 
 	// UI Stuff
-	const today = new Date();
+	const yesterday = new Date();
+	yesterday.setDate(yesterday.getDate() - 1);
+
 	let doesActivityAlreadyExist: boolean = false;
-	let isItToday = false;
+	let isItYesterday = false;
 	let isActivityValid: boolean = false;
 
 	init();
 
 	function init() {
 		checkActivityExistence();
-		checkIfIsItToday();
 	}
 
-	function checkIfIsItToday(): void {
-		if (date.getFullYear() !== today.getFullYear()) {
-			isItToday = false;
+	function checkIfIsItYesterday(): void {
+		if (date.getFullYear() !== yesterday.getFullYear()) {
+			isItYesterday = false;
 			return;
 		}
-		if (date.getMonth() !== today.getMonth()) {
-			isItToday = false;
+		if (date.getMonth() !== yesterday.getMonth()) {
+			isItYesterday = false;
 			return;
 		}
-		if (date.getDay() !== today.getDay()) {
-			isItToday = false;
+		if (date.getDay() !== yesterday.getDay()) {
+			isItYesterday = false;
 			return;
 		}
-		isItToday = true;
+		isItYesterday = true;
 	}
 
 	async function checkActivityExistence() {
@@ -72,8 +73,6 @@
 			date = activityDate.toDate();
 			activityDate = null;
 		}
-
-		console.log(initialLoad);
 
 		const activity = await getActivityFromDatabase(
 			date.getFullYear(),
@@ -91,6 +90,7 @@
 
 		initialLoad = false;
 		assignFetchedData(activity);
+		checkIfIsItYesterday();
 	}
 
 	function assignFetchedData(activity: Activity) {
@@ -128,7 +128,6 @@
 	}
 
 	async function deleteActivity(): Promise<void> {
-		console.log(activityDate);
 		const activity = await deleteActivityFromDatabase(
 			date.getFullYear(),
 			date.getMonth() + 1,
@@ -151,7 +150,7 @@
 		bind:date
 		on:input={() => {
 			checkActivityExistence();
-			checkIfIsItToday();
+			checkIfIsItYesterday();
 		}}
 	/>
 
@@ -196,11 +195,11 @@
 	<button class="btn btn-error" on:click={() => deleteActivity()}
 		>Delete Activity</button
 	>
-{:else if isItToday}
+{:else if isItYesterday}
 	<button
 		class="btn btn-success"
 		disabled={isActivityValid}
-		on:click={() => saveActivity()}>Log Today's Activity</button
+		on:click={() => saveActivity()}>Log Yesterday's Activity</button
 	>
 {:else}
 	<button
