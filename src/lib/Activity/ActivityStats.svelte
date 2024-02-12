@@ -85,8 +85,12 @@
 
 		averageActivities = setAverageActivities(nbDays);
 
+		averageCalories = averageActivities[0].calories;
+		averageWeight = averageActivities[0].weight;
+		averageSteps = averageActivities[0].steps;
+
 		totalAverageWeightLoss =
-			averageActivities[nbDays].weight -
+			averageActivities[nbDays - 1].weight -
 			averageActivities[0].weight;
 		totalAverageWeightLoss = Number(
 			totalAverageWeightLoss.toFixed(1),
@@ -152,7 +156,11 @@
 	function setAverageActivities(nbDays: number): Activity[] {
 		let r: Activity[] = [];
 
-		for (let i = 0; i < activities.length; i++) {
+		if (nbDays > activities.length) {
+			nbDays = activities.length;
+		}
+
+		for (let i = 0; i < nbDays; i++) {
 			const a = activities[i];
 
 			averageCalories = Math.trunc(getAverage("calories", i));
@@ -170,8 +178,6 @@
 			);
 			r.push(newA);
 		}
-
-		console.log(r);
 
 		return r;
 	}
@@ -311,9 +317,9 @@
 					class="text-xl text-neutral-content mt-auto"
 				>
 					kilo
-					{#if totalAverageWeightLoss > 0}
+					{#if totalAverageWeightLoss < 0}
 						gained
-					{:else if totalAverageWeightLoss < 0}
+					{:else if totalAverageWeightLoss > 0}
 						losed
 					{/if}
 				</span>
