@@ -1,7 +1,7 @@
 export class Plan {
-    constructor(public id: number, public name: string, public targetWeeklyAverageCalories: number, public targetWeeklyAverageSteps: number, public isCurrent: boolean) { }
+    constructor(public targetWeeklyAverageCalories: number, public targetWeeklyAverageSteps: number) { }
 }
 
 export function getRealPlan(plan: Plan): Plan {
-    return new Plan(plan.id, plan.name, plan.targetWeeklyAverageCalories, plan.targetWeeklyAverageSteps, plan.isCurrent);
+    return new Plan(plan.targetWeeklyAverageCalories, plan.targetWeeklyAverageSteps);
 }

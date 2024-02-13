@@ -281,3 +281,9 @@ export function truncateNumber(n: number, decimals: number): number {
 	const s = n.toFixed(decimals)
 	return Number(s);
 }
+
+export function getNbDaysLeftInWeek(d: Date) {
+	const dayOfWeek = d.getDay();
+	const daysInWeek = 7;
+	return daysInWeek - dayOfWeek;
+}

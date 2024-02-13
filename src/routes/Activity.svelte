@@ -2,8 +2,7 @@
   import ActivityList from "../lib/Activity/ActivityList.svelte";
   import ActivityPlan from "../lib/Activity/ActivityPlan.svelte";
   import ActivityStats from "../lib/Activity/ActivityStats.svelte";
-  import type { Activity, Activity } from "../shared/class/Activity/Activity";
-  import { exportActivities } from "../shared/functions/Activity";
+  import type { Activity } from "../shared/class/Activity/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
   let activities: Activity[] = null;
@@ -69,17 +68,16 @@
     on:click={() => setTabs("stats")}>Stats</button
   >
 </div>
-
-<div class="w-full h-full mt-4">
-  {#if tabs.plan.class == "tab-active"}
-    <ActivityPlan />
-  {:else if tabs.list.class == "tab-active"}
-    <ActivityList {activities} on:refreshActivities={() => setActivities()} />
-  {:else if tabs.stats.class == "tab-active"}
-    <ActivityStats {activities} />
-  {:else}
-    <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
-  {/if}
-</div>
-
-<div></div>
+{#if activities}
+  <div class="w-full h-full mt-4">
+    {#if tabs.plan.class == "tab-active"}
+      <ActivityPlan {activities} />
+    {:else if tabs.list.class == "tab-active"}
+      <ActivityList {activities} on:refreshActivities={() => setActivities()} />
+    {:else if tabs.stats.class == "tab-active"}
+      <ActivityStats {activities} />
+    {:else}
+      <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
+    {/if}
+  </div>
+{/if}
