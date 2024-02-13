@@ -145,7 +145,7 @@
 	}
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col items-center">
 	<DateInput
 		bind:date
 		on:input={() => {
@@ -154,63 +154,72 @@
 		}}
 	/>
 
-	<InputNumber
-		label="Weight"
-		placeholder="Weight"
-		className="input w-24 mr-0 text-left"
-		value={weight}
-		metric={si.wm}
-		on:input={(event) => {
-			weight = event.detail.value;
-		}}
-	/>
-
-	<InputNumber
-		label="Calories"
-		placeholder="Calories"
-		className="input w-24 mr-0 text-left"
-		value={calories}
-		on:input={(event) => {
-			calories = event.detail.value;
-		}}
-	/>
-
-	<InputNumber
-		label="Steps"
-		placeholder="Steps"
-		className="input w-24 mr-0 text-left"
-		value={steps}
-		on:input={(event) => {
-			steps = event.detail.value;
-		}}
-	/>
-</div>
-
-{#if doesActivityAlreadyExist}
-	<button
-		class="btn btn-warning"
-		disabled={isActivityValid}
-		on:click={() => saveActivity()}>Update Activity</button
-	>
-	<button class="btn btn-error" on:click={() => deleteActivity()}
-		>Delete Activity</button
-	>
-{:else if isItYesterday}
-	<button
-		class="btn btn-success"
-		disabled={isActivityValid}
-		on:click={() => saveActivity()}>Log Yesterday's Activity</button
-	>
-{:else}
-	<button
-		class="btn btn-warning"
-		disabled={isActivityValid}
-		on:click={() => saveActivity()}>Log Activity</button
-	>
-{/if}
-
-{#if isOverridingData}
-	<div class="text-warning">
-		<span>You are overriding existing data.</span>
+	<div class="mt-2">
+		<InputNumber
+			label="Weight"
+			placeholder="Weight"
+			className="input w-24  text-left"
+			value={weight}
+			metric={si.wm}
+			on:input={(event) => {
+				weight = event.detail.value;
+			}}
+		/>
 	</div>
-{/if}
+
+	<div class="mt-2">
+		<InputNumber
+			label="Calories"
+			placeholder="Calories"
+			className="input w-24 mt-2 text-left"
+			value={calories}
+			on:input={(event) => {
+				calories = event.detail.value;
+			}}
+		/>
+	</div>
+
+	<div class="mt-2">
+		<InputNumber
+			label="Steps"
+			placeholder="Steps"
+			className="input w-24 mt-2 text-left"
+			value={steps}
+			on:input={(event) => {
+				steps = event.detail.value;
+			}}
+		/>
+	</div>
+
+	{#if doesActivityAlreadyExist}
+		<button
+			class="btn btn-warning mt-2"
+			disabled={isActivityValid}
+			on:click={() => saveActivity()}>Update Activity</button
+		>
+		<button
+			class="btn btn-error mt-2"
+			on:click={() => deleteActivity()}
+			>Delete Activity</button
+		>
+	{:else if isItYesterday}
+		<button
+			class="btn btn-success mt-2"
+			disabled={isActivityValid}
+			on:click={() => saveActivity()}
+			>Log Yesterday's Activity</button
+		>
+	{:else}
+		<button
+			class="btn btn-warning mt-2"
+			disabled={isActivityValid}
+			on:click={() => saveActivity()}>Log Activity</button
+		>
+	{/if}
+
+	{#if isOverridingData}
+		<div class="text-warning">
+			<span>You are overriding existing data.</span>
+		</div>
+	{/if}
+</div>
