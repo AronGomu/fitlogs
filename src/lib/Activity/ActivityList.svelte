@@ -7,11 +7,16 @@
 	const dispatch = createEventDispatcher();
 
 	export let activities: Activity[] = null;
-	export const yesterday = new Date();
+	const today = new Date();
+	const todayYear = today.getFullYear();
+	const todayMonth = today.getMonth() + 1;
+	const todayDay = today.getDate();
+
+	const yesterday = new Date();
 	yesterday.setDate(yesterday.getDate() - 1);
-	export const yesterdayYear = yesterday.getFullYear();
-	export const yesterdayMonth = yesterday.getMonth() + 1;
-	export const yesterdayDay = yesterday.getDate();
+	const yesterdayYear = yesterday.getFullYear();
+	const yesterdayMonth = yesterday.getMonth() + 1;
+	const yesterdayDay = yesterday.getDate();
 
 	let activityFormFunctions: {
 		refresh(updatedActivityDate: ActivityDate): void;
@@ -43,6 +48,12 @@
 <div class="flex items-center justify-center w-full">
 	<button
 		class="btn btn-primary"
+		on:click={() =>
+			showActivityFormDialog(todayYear, todayMonth, todayDay)}
+		>Log Today's weigth</button
+	>
+	<button
+		class="btn btn-secondary"
 		on:click={() =>
 			showActivityFormDialog(
 				yesterdayYear,
