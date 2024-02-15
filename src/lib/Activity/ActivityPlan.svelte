@@ -48,8 +48,12 @@
 		for (let i = 0; i < todayDay + 1; i++) {
 			const a = activities[i];
 			console.log(a);
+
+			// skip today
+			console.log(a.day, today.getDate());
 			if (a && a.day === today.getDate()) continue;
-			if (!isactivityValid(a)) {
+
+			if (!isactivityValid(a, i)) {
 				isMissingDays = true;
 				return;
 			}
@@ -75,18 +79,14 @@
 		activity: Activity,
 		nbDaysBefore: number,
 	): boolean {
-		const day = new Date(today.getDate() - nbDaysBefore);
-		console.log(day);
-		console.log(activity);
-		console.log(activity.day, today.getDate());
-		console.log(activity.month, today.getMonth() + 1);
-		console.log(activity.year, today.getFullYear());
+		let day = new Date();
+		day = new Date(day.setDate(day.getDate() - nbDaysBefore));
 		if (!activity) return false;
 		if (!activity.calories) return false;
 		if (!activity.steps) return false;
-		if (activity.day !== today.getDate() + 1) return false;
-		if (activity.month !== today.getMonth()) return false;
-		if (activity.year !== today.getFullYear()) return false;
+		if (activity.day !== day.getDate()) return false;
+		if (activity.month !== day.getMonth() + 1) return false;
+		if (activity.year !== day.getFullYear()) return false;
 		return true;
 	}
 
@@ -97,11 +97,14 @@
 </script>
 
 <div class="flex flex-col items-center">
+	<div class="w-full flex items-center justify-center mt-2 mb-6">
+		<span class="text-5xl text-primary">Weekly Plan</span>
+	</div>
 	{#if plan}
 		<InputNumber
 			label="Average Calories Target"
 			placeholder="How many calories per day on average ?"
-			className="input w-full mr-0 text-left"
+			className="input input-bordered w-full mr-0 text-left"
 			value={plan.targetWeeklyAverageCalories}
 			on:input={(event) => {
 				plan.targetWeeklyAverageCalories = Number(
@@ -114,7 +117,7 @@
 		<InputNumber
 			label="Average Steps Target"
 			placeholder="How many steps per day on average ?"
-			className="input w-full mr-0 text-left"
+			className="input input-bordered w-full mr-0 text-left"
 			value={plan.targetWeeklyAverageSteps}
 			on:input={(event) => {
 				plan.targetWeeklyAverageSteps = Number(
@@ -136,7 +139,19 @@
 			</div>
 		</div>
 	{:else if averageCaloriesTodo && averageStepsTodo}
-		{averageCaloriesTodo}
-		{averageStepsTodo}
+		<div class="w-full flex items-center justify-center mt-12 mb-4">
+			<span class="text-3xl text-secondary"
+				>Daily objectives :</span
+			>
+		</div>
+		<div></div>
+		<span class="text-6xl text-accent ml-4">
+			{averageCaloriesTodo}
+		</span>
+		<span class="text-xl text-neutral-content mt-auto"> cals</span>
+		<span class="text-6xl text-accent ml-4">
+			{averageStepsTodo}
+		</span>
+		<span class="text-xl text-neutral-content mt-auto"> steps</span>
 	{/if}
 </div>
