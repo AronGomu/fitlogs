@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Activity } from "../../shared/class/Activity/Activity";
 	import { Plan } from "../../shared/class/Plan/Plan";
+	import { truncateNumber } from "../../shared/functions/Utilitary";
 	import {
 		getPlanFromDatabase,
 		updatePlanInDatabase,
@@ -70,7 +71,10 @@
 			totalCaloriesWeek - totalCaloriesEaten;
 		const totalStepsLeft = totalStepsWeek - totalStepsWalked;
 
-		averageCaloriesTodo = totalCaloriesLeft / nbDaysLeftInWeek;
+		averageCaloriesTodo = truncateNumber(
+			totalCaloriesLeft / nbDaysLeftInWeek,
+			0,
+		);
 		averageStepsTodo = totalStepsLeft / nbDaysLeftInWeek;
 		isMissingDays = false;
 	}

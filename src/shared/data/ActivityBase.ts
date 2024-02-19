@@ -36,7 +36,11 @@ export const baseActivities: Activity[] = [
 	new Activity(2024, 2, 12, 82.1, 2850, 21869),
 	new Activity(2024, 2, 13, 81.7, 3680, 20008),
 	new Activity(2024, 2, 14, 82, 2665, 20368),
-	new Activity(2024, 2, 15, 82, null, null),
+	new Activity(2024, 2, 15, 82, 2550, 23490),
+	new Activity(2024, 2, 16, 82, 4412, 24100),
+	new Activity(2024, 2, 17, 82, 2500, 23744),
+	new Activity(2024, 2, 18, 82, 3200, 18773),
+	new Activity(2024, 2, 19, 82, null, null),
 ]
 
 
