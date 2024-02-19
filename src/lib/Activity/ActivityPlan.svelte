@@ -108,8 +108,9 @@
 </script>
 
 <div class="flex flex-col items-center">
-	<div class="w-full flex items-center justify-center mt-2 mb-6">
+	<div class="w-full flex flex-col items-center justify-center mt-2 mb-6">
 		<span class="text-5xl text-primary">Weekly Plan</span>
+		<span class="text-xl text-secondary">Sunday to Saturday</span>
 	</div>
 	{#if plan}
 		<InputNumber
