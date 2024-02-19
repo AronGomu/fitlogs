@@ -26,15 +26,17 @@
 	init();
 
 	async function init() {
-		await fetchPlan();
-		calculateGoals();
+		fetchPlan();
 	}
 
 	async function fetchPlan() {
+		console.log(`fetchPlan`);
 		plan = await getPlanFromDatabase();
+		console.log(plan);
 		if (!plan) {
 			plan = new Plan(null, null);
 		}
+		calculateGoals();
 	}
 
 	function calculateGoals() {
@@ -75,7 +77,10 @@
 			totalCaloriesLeft / nbDaysLeftInWeek,
 			0,
 		);
-		averageStepsTodo = totalStepsLeft / nbDaysLeftInWeek;
+		averageStepsTodo = truncateNumber(
+			totalStepsLeft / nbDaysLeftInWeek,
+			0,
+		);
 		isMissingDays = false;
 	}
 
@@ -95,8 +100,10 @@
 	}
 
 	async function savePlan(): Promise<void> {
-		await updatePlanInDatabase(plan);
-		fetchPlan;
+		console.log(`savePlan`);
+		const updatedPlan = await updatePlanInDatabase(plan);
+		console.log(updatedPlan);
+		fetchPlan();
 	}
 </script>
 
