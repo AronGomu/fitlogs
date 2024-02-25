@@ -9,3 +9,5 @@
 * Implement graph section for checking stats trends
     * for brut data
     * for average data
+* Exports for all and each data
+* Import for all and each data

@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { Route, Router } from "svelte-routing";
 	import HamburgerMenu from "./lib/HamburgerMenu.svelte";
-	import Workouts from "./routes/Workouts.svelte";
-	import Lifts from "./routes/Lifts.svelte";
-	import Programs from "./routes/Programs.svelte";
 	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
-	import WorkoutForm from "./lib/WorkoutForm/WorkoutForm.svelte";
-	import Activity from "./routes/Activity.svelte";
-	import Admin from "./routes/Admin.svelte";
+	import Workout from "./routes/Workout.svelte";
+	import SettingsPage from "./routes/SettingsPage.svelte";
+	import ExportsPage from "./routes/ExportsPage.svelte";
+	import ImportsPage from "./routes/ImportsPage.svelte";
+	import AdminPage from "./routes/AdminPage.svelte";
+	import ActivityPage from "./routes/ActivityPage.svelte";
+	import ProgramsPage from "./routes/ProgramsPage.svelte";
+	import LiftsPage from "./routes/LiftsPage.svelte";
+	import WorkoutsPage from "./routes/WorkoutsPage.svelte";
+	import WorkoutPage from "./routes/WorkoutPage.svelte";
+	import HomePage from "./routes/HomePage.svelte";
 </script>
 
 <div class="h-screen flex flex-col overflow-auto">
@@ -19,20 +24,32 @@
 		<div class="page-content">
 			<Router>
 				<Route
+					path="/fitlogs/settings"
+					component={SettingsPage}
+				/>
+				<Route
+					path="/fitlogs/exports"
+					component={ExportsPage}
+				/>
+				<Route
+					path="/fitlogs/imports"
+					component={ImportsPage}
+				/>
+				<Route
 					path="/fitlogs/admin"
-					component={Admin}
+					component={AdminPage}
 				/>
 				<Route
 					path="/fitlogs/activity"
-					component={Activity}
+					component={ActivityPage}
 				/>
 				<Route
 					path="/fitlogs/globalPrograms"
-					component={Programs}
+					component={ProgramsPage}
 				/>
 				<Route
 					path="/fitlogs/globalLifts"
-					component={Lifts}
+					component={LiftsPage}
 				/>
 				<Route
 					path="/fitlogs/program/:id"
@@ -43,26 +60,26 @@
 				</Route>
 				<Route
 					path="/fitlogs/programs"
-					component={Programs}
+					component={ProgramsPage}
 				/>
 				<Route
 					path="/fitlogs/lifts"
-					component={Lifts}
+					component={LiftsPage}
 				/>
 				<Route
 					path="/fitlogs/workouts"
-					component={Workouts}
+					component={WorkoutsPage}
 				/>
 				<Route
 					path="/fitlogs/workout/:id"
-					component={WorkoutForm}
+					component={WorkoutPage}
 					let:params
 				>
-					<WorkoutForm id={Number(params.id)} />
+					<WorkoutPage date={new Date()} />
 				</Route>
 
-				<Route path="/fitlogs" component={Activity} />
-				<Route path="/" component={Activity} />
+				<Route path="/fitlogs" component={HomePage} />
+				<Route path="/" component={HomePage} />
 			</Router>
 		</div>
 	</div>

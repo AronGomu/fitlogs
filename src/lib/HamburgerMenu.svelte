@@ -1,15 +1,6 @@
 <script lang="ts">
 	import { navigate } from "svelte-routing";
-	import { baseActivities } from "../shared/data/ActivityBase";
-	import {
-		deleteDatabase,
-		fetchWorkoutList,
-		loadActivities,
-	} from "../shared/functions/Database";
-	import { downloadAsJson } from "../shared/functions/Utilitary";
 	import { menuPath } from "../shared/store/menuPath";
-	import Workouts from "../routes/Workouts.svelte";
-	import { exportActivities } from "../shared/functions/Activity";
 
 	let showMenu: boolean = false;
 
@@ -20,21 +11,21 @@
 		showMenu = !showMenu;
 	}
 
-	function setMenuPath(menus: string[]) {
-		mp = "";
-		for (let i = 0; i < menus.length; i++) {
-			if (i != 0) {
-				mp += " > ";
-			}
-			mp += menus[i];
-		}
-	}
-
-	function handleOnclickExportData(event) {
-		fetchWorkoutList().then((wl) => {
-			downloadAsJson(wl, "data");
-		});
-	}
+	// function setMenuPath(menus: string[]) {
+	// 	mp = "";
+	// 	for (let i = 0; i < menus.length; i++) {
+	// 		if (i != 0) {
+	// 			mp += " > ";
+	// 		}
+	// 		mp += menus[i];
+	// 	}
+	// }
+	//
+	// function handleOnclickExportData() {
+	// 	fetchWorkoutList().then((wl) => {
+	// 		downloadAsJson(wl, "data");
+	// 	});
+	// }
 </script>
 
 <div class="z-20 navbar bg-base-100 override-nav p-0 m-0">
@@ -69,6 +60,28 @@
 		<button
 			class="btn"
 			on:click={() => {
+				navigate("/fitlogs");
+				toggleMenu();
+			}}
+		>
+			<span>Home</span>
+		</button>
+	</li>
+	<li>
+		<button
+			class="btn"
+			on:click={() => {
+				navigate("/fitlogs/workouts");
+				toggleMenu();
+			}}
+		>
+			<span>Workouts</span>
+		</button>
+	</li>
+	<li>
+		<button
+			class="btn"
+			on:click={() => {
 				navigate("/fitlogs/activity");
 				toggleMenu();
 			}}
@@ -98,43 +111,16 @@
 			<span>Programs</span>
 		</button>
 	</li>
-
 	<li>
 		<button
-			class="btn btn-primary btn-sm"
+			class="btn"
 			on:click={() => {
-				fetchWorkoutList().then((wl) => {
-					downloadAsJson(wl, "data");
-				});
-			}}>Export Data</button
+				navigate("/fitlogs/settings");
+				toggleMenu();
+			}}
 		>
-	</li>
-
-	<li>
-		<button
-			class="btn btn-warning"
-			on:click={() => {
-				exportActivities();
-			}}>Export Activities Data</button
-		>
-	</li>
-	<li>
-		<button
-			class="btn btn-warning"
-			on:click={() => {
-				loadActivities(baseActivities, true);
-				location.reload();
-			}}>Set Default Activity</button
-		>
-	</li>
-	<li>
-		<button
-			class="btn btn-warning"
-			on:click={() => {
-				deleteDatabase();
-				location.reload();
-			}}>RESET</button
-		>
+			<span>Settings</span>
+		</button>
 	</li>
 </ul>
 
