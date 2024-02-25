@@ -92,34 +92,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each plFiltered as p, i}
+				{#each plFiltered as p}
 					<tr>
-						<td
-							class="font-bold"
-							on:click={() => {
-								nl = l;
-							}}>{l.name}</td
-						>
+						<td class="font-bold"> </td>
 						<td>{p.type}</td>
 						<td>{p.description}</td>
 						<td>
-							<button
-								on:click={() => {
-									deleteFromDatabase(
-										StoreName.LIFT,
-										l.id,
-									).then(
-										() => {
-											ll.splice(
-												i,
-												1,
-											);
-											pl =
-												pl;
-										},
-									);
-								}}
-							>
+							<button>
 								<Icon
 									icon={trashCanOutline}
 									color="red"
@@ -140,9 +119,9 @@
 	<form method="dialog" class="modal-box">
 		<div class="flex flex-col justify-center items-center">
 			<div class="form-control w-full max-w-xs">
-				<label class="label">
+				<div class="label">
 					<span class="label-text-alt">Name</span>
-				</label>
+				</div>
 				<input
 					type="text"
 					placeholder="Filter by name"
@@ -152,16 +131,15 @@
 						selectWholeTextOnFocus(e)}
 				/>
 
-				<label class="label">
+				<div class="label">
 					<span class="label-text-alt"
 						>Description</span
 					>
-				</label>
+				</div>
 				<input
 					type="text"
 					placeholder="Filter by description"
 					class="input input-bordered"
-					bind:value={filters.description}
 					on:focus={(e) =>
 						selectWholeTextOnFocus(e)}
 				/>

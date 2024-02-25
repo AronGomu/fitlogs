@@ -142,9 +142,3 @@
 		<button>close</button>
 	</form>
 </dialog>
-
-<style>
-	.override-collapse {
-		overflow: initial;
-	}
-</style>
