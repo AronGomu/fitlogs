@@ -211,35 +211,7 @@ export async function deleteDatabase(): Promise<void> {
 	console.log(`Database '${DB_NAME}' deleted successfully.`);
 }
 
-// SPECIFIC DATABASE FUNCTIONS - WORKOUT
-/** Fetch the data of all the workouts in the storage
- * then convert the stringify data into real objects. */
-export async function fetchWorkoutList(): Promise<Workout[]> {
-	const workouts: Workout[] = await getAllFromDatabase<Workout>(
-		StoreName.WORKOUT
-	);
 
-	for (let i = 0; i < workouts.length; i++) {
-		// workouts[i] = getRealWorkout(workouts[i]);
-		const createdAt: WorkoutDate = getRealWorkoutDate(workouts[i].createdAt);
-		workouts[i] = new Workout(workouts[i].id, createdAt, null, null)
-	}
-
-	return workouts;
-}
-
-export async function addNewWorkout() {
-	console.log(`addNewWorkout`);
-	const db = await openDatabase();
-	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
-	const store = tx.objectStore(StoreName.WORKOUT);
-	const newWorkout = { createdAt: new WorkoutDate() } as Workout;
-	const id = await store.add(newWorkout);
-	const newWorkoutWithId = new Workout(id, newWorkout.createdAt, [], false);
-	await store.put(newWorkoutWithId, id);
-	console.log(await store.get(id));
-
-}
 
 // SPECIFIC DATABASE FUNCTIONS - Settings 
 // (Use only those to avoid errors with the settings database errors)

@@ -287,3 +287,10 @@ export function getNbDaysLeftInWeek(d: Date) {
 	const daysInWeek = 7;
 	return daysInWeek - dayOfWeek;
 }
+
+export function formatDateToYYYYMMDD(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Adding 1 because January is 0
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+}

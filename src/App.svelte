@@ -2,7 +2,6 @@
 	import { Route, Router } from "svelte-routing";
 	import HamburgerMenu from "./lib/HamburgerMenu.svelte";
 	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
-	import Workout from "./routes/Workout.svelte";
 	import SettingsPage from "./routes/SettingsPage.svelte";
 	import ExportsPage from "./routes/ExportsPage.svelte";
 	import ImportsPage from "./routes/ImportsPage.svelte";
