@@ -30,9 +30,7 @@
 	}
 
 	async function fetchPlan() {
-		console.log(`fetchPlan`);
 		plan = await getPlanFromDatabase();
-		console.log(plan);
 		if (!plan) {
 			plan = new Plan(null, null);
 		}
@@ -50,10 +48,8 @@
 
 		for (let i = 0; i < todayDay + 1; i++) {
 			const a = activities[i];
-			console.log(a);
 
 			// skip today
-			console.log(a.day, today.getDate());
 			if (a && a.day === today.getDate()) continue;
 
 			if (!isactivityValid(a, i)) {
@@ -100,9 +96,7 @@
 	}
 
 	async function savePlan(): Promise<void> {
-		console.log(`savePlan`);
 		const updatedPlan = await updatePlanInDatabase(plan);
-		console.log(updatedPlan);
 		fetchPlan();
 	}
 </script>
@@ -147,7 +141,7 @@
 			</div>
 			<div class="text-sm text-warning">
 				Even if you don't have the exact data, it's
-				better to estime it yourself than have nothing
+				better to estimate it yourself than have nothing
 			</div>
 		</div>
 	{:else if averageCaloriesTodo && averageStepsTodo}
