@@ -3,18 +3,13 @@ import { StoreName } from "../Database";
 import { getRealWorkout, type Workout } from "../../class/Workout/Workout";
 import { formatDateToYYYYMMDD } from "../Utilitary";
 
-const DB_NAME = "db_plan";
-const KEY = 0;
+const DB_NAME = "db_workout";
 
 interface Database extends DBSchema {
 	"workout-store": {
 		key: number;
 		value: any;
 	};
-}
-
-function getKey(d: Date): string {
-	return formatDateToYYYYMMDD(d);
 }
 
 async function openDatabaseWorkout(): Promise<IDBPDatabase<Database>> {
@@ -35,33 +30,50 @@ export async function getWorkoutsFromDatabase(): Promise<Workout[]> {
 	const realWorkouts: Workout[] = [];
 	for (let i = 0; i < fakeWorkouts.length; i++) {
 		const fakeWorkout = fakeWorkouts[i];
-realWorkouts.push(await getRealWorkout(fakeWorkout));
+		realWorkouts.push(getRealWorkout(fakeWorkout));
 	}
 	return realWorkouts;
 }
 
+export async function getWorkoutFromDatabase(workout: Workout): Promise<Workout> {
+	const db = await openDatabaseWorkout();
+
+	const tx = db.transaction(StoreName.WORKOUT, "readonly");
+	const store = tx.objectStore(StoreName.WORKOUT);
+
+	let cursor = await store.openCursor();
+	while (cursor) {
+		let wc: Workout = cursor.value;
+		if (wc.compareWorkout(workout)) {
+			return cursor.value;
+		}
+		cursor = await cursor.continue();
+	}
+
+	return null;
+}
+
 export async function updateWorkoutInDatabase(workout: Workout): Promise<Workout> {
-	const key =  getKey(workout.createdAt.)
 	const db = await openDatabaseWorkout();
 
 	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
 	const store = tx.objectStore(StoreName.WORKOUT);
 
-
-	const storedWorkout= await store.get(KEY);
-	if (!storedWorkout) {
-		await store.add(workout, KEY);
-		const createdPlan = await store.get(KEY);
-		return getRealPlan(createdPlan);
+	let cursor = await store.openCursor();
+	while (cursor) {
+		let wc: Workout = cursor.value;
+		if (wc.compareWorkout(workout)) {
+			cursor.update(workout);
+			return cursor.value;
+		}
+		cursor = await cursor.continue();
 	}
 
-	await store.put(workout, KEY);
-	return await store.get(KEY);
-
-
+	const id = await store.add(workout);
+	return await store.get(id);
 }
 
-export async function deleteDatabasePlan(): Promise<void> {
+export async function deleteDatabaseWorkout(): Promise<void> {
 	await deleteDB(DB_NAME);
 	console.log(`Database '${DB_NAME}' deleted successfully.`);
 }

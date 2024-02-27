@@ -1,23 +1,15 @@
-/** Represents the date of a workout. */
 export class WorkoutDate {
 
-    /** Creates a new instance of WorkoutDate.
-     * @param {number} year - The year of the workout date.
-     * @param {number} month - The month of the workout date.
-     * @param {number} day - The day of the workout date.*/
     constructor(
-        /** The day of the workout date.*/
-        public day: number,
-        /** The month of the workout date.*/
-        public month: number,
-        /** The year of the workout date. */
         public year: number,
+        public month: number,
+        public day: number,
     ) {
         const currentDate = new Date();
         if (!year && !month && !day) {
-this.year = currentDate.getFullYear();
-this.month = currentDate.getMonth();
-this.day = currentDate.getDate();
+            this.year = currentDate.getFullYear();
+            this.month = currentDate.getMonth();
+            this.day = currentDate.getDate();
         }
 
         if (!year) {
@@ -31,7 +23,7 @@ this.day = currentDate.getDate();
         if (!day) {
             throw new Error("Day is missing !")
         }
-           }
+    }
 
     public compare(wd: WorkoutDate): boolean {
         if (this.day != wd.day) return false;

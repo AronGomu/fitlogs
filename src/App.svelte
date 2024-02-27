@@ -70,11 +70,11 @@
 					component={WorkoutsPage}
 				/>
 				<Route
-					path="/fitlogs/workout/:id"
+					path="/fitlogs/workout/:urlWorkoutDate"
 					component={WorkoutPage}
 					let:params
 				>
-					<WorkoutPage date={new Date()} />
+					<WorkoutPage urlWorkoutDate={params.urlWorkoutDate} />
 				</Route>
 
 				<Route path="/fitlogs" component={HomePage} />

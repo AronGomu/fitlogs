@@ -1,19 +1,14 @@
 <script lang="ts">
-	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
-	import Icon from "@iconify/svelte";
 	import {
 		StoreName,
-		addNewWorkout,
 		deleteFromDatabase,
-		fetchWorkoutList,
-		getObjectByIdInDatabase,
 		updateInDatabase,
 	} from "../shared/functions/Database";
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
-	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";
+    import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
 
 	document.querySelector("html").setAttribute("data-theme", "black");
 
@@ -29,7 +24,7 @@
 	setWorkouts();
 
 	async function setWorkouts() {
-		workouts = await fetchWorkoutList();
+		workouts = await getWorkoutsFromDatabase();
 		isWorkoutsLoaded = true;
 	}
 

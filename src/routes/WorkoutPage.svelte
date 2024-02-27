@@ -2,48 +2,61 @@
 	import { createEventDispatcher } from "svelte";
 	import ExerciceForm from "../lib/WorkoutForm/ExerciceForm.svelte";
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
-    import type { Workout } from "../shared/class/Workout/Workout";
-    import { Settings } from "../shared/class/Settings";
-    import { StoreName, fetchSettings, getObjectByIdInDatabase } from "../shared/functions/Database";
+	import { Workout } from "../shared/class/Workout/Workout";
+	import { Settings } from "../shared/class/Settings";
+	import { StoreName, fetchSettings, getObjectByIdInDatabase } from "../shared/functions/Database";
+	import WorkoutsPage from "./WorkoutsPage.svelte";
+	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
+    import { getWorkoutFromDatabase } from "../shared/functions/database/workout";
 
 	const dispatch = createEventDispatcher();
-	export let id: number = null;
-
+	export let urlWorkoutDate: string = null;
 	let settings: Settings = new Settings();
-	fetchSettings().then((fs) => (settings = fs));
+
+	let workout: Workout;
 
 	let isWorkoutLoaded: boolean = false;
 	let doesWorkoutExist: boolean = true;
-	let workout: Workout = null;
-	if (!id) {
-		isWorkoutLoaded = true;
-		doesWorkoutExist = true;
-	} else {
-		fetchWorkout();
+
+
+	init()
+
+	function init() {
+		fetchSettings().then((fs) => (settings = fs));
+
+		const emptyWorkout = parseURLWorkoutDate()
+		fetchWorkout(emptyWorkout);
 	}
 
-	async function setWorkout(fetchedWorkout: Workout) {
-		workout = await getRealWorkout(fetchedWorkout);
-	}
-
-	async function fetchWorkout() {
-		const fetchedWorkout = await getObjectByIdInDatabase<Workout>(
-			StoreName.WORKOUT,
-			Number(id),
-		);
-
-		if (!fetchedWorkout) {
-			isWorkoutLoaded = true;
-			doesWorkoutExist = false;
-			throw new Error(
-				`No workout if id=${id} found in the database`,
-			);
+	function parseURLWorkoutDate(): Workout {
+		console.log(urlWorkoutDate);
+		const urlWorkoutDateSplitted = urlWorkoutDate.split('-');
+		if (urlWorkoutDateSplitted.length < 3) {
+			console.log(urlWorkoutDateSplitted)
+			throw new Error("urlWorkoutDateSplitted is not right")
 		}
 
-		await setWorkout(fetchedWorkout);
+		const year = Number(urlWorkoutDateSplitted[0]);
+		const month = Number(urlWorkoutDateSplitted[1]);
+		const day = Number(urlWorkoutDateSplitted[2]);
+
+		const wd = new WorkoutDate(year, month, day);
+		
+		return new Workout(wd, []);
+	}
+
+	async function fetchWorkout(w: Workout) {
+		const fetchedWorkout = await getWorkoutFromDatabase(w);
+
+		if (!fetchWorkout) {
+			workout = w;
+		} else {
+			workout = fetchedWorkout;
+		}
 
 		isWorkoutLoaded = true;
 	}
+
 
 	async function updateWorkout() {
 		const fetchedWorkout = await updateInDatabase<Workout>(
@@ -93,6 +106,7 @@
 {/if}
 
 {#if isWorkoutLoaded}
+	{workout | JSON}
 	<div id="workout" class="flex flex-col items-center">
 		<h1 class="text-xl">
 			{formatDateWithSpelledOutMonth(
