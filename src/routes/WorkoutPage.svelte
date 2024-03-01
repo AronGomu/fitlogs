@@ -7,7 +7,9 @@
 	import { StoreName, fetchSettings, getObjectByIdInDatabase } from "../shared/functions/Database";
 	import WorkoutsPage from "./WorkoutsPage.svelte";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
-    import { getWorkoutFromDatabase } from "../shared/functions/database/workout";
+	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
+    import LiftInput from "../lib/LiftForm/LiftInput.svelte";
+    import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -16,23 +18,28 @@
 	let workout: Workout;
 
 	let isWorkoutLoaded: boolean = false;
-	let doesWorkoutExist: boolean = true;
 
+	// UI Stuff
+	let liftSelectorFormDialog: HTMLElement;
+	function openLiftSelectorFormDialog(asModal = true) {
+		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
+	}
 
 	init()
 
-	function init() {
+	async function init() {
 		fetchSettings().then((fs) => (settings = fs));
 
 		const emptyWorkout = parseURLWorkoutDate()
-		fetchWorkout(emptyWorkout);
+		await fetchWorkout(emptyWorkout);
+
+		console.log(workout)	
+		isWorkoutLoaded = true;
 	}
 
 	function parseURLWorkoutDate(): Workout {
-		console.log(urlWorkoutDate);
 		const urlWorkoutDateSplitted = urlWorkoutDate.split('-');
 		if (urlWorkoutDateSplitted.length < 3) {
-			console.log(urlWorkoutDateSplitted)
 			throw new Error("urlWorkoutDateSplitted is not right")
 		}
 
@@ -46,36 +53,43 @@
 	}
 
 	async function fetchWorkout(w: Workout) {
-		const fetchedWorkout = await getWorkoutFromDatabase(w);
 
-		if (!fetchWorkout) {
+		const fetchedWorkout: Workout = await getWorkoutFromDatabase(w.getKey());
+
+		console.log(w)	
+		console.log(fetchedWorkout)	
+
+		if (!fetchedWorkout) {
 			workout = w;
 		} else {
 			workout = fetchedWorkout;
 		}
 
-		isWorkoutLoaded = true;
+		console.log(workout)
+	}
+
+	async function updateWorkout() {
+		const fetchedWorkout = await putWorkoutInDatabase(workout);
+
+		if (!fetchedWorkout) {
+			throw new Error("Updated workout is null in database ?")
+		}
 	}
 
 
-	async function updateWorkout() {
-		const fetchedWorkout = await updateInDatabase<Workout>(
-			StoreName.WORKOUT,
-			workout.id,
-			workout,
-			true,
-		);
-
-		setWorkout(fetchedWorkout);
+	function onClickAddExercice() {
+		workout.addNewExercice();
 	}
 
 	function updateExercice(e, event) {
 		updateWorkout();
 	}
 
+
 	/** Add a new exercice to the workout and update it in the database. */
 	function newExercice() {
-		workout.addNewExercice();
+		// workout.addNewExercice();
+		
 		updateWorkout();
 	}
 
@@ -88,25 +102,13 @@
 	}
 </script>
 
-<!-- TODO : Make the exercice suggestions work from selecting and adding new ones -->
-
-{#if !isWorkoutLoaded && doesWorkoutExist}
+{#if !isWorkoutLoaded}
 	<div class="flex items-center justify-center h-screen">
-		<span class="text-center loading loading-spinner loading-lg"
-		></span>
-	</div>
-{/if}
-
-{#if !isWorkoutLoaded && !doesWorkoutExist}
-	<div class="flex items-center justify-center h-screen">
-		<span class="text-center text-error">
-			ERROR : The workout searched does not exist !
-		</span>
+		<span class="text-center loading loading-spinner loading-lg"/>
 	</div>
 {/if}
 
 {#if isWorkoutLoaded}
-	{workout | JSON}
 	<div id="workout" class="flex flex-col items-center">
 		<h1 class="text-xl">
 			{formatDateWithSpelledOutMonth(
@@ -116,11 +118,12 @@
 
 		{#each workout.el as e, index}
 			<span>index : {index}</span>
-			<ExerciceForm
-				{e}
-				{index}
-				on:update={(event) => updateExercice(e, event)}
-			/>
+			<LiftInput lift={e.lift} on:openLiftSelector={() => openLiftSelectorFormDialog() } />
+			<!-- <ExerciceForm -->
+			<!-- 	{e} -->
+			<!-- 	{index} -->
+			<!-- 	on:update={(event) => updateExercice(e, event)} -->
+			<!-- /> -->
 
 			<!-- 	<div -->
 			<!-- 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title" -->
@@ -202,8 +205,19 @@
 			<!-- </div> -->
 		{/each}
 
-		<button class="btn btn-primary w-30" on:click={newExercice}
-			>Add Exercice</button
-		>
+		<button class="btn btn-primary w-30" on:click={() => onClickAddExercice()}>Add Exercice</button>
 	</div>
 {/if}
+
+<dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}>
+	<form method="dialog" class="modal-box">
+	<LiftSelector  />	
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button
+			on:click={() => {
+				updateWorkout();
+			}}>close</button
+		>
+	</form>
+</dialog>

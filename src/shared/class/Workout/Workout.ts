@@ -8,10 +8,18 @@ export class Workout {
     constructor(
         // DATA VARIABLES
         /** Date of the creation of the workout. Used as id here to differentiate with other workouts. */
-        public createdAt: WorkoutDate = new WorkoutDate(null, null, null),
+        public createdAt: WorkoutDate,
         /** Exercice List of the workout. */
         public el: Exercice[],
     ) { }
+
+    getKey() {
+        if (!this.createdAt) {
+            throw new Error(`Cannot create key if createdAt property is null !`)
+        }
+
+        return this.createdAt.convertToKey();
+    }
 
     /** Return 0 that represent if the workouts are the same (if same date of creation), -1 if the workout was created before, 1 if created after. */
     compareWorkout(w: Workout): number {

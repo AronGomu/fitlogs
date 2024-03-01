@@ -5,6 +5,7 @@
 		loadActivities,
 	} from "../shared/functions/Database";
 	import { deleteDatabasePlan } from "../shared/functions/database/plan";
+    import { deleteDatabaseWorkout } from "../shared/functions/database/workout";
 </script>
 
 <div class="flex flex-col items-center">
@@ -22,6 +23,14 @@
 			deleteDatabasePlan();
 			location.reload();
 		}}>DELETE PLAN DB</button
+	>
+
+	<button
+		class="btn btn-error"
+		on:click={() => {
+			deleteDatabaseWorkout();
+			location.reload();
+		}}>DELETE WORKOUR DB</button
 	>
 
 	<button

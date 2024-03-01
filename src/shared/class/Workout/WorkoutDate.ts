@@ -25,6 +25,10 @@ export class WorkoutDate {
         }
     }
 
+    public convertToKey(): string {
+        return `${this.year}-${this.month}-${this.day}`
+    }
+
     public compare(wd: WorkoutDate): boolean {
         if (this.day != wd.day) return false;
         if (this.month != wd.month) return false;

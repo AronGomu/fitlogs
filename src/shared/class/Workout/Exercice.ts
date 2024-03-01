@@ -1,6 +1,5 @@
 import type { WeightMetric } from "../../enum/WeightMetrics";
 import { isArrayWithElements, last } from "../../functions/Utilitary";
-import { getLiftByName } from "../../functions/database/lift";
 import { Lift, getRealLift } from "../Lift/Lift";
 import { getRealRepRange, type RepRange } from "../Program/RepRange";
 import { Serie, getRealSerie } from "./Serie";
@@ -33,9 +32,10 @@ export class Exercice {
 
 	public async checkIfItsNewLift(): Promise<void> {
 		console.log(`checkIfItsNewLift`)
-		const retrieved = await getLiftByName(
-			this.lift.name
-		);
+		throw new Error("NOT IMPLEMENTED")
+		// const retrieved = await getLiftByName(
+		// 	this.lift.name
+		// );
 		console.log("retrieved", retrieved)
 
 		if (!retrieved || !retrieved.id) {

@@ -1,13 +1,13 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
 import { StoreName } from "../Database";
 import { getRealWorkout, type Workout } from "../../class/Workout/Workout";
-import { formatDateToYYYYMMDD } from "../Utilitary";
+import type { WorkoutDate } from "../../class/Workout/WorkoutDate";
 
 const DB_NAME = "db_workout";
 
 interface Database extends DBSchema {
 	"workout-store": {
-		key: number;
+		key: string;
 		value: any;
 	};
 }
@@ -35,41 +35,31 @@ export async function getWorkoutsFromDatabase(): Promise<Workout[]> {
 	return realWorkouts;
 }
 
-export async function getWorkoutFromDatabase(workout: Workout): Promise<Workout> {
+export async function getWorkoutFromDatabase(key: string): Promise<Workout> {
 	const db = await openDatabaseWorkout();
 
 	const tx = db.transaction(StoreName.WORKOUT, "readonly");
 	const store = tx.objectStore(StoreName.WORKOUT);
 
-	let cursor = await store.openCursor();
-	while (cursor) {
-		let wc: Workout = cursor.value;
-		if (wc.compareWorkout(workout)) {
-			return cursor.value;
-		}
-		cursor = await cursor.continue();
-	}
-
-	return null;
+	const fakeWorkout =  await store.get(key)
+	if (fakeWorkout) {
+		return getRealWorkout(fakeWorkout);
+	} 
+	return null;	
 }
 
-export async function updateWorkoutInDatabase(workout: Workout): Promise<Workout> {
+export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 	const db = await openDatabaseWorkout();
 
 	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
 	const store = tx.objectStore(StoreName.WORKOUT);
 
-	let cursor = await store.openCursor();
-	while (cursor) {
-		let wc: Workout = cursor.value;
-		if (wc.compareWorkout(workout)) {
-			cursor.update(workout);
-			return cursor.value;
-		}
-		cursor = await cursor.continue();
+	const fakeWorkout =  await store.get(w.getKey())
+	if (fakeWorkout) {
+		return getRealWorkout(fakeWorkout);
 	}
 
-	const id = await store.add(workout);
+	const id = await store.add(w, w.getKey());
 	return await store.get(id);
 }
 
@@ -77,5 +67,3 @@ export async function deleteDatabaseWorkout(): Promise<void> {
 	await deleteDB(DB_NAME);
 	console.log(`Database '${DB_NAME}' deleted successfully.`);
 }
-
-
