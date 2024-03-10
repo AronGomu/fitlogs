@@ -6,17 +6,17 @@
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
 
   let activities: Activity[] = null;
-  type TabType = "plan" | "list" | "stats";
-  let selectedTab: TabType = "plan";
+  type TabType = "list" | "stats" | "plan";
+  let selectedTab: TabType = "list";
 
   const tabs = {
-    plan: {
+    list: {
       class: "tab-active",
     },
-    list: {
+    stats: {
       class: "",
     },
-    stats: {
+    plan: {
       class: "",
     },
   };
@@ -54,11 +54,6 @@
 <div role="tablist" class="tabs tabs-boxed">
   <button
     role="tab"
-    class="tab {tabs.plan.class}"
-    on:click={() => setTabs("plan")}>Plan</button
-  >
-  <button
-    role="tab"
     class="tab {tabs.list.class}"
     on:click={() => setTabs("list")}>List</button
   >
@@ -66,6 +61,11 @@
     role="tab"
     class="tab {tabs.stats.class}"
     on:click={() => setTabs("stats")}>Stats</button
+  >
+  <button
+    role="tab"
+    class="tab {tabs.plan.class}"
+    on:click={() => setTabs("plan")}>Plan</button
   >
 </div>
 {#if activities}
