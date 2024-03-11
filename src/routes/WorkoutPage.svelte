@@ -69,16 +69,22 @@
 	}
 
 	async function updateWorkout() {
+		console.log(`workout`, workout)
 		const fetchedWorkout = await putWorkoutInDatabase(workout);
+		console.log(`fetchedWorkout`, fetchedWorkout)
 
 		if (!fetchedWorkout) {
 			throw new Error("Updated workout is null in database ?")
 		}
+
+		workout = fetchedWorkout;
 	}
 
 
 	function onClickAddExercice() {
+		console.log("onClickAddExercice")
 		workout.addNewExercice();
+		updateWorkout();
 	}
 
 	function updateExercice(e, event) {
@@ -89,7 +95,6 @@
 	/** Add a new exercice to the workout and update it in the database. */
 	function newExercice() {
 		// workout.addNewExercice();
-		
 		updateWorkout();
 	}
 
@@ -176,7 +181,7 @@
 			<!-- 			/> -->
 			<!---->
 			<!-- 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			-->
+
 			<!-- 			<div -->
 			<!-- 				class="w-full flex justify-end cursor-pointer" -->
 			<!-- 				on:click={() => -->
@@ -217,7 +222,7 @@
 		<button
 			on:click={() => {
 				updateWorkout();
-			}}>close</button
-		>
+			}}>close
+		</button>
 	</form>
 </dialog>

@@ -32,6 +32,7 @@ export class Workout {
 
     /** Add a new empty exercice to both exercice list. */
     addNewExercice() {
+        console.log("addNewExercice")
         const newExercice: Exercice = new Exercice(
             new Lift(),
             [],

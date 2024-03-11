@@ -1,10 +1,9 @@
 import { Lift } from "../class/Lift/Lift";
 import { MuscleWork } from "../class/Lift/MuscleWork";
 import { Muscle } from "../enum/Muscle";
-import { StoreName, addToDatabase } from "../functions/Database";
 
 /** List of Lifts loaded by default on the app at the startup. */
-export const ExerciceSuggestionsBase: Lift[] = [
+export const baseLifts: Lift[] = [
 	new Lift(null, "Squat", "Low bar", [
 		new MuscleWork(Muscle.Quad, 50),
 		new MuscleWork(Muscle.Glute, 30),
@@ -78,10 +77,3 @@ export const ExerciceSuggestionsBase: Lift[] = [
 	new Lift(null, "Pull-up", "Wide", [new MuscleWork(Muscle.Calve, 100)]),
 	new Lift(null, "Chin-up", "", [new MuscleWork(Muscle.Calve, 100)]),
 ];
-
-export async function loadLiftsMock() {
-	for (const l of ExerciceSuggestionsBase) {
-		const addedEs = await addToDatabase(StoreName.LIFT, l);
-		console.log(addedEs);
-	}
-}

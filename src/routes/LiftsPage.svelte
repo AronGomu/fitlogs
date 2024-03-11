@@ -2,25 +2,17 @@
 	import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
 	import Icon from '@iconify/svelte';
 	import magnifyIcon from '@iconify/icons-mdi/magnify';
-	import LiftForm from '../lib/LiftForm/LiftForm.svelte';
 	import { Lift } from '../shared/class/Lift/Lift';
-	import { lifts } from '../shared/store/liftStore';
 	import {
 		StoreName,
 		deleteFromDatabase,
 	} from '../shared/functions/Database';
-	import sortAlphabeticalAscending from '@iconify/icons-mdi/sort-alphabetical-ascending';
-	import sortAlphabeticalDescending from '@iconify/icons-mdi/sort-alphabetical-descending';
 	import {
-		enumToList,
 		isStringNotEmpty,
 		selectWholeTextOnFocus,
 	} from '../shared/functions/Utilitary';
-	import { Muscle } from '../shared/enum/Muscle';
-	import { onMount } from 'svelte';
 	import { FiltersLift } from '../shared/class/Lift/FiltersLift';
 	import { MuscleWork } from '../shared/class/Lift/MuscleWork';
-	import { fetchGlobalLifts } from '../shared/functions/Global';
 
 	/** All the filters for the lift list. */
 	const filtersLift: FiltersLift = new FiltersLift();

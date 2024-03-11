@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { baseActivities } from "../shared/data/ActivityBase";
+    import { baseLifts } from "../shared/data/LiftsBase";
 	import {
 		deleteDatabase,
 		loadActivities,
 	} from "../shared/functions/Database";
+    import { loadLifts } from "../shared/functions/database/lift";
 	import { deleteDatabasePlan } from "../shared/functions/database/plan";
     import { deleteDatabaseWorkout } from "../shared/functions/database/workout";
 </script>
@@ -30,7 +32,7 @@
 		on:click={() => {
 			deleteDatabaseWorkout();
 			location.reload();
-		}}>DELETE WORKOUR DB</button
+		}}>DELETE WORKOUT DB</button
 	>
 
 	<button
@@ -38,6 +40,14 @@
 		on:click={() => {
 			loadActivities(baseActivities, true);
 			location.reload();
-		}}>Set Default Activity</button
+		}}>POPULATE ACTIVITIES</button
+	>
+
+	<button
+		class="btn btn-warning"
+		on:click={() => {
+			loadLifts(baseLifts, true);
+			location.reload();
+		}}>POPULATE LIFTS</button
 	>
 </div>

@@ -14,7 +14,6 @@
 		getObjectByIdInDatabase,
 	} from "../../shared/functions/Database";
 	import { isPositive } from "../../shared/functions/Utilitary";
-	import { lifts } from "../../shared/store/liftStore";
 	import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
 
 	// Store variables

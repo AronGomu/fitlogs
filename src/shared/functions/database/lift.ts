@@ -66,3 +66,23 @@ export async function getLiftsFromDatabase(): Promise<Lift[]> {
 // 	await deleteDB(DB_NAME);
 // 	console.log(`Database '${DB_NAME}' deleted successfully.`);
 // }
+//
+//
+export async function loadLifts(lifts: Lift[], resetDB: boolean): Promise<void> {
+	const db = await openDatabaseLift();
+	const tx = db.transaction(StoreName.LIFT, "readwrite");
+	const store = tx.objectStore(StoreName.LIFT);
+
+	if (resetDB) {
+		let cursor = await store.openCursor();
+		while (cursor) {
+			cursor.delete();
+			cursor = await cursor.continue();
+		}
+	}
+
+	for (let i = 0; i < lifts.length; i++) {
+		const a = lifts[i];
+		store.add(a);
+	}
+}

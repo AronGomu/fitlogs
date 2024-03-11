@@ -2,7 +2,6 @@
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { Lift } from "../../../shared/class/Lift/Lift";
 	import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
-	import { lifts } from "../../../shared/store/liftStore";
 
 	const dispatch = createEventDispatcher();
 

@@ -70,8 +70,7 @@
 
 {#if !isWorkoutsLoaded}
 	<div class="flex items-center justify-center h-screen">
-		<span class="text-center loading loading-spinner loading-lg"
-		></span>
+		<span class="text-center loading loading-spinner loading-lg"></span>
 	</div>
 {/if}
 

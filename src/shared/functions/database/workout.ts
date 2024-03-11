@@ -54,8 +54,11 @@ export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
 	const store = tx.objectStore(StoreName.WORKOUT);
 
-	const fakeWorkout =  await store.get(w.getKey())
+	let fakeWorkout = await store.get(w.getKey());
 	if (fakeWorkout) {
+		const key = await store.put(w, w.getKey());
+		let fakeWorkout = await store.get(key);
+		await store.get(w.getKey());
 		return getRealWorkout(fakeWorkout);
 	}
 
