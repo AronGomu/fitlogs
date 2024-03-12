@@ -111,9 +111,7 @@
 	<div class="flex items-center justify-center h-screen">
 		<span class="text-center loading loading-spinner loading-lg"/>
 	</div>
-{/if}
-
-{#if isWorkoutLoaded}
+{:else}
 	<div id="workout" class="flex flex-col items-center">
 		<h1 class="text-xl">
 			{formatDateWithSpelledOutMonth(
@@ -215,8 +213,8 @@
 {/if}
 
 <dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}>
-	<form method="dialog" class="modal-box">
-	<LiftSelector  />	
+	<form method="dialog" class="modal-box h-3/4">
+	<LiftSelector></LiftSelector>	
 	</form>
 	<form method="dialog" class="modal-backdrop">
 		<button

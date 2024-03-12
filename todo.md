@@ -1,3 +1,8 @@
+DO LIFT SELECTOR SEARCH
+UPDATE LIFTS BASE
+MAKE THE LIFT FORM
+MAKE THE WORKOUT FORM
+
 * Workout : Only select existing exercice
 * Workout : Button to create new exercice
 * Plan : stop needing all data to show numbers

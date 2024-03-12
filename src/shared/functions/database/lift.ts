@@ -69,20 +69,39 @@ export async function getLiftsFromDatabase(): Promise<Lift[]> {
 //
 //
 export async function loadLifts(lifts: Lift[], resetDB: boolean): Promise<void> {
+
+	console.log(`Populating lifts with resetDB=${resetDB}\nLifts :\n`, lifts)
+
 	const db = await openDatabaseLift();
 	const tx = db.transaction(StoreName.LIFT, "readwrite");
 	const store = tx.objectStore(StoreName.LIFT);
 
 	if (resetDB) {
+		console.log(`Deleting whole Lift database content...`)
 		let cursor = await store.openCursor();
 		while (cursor) {
 			cursor.delete();
 			cursor = await cursor.continue();
 		}
+		console.log(`Done`)
+
 	}
 
+	console.log(`Adding Lifts from baseLifts to database`)
 	for (let i = 0; i < lifts.length; i++) {
 		const a = lifts[i];
-		store.add(a);
+		console.log(`Adding ${a.getExerciceName()}`);
+		await store.add(a, a.getExerciceName());
 	}
+
+	const fakeLifts = await store.getAll();
+	let realLifts = [];
+	for (let i = 0; i < fakeLifts.length; i++) {
+		const fakeLift = fakeLifts[i];
+		realLifts.push(getRealLift(fakeLift))
+	}
+
+
+	console.log(`New Database Content :`, realLifts)
+	console.log(`Refresh the app for getting the lifts`)
 }

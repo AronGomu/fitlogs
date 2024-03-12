@@ -47,7 +47,6 @@
 		class="btn btn-warning"
 		on:click={() => {
 			loadLifts(baseLifts, true);
-			location.reload();
 		}}>POPULATE LIFTS</button
 	>
 </div>

@@ -6,7 +6,6 @@
 	init();
 
 	function init() {
-		fetch
 	    fetchLifts();
 	}
 
@@ -18,18 +17,10 @@
 
 <div class="overflow-x-auto">
 	<table class="table">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Variation</th>
-			</tr>
-		</thead>
-
 		<tbody>
 			{#each lifts as l}
 				<tr class="hover">
-					<td>{l.name}</td>
-					<td>{l.variation}</td>
+					<td>{l.getExerciceName()}</td>
 				</tr>
 			{/each}
 		</tbody>

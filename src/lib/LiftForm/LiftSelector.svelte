@@ -33,8 +33,13 @@
 <div class="flex flex-col">
     <TextInput placeholder="Search Lift..." value={selectedLift.name}/>
     {#if lifts }
-	<LiftTable lifts={lifts}/>
+	<div class="h-80 overflow-y-scroll mt-4">
+	    <LiftTable lifts={lifts} />
+	</div>
+	<button class="btn btn-secondary mt-4">Add Lift</button>
     {:else}
 	<span class="text-center loading loading-spinner loading-lg"></span>
     {/if}
 </div>
+
+

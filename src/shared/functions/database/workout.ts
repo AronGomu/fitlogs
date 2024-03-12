@@ -63,7 +63,9 @@ export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 	}
 
 	const id = await store.add(w, w.getKey());
-	return await store.get(id);
+	fakeWorkout = await store.get(id)
+	return getRealWorkout(fakeWorkout);
+;
 }
 
 export async function deleteDatabaseWorkout(): Promise<void> {
