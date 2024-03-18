@@ -25,6 +25,8 @@
 		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
 	}
 
+	 
+
 	init()
 
 	async function init() {
@@ -122,90 +124,6 @@
 		{#each workout.el as e, index}
 			<span>index : {index}</span>
 			<LiftInput lift={e.lift} on:openLiftSelector={() => openLiftSelectorFormDialog() } />
-			<!-- <ExerciceForm -->
-			<!-- 	{e} -->
-			<!-- 	{index} -->
-			<!-- 	on:update={(event) => updateExercice(e, event)} -->
-			<!-- /> -->
-
-			<!-- 	<div -->
-			<!-- 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title" -->
-			<!-- 	> -->
-			<!-- 		<div -->
-			<!-- 			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName" -->
-			<!-- 		> -->
-			<!-- 			<AutoCompleteInput -->
-			<!-- 				type="text" -->
-			<!-- 				value={e.lift.name} -->
-			<!-- 				placeholder="Exercice Name" -->
-			<!-- 				class="bg-base-500 input input-ghost input-lg text-primary z-10" -->
-			<!-- 				on:update={(event) => -->
-			<!-- 					updateExerciceName( -->
-			<!-- 						event, -->
-			<!-- 						e, -->
-			<!-- 					)} -->
-			<!-- 			/> -->
-			<!-- 		</div> -->
-			<!-- 		{#if !e.isSelfOpen} -->
-			<!-- 			<span -->
-			<!-- 				class="text-secondary text-sm" -->
-			<!-- 				>{`${e.series.length} Sets`} -->
-			<!-- 			</span> -->
-			<!-- 			{#if e.getMaxWeight(settings.wm)} -->
-			<!-- 				<span -->
-			<!-- 					class="text-secondary text-sm" -->
-			<!-- 					>{` - Max : ${e.getMaxWeight( -->
-			<!-- 						settings.wm, -->
-			<!-- 					)}${getReducedStringMetric( -->
-			<!-- 						settings.wm, -->
-			<!-- 					)}`} -->
-			<!-- 					{e.isSelfOpen} -->
-			<!-- 					{e.isExtraOpen} -->
-			<!-- 				</span> -->
-			<!-- 			{/if} -->
-			<!-- 		{/if} -->
-			<!-- 	</div> -->
-			<!---->
-
-			<!-- 	{#if e.isSelfOpen} -->
-			<!-- 		<div class="collapse-content"> -->
-			<!-- 			<ExerciceForm -->
-			<!-- 				{e} -->
-			<!-- 				on:update={(event) => { -->
-			<!-- 					/* console.log(event.detail); */ -->
-			<!-- 					/* workoutGUI.el = event.detail; */ -->
-			<!-- 					updateWorkout(); -->
-			<!-- 				}} -->
-			<!-- 			/> -->
-			<!---->
-			<!-- 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-
-			<!-- 			<div -->
-			<!-- 				class="w-full flex justify-end cursor-pointer" -->
-			<!-- 				on:click={() => -->
-			<!-- 					openExerciceExtra( -->
-			<!-- 						e, -->
-			<!-- 					)} -->
-			<!-- 			> -->
-			<!-- 				{#if e.isExtraOpen} -->
-			<!-- 					<Icon -->
-			<!-- 						icon={minusIcon} -->
-			<!-- 						color="blue" -->
-			<!-- 						width="15" -->
-			<!-- 						height="15" -->
-			<!-- 					/> -->
-			<!-- 				{:else} -->
-			<!-- 					<Icon -->
-			<!-- 						icon={plusIcon} -->
-			<!-- 						color="blue" -->
-			<!-- 						width="15" -->
-			<!-- 						height="15" -->
-			<!-- 					/> -->
-			<!-- 				{/if} -->
-			<!-- 			</div> -->
-			<!-- 		</div> -->
-			<!-- 	{/if} -->
-			<!-- </div> -->
 		{/each}
 
 		<button class="btn btn-primary w-30" on:click={() => onClickAddExercice()}>Add Exercice</button>

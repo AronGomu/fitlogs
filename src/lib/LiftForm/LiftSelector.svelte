@@ -7,12 +7,18 @@
 
     export let selectedLift: Lift = null;
     let lifts: Lift[] = [];
+    let searchLiftInputFocus: boolean = false;
 
     init()
 
     function init() {
 	fetchLifts();
 	setLift();
+	onOpen();
+    }
+
+    function onOpen() {
+	searchLiftInputFocus = true;
     }
 
     async function fetchLifts() {
@@ -31,7 +37,7 @@
 </script>
 
 <div class="flex flex-col">
-    <TextInput placeholder="Search Lift..." value={selectedLift.name}/>
+    <TextInput placeholder="Search Lift..." value={selectedLift.name} hasAutofocus={true}/>
     {#if lifts }
 	<div class="h-80 overflow-y-scroll mt-4">
 	    <LiftTable lifts={lifts} />
