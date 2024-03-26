@@ -1,18 +1,7 @@
 <script lang="ts">
-    import { getLiftsFromDatabase } from "../../shared/functions/database/lift";
+    import type { Lift } from "../../shared/class/Lift/Lift";
 
-	export let lifts = [];
-
-	init();
-
-	function init() {
-	    fetchLifts();
-	}
-
-	async function fetchLifts() {
-		lifts = await getLiftsFromDatabase();
-		console.log("lifts from liftTable", lifts)
-	}
+	export let lifts: Lift[];
 </script>
 
 <div class="overflow-x-auto">
@@ -20,7 +9,13 @@
 		<tbody>
 			{#each lifts as l}
 				<tr class="hover">
-					<td>{l.getExerciceName()}</td>
+					<td>
+					{#if l}
+						{l.getExerciceName()}
+					{:else}
+						{"empty"}
+					{/if}
+					</td>
 				</tr>
 			{/each}
 		</tbody>

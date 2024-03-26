@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import ExerciceForm from "../lib/WorkoutForm/ExerciceForm.svelte";
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { Settings } from "../shared/class/Settings";
-	import { StoreName, fetchSettings, getObjectByIdInDatabase } from "../shared/functions/Database";
-	import WorkoutsPage from "./WorkoutsPage.svelte";
+	import { fetchSettings } from "../shared/functions/Database";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
-    import LiftInput from "../lib/LiftForm/LiftInput.svelte";
-    import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
+	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
+	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
+	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -25,7 +24,11 @@
 		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
 	}
 
-	 
+	let liftFormFormDialog: HTMLElement;
+	function openLiftFormFormDialog(asModal = true) {
+		console.log(`sdlfkgjuhsdfhjkgbsdhjklfgbjklsdfhgksj`)
+		liftFormFormDialog[asModal ? "showModal" : "show"]();
+	}
 
 	init()
 
@@ -58,22 +61,15 @@
 
 		const fetchedWorkout: Workout = await getWorkoutFromDatabase(w.getKey());
 
-		console.log(w)	
-		console.log(fetchedWorkout)	
-
 		if (!fetchedWorkout) {
 			workout = w;
 		} else {
 			workout = fetchedWorkout;
 		}
-
-		console.log(workout)
 	}
 
 	async function updateWorkout() {
-		console.log(`workout`, workout)
 		const fetchedWorkout = await putWorkoutInDatabase(workout);
-		console.log(`fetchedWorkout`, fetchedWorkout)
 
 		if (!fetchedWorkout) {
 			throw new Error("Updated workout is null in database ?")
@@ -132,7 +128,20 @@
 
 <dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}>
 	<form method="dialog" class="modal-box h-3/4">
-	<LiftSelector></LiftSelector>	
+	<LiftSelector on:openLiftForm={() => openLiftFormFormDialog() }></LiftSelector>	
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button
+			on:click={() => {
+				updateWorkout();
+			}}>close
+		</button>
+	</form>
+</dialog>
+
+<dialog id="modal" class="modal" bind:this={liftFormFormDialog}>
+	<form method="dialog" class="modal-box h-3/4">
+	<LiftForm></LiftForm>	
 	</form>
 	<form method="dialog" class="modal-backdrop">
 		<button
