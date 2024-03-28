@@ -20,8 +20,9 @@
 	function setExerciceIsValid() {
 		if (!lift) return false;
 		if (!minLength(lift.name, 3)) return false;
-		if (lift.variation && !minLength(lift.variation, 3))
+		if (lift.variation && !minLength(lift.variation, 3)) {
 			return false;
+		}
 		if (!minLength(lift.targets, 1)) return false;
 
 		let totalPercentage: number = 0;
@@ -29,10 +30,10 @@
 		setOnlyMuscleTo100();
 
 		for (const t of lift.targets) {
-			console.log("t", t);
 			if (!t.work) t.work = 0;
-			if (t.muscle && !t.work && !isPercentage(t.work))
+			if (t.muscle && !t.work && !isPercentage(t.work)) {
 				return false;
+			}
 			totalPercentage += t.work;
 		}
 		if (totalPercentage !== 100) return false;
@@ -54,6 +55,15 @@
 			lift = lift;
 		}
 	}
+
+	function addMuscle() {
+		lift.targets.push(new MuscleWork(null, 0));
+		lift = lift;
+	}
+
+	function addLift() {
+		dispatch("addLift", lift);
+	}
 </script>
 
 <div class="flex flex-col justify-center">
@@ -66,6 +76,8 @@
 			(exerciceIsValid = setExerciceIsValid())}
 		placeholder="Main name of the lift..."
 	/>
+
+
 	<input
 		type="text"
 		class="m-2 input input-bordered input-secondary"
@@ -75,6 +87,8 @@
 			(exerciceIsValid = setExerciceIsValid())}
 		placeholder="Name of the variation of lift..."
 	/>
+
+
 	{#each lift.targets as t, i}
 		<div class="flex flex-row items-center justify-between">
 			<select
@@ -115,7 +129,7 @@
 				</div>
 			</div>
 
-			<button
+			<div
 				on:click={() => {
 					lift.targets.splice(i, 1);
 					lift.targets = lift.targets;
@@ -130,12 +144,14 @@
 					height="15"
 					class="cursor-pointer"
 				/>
-			</button>
+			</div>
 		</div>
 	{/each}
 
+	<div class="btn btn-neutral" on:click={() => addMuscle()}>Add Working Muscle</div>
+
 	{#if exerciceIsValid}
-		<button class="btn btn-success">Add Lift</button>
+		<div class="btn btn-success" on:click={() => addLift()}>Add Lift</div>
 	{:else}
 		<button class="btn btn-success" disabled>Add Lift</button>
 	{/if}

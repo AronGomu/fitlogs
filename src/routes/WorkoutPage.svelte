@@ -6,9 +6,12 @@
 	import { fetchSettings } from "../shared/functions/Database";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
+	import { putLiftInDatabase } from "../shared/functions/database/lift";
 	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
 	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
 	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
+    import type { Lift } from "../shared/class/Lift/Lift";
+    import type { Exercice } from "../shared/class/Workout/Exercice";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -18,9 +21,12 @@
 
 	let isWorkoutLoaded: boolean = false;
 
+
+	let exerciceConcerned: Exercice = null;
 	// UI Stuff
 	let liftSelectorFormDialog: HTMLElement;
-	function openLiftSelectorFormDialog(asModal = true) {
+	function openLiftSelectorFormDialog(exerciceConcerned: Exercice, asModal = true) {
+		exer
 		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
 	}
 
@@ -103,6 +109,13 @@
 		}
 		updateWorkout();
 	}
+
+
+    async function addLiftFormLiftForm(exerciceConcerned: Exercice, newLift: Lift) {
+	exerciceConcerned.lift = await putLiftInDatabase(newLift);
+	console.log("exerciceConcerned.lift", exerciceConcerned.lift)	
+    }
+
 </script>
 
 {#if !isWorkoutLoaded}
@@ -141,7 +154,9 @@
 
 <dialog id="modal" class="modal" bind:this={liftFormFormDialog}>
 	<form method="dialog" class="modal-box h-3/4">
-	<LiftForm></LiftForm>	
+	<LiftForm on:addLift={(customEvent) => {
+		addLiftFormLiftForm(exerciceConcerned, customEvent.detail);
+	}}></LiftForm>	
 	</form>
 	<form method="dialog" class="modal-backdrop">
 		<button

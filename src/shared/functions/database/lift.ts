@@ -34,34 +34,36 @@ export async function getLiftsFromDatabase(): Promise<Lift[]> {
 	return realLifts;
 }
 
-// export async function getLiftFromDatabase(key: string): Promise<Lift> {
-// 	const db = await openDatabaseLift();
-//
-// 	const tx = db.transaction(StoreName.LIFT, "readonly");
-// 	const store = tx.objectStore(StoreName.LIFT);
-//
-// 	const fakeLift =  await store.get(key)
-// 	if (fakeLift) {
-// 		return getRealLift(fakeLift);
-// 	} 
-// 	return null;	
-// }
-//
-// export async function putLiftInDatabase(w: Lift): Promise<Lift> {
-// 	const db = await openDatabaseLift();
-//
-// 	const tx = db.transaction(StoreName.LIFT, "readwrite");
-// 	const store = tx.objectStore(StoreName.LIFT);
-//
-// 	const fakeLift =  await store.get(w.getKey())
-// 	if (fakeLift) {
-// 		return getRealLift(fakeLift);
-// 	}
-//
-// 	const id = await store.add(w, w.getKey());
-// 	return await store.get(id);
-// }
-//
+export async function getLiftFromDatabase(exerciceName: string): Promise<Lift> {
+	const db = await openDatabaseLift();
+
+	const tx = db.transaction(StoreName.LIFT, "readonly");
+	const store = tx.objectStore(StoreName.LIFT);
+
+	const fakeLift =  await store.get(exerciceName)
+	if (fakeLift) {
+		return getRealLift(fakeLift);
+	} 
+	return null;	
+}
+
+
+export async function putLiftInDatabase(l: Lift): Promise<Lift> {
+	console.log(l)
+	const db = await openDatabaseLift();
+
+	const tx = db.transaction(StoreName.LIFT, "readwrite");
+	const store = tx.objectStore(StoreName.LIFT);
+
+	const fakeLift =  await store.get(l.getExerciceName())
+	if (fakeLift) {
+		return getRealLift(fakeLift);
+	}
+
+	const id = await store.add(l, l.getExerciceName());
+	return await store.get(id);
+}
+
 // export async function deleteDatabaseLift(): Promise<void> {
 // 	await deleteDB(DB_NAME);
 // 	console.log(`Database '${DB_NAME}' deleted successfully.`);
