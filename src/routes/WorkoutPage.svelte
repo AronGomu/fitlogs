@@ -10,8 +10,9 @@
 	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
 	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
 	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-    import type { Lift } from "../shared/class/Lift/Lift";
-    import type { Exercice } from "../shared/class/Workout/Exercice";
+	import type { Lift } from "../shared/class/Lift/Lift";
+	import type { Exercice } from "../shared/class/Workout/Exercice";
+    import Modal from "../lib/Generic/Modal.svelte";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -26,15 +27,17 @@
 	// UI Stuff
 	let liftSelectorFormDialog: HTMLElement;
 	function openLiftSelectorFormDialog(exerciceConcerned: Exercice, asModal = true) {
-		exer
+		console.log(`openLiftSelectorFormDialog`)
 		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
 	}
 
 	let liftFormFormDialog: HTMLElement;
 	function openLiftFormFormDialog(asModal = true) {
-		console.log(`sdlfkgjuhsdfhjkgbsdhjklfgbjklsdfhgksj`)
+		console.log(`openLiftFormFormDialog`)
 		liftFormFormDialog[asModal ? "showModal" : "show"]();
 	}
+
+	let showLiftSelector: boolean = false;
 
 	init()
 
@@ -115,7 +118,6 @@
 	exerciceConcerned.lift = await putLiftInDatabase(newLift);
 	console.log("exerciceConcerned.lift", exerciceConcerned.lift)	
     }
-
 </script>
 
 {#if !isWorkoutLoaded}
@@ -132,37 +134,44 @@
 
 		{#each workout.el as e, index}
 			<span>index : {index}</span>
-			<LiftInput lift={e.lift} on:openLiftSelector={() => openLiftSelectorFormDialog() } />
+			<LiftInput lift={e.lift} on:openLiftSelector={() => {
+				console.log("TEST");
+				showLiftSelector = true
+			} } />
 		{/each}
 
 		<button class="btn btn-primary w-30" on:click={() => onClickAddExercice()}>Add Exercice</button>
 	</div>
 {/if}
 
-<dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}>
-	<form method="dialog" class="modal-box h-3/4">
-	<LiftSelector on:openLiftForm={() => openLiftFormFormDialog() }></LiftSelector>	
-	</form>
-	<form method="dialog" class="modal-backdrop">
-		<button
-			on:click={() => {
-				updateWorkout();
-			}}>close
-		</button>
-	</form>
-</dialog>
+<Modal component={LiftSelector} bind:show={showLiftSelector}></Modal>
 
-<dialog id="modal" class="modal" bind:this={liftFormFormDialog}>
-	<form method="dialog" class="modal-box h-3/4">
-	<LiftForm on:addLift={(customEvent) => {
-		addLiftFormLiftForm(exerciceConcerned, customEvent.detail);
-	}}></LiftForm>	
-	</form>
-	<form method="dialog" class="modal-backdrop">
-		<button
-			on:click={() => {
-				updateWorkout();
-			}}>close
-		</button>
-	</form>
-</dialog>
+<!-- <dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}> -->
+<!-- 	<form class="modal-box h-3/4"> -->
+<!-- 	<LiftSelector on:openLiftForm={() => openLiftFormFormDialog() }  -->
+<!-- 		on:setLift={(lift) => setLift()}> -->
+<!-- 	</LiftSelector>	 -->
+<!-- 	</form> -->
+<!-- 	<form method="dialog" class="modal-backdrop"> -->
+<!-- 		<button -->
+<!-- 			on:click={() => { -->
+<!-- 				updateWorkout(); -->
+<!-- 			}}>close -->
+<!-- 		</button> -->
+<!-- 	</form> -->
+<!-- </dialog> -->
+<!---->
+<!-- <dialog id="modal" class="modal" bind:this={liftFormFormDialog}> -->
+<!-- 	<form method="dialog" class="modal-box h-3/4"> -->
+<!-- 	<LiftForm on:addLift={(customEvent) => { -->
+<!-- 		addLiftFormLiftForm(exerciceConcerned, customEvent.detail); -->
+<!-- 	}}></LiftForm>	 -->
+<!-- 	</form> -->
+<!-- 	<form method="dialog" class="modal-backdrop"> -->
+<!-- 		<button -->
+<!-- 			on:click={() => { -->
+<!-- 				updateWorkout(); -->
+<!-- 			}}>close -->
+<!-- 		</button> -->
+<!-- 	</form> -->
+<!-- </dialog> -->

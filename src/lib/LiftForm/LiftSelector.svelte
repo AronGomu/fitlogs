@@ -37,7 +37,7 @@
 
     function init() {
 	fetchLifts();
-	setLift();
+	setLift(null);
     }
 
     async function fetchLifts() {
@@ -46,13 +46,19 @@
 	fuse = new Fuse(lifts, fuseOptions);
     }
 
-    function setLift() {
+    function setLift(lift: Lift) {
+	console.log("setLift", lift)
+	if (lift) {
+	    selectedLift = lift;
+	    dispatch("setLift", lift)
+	}
+
 	if (!selectedLift) {
-	    selectedLift = new Lift()
+	    selectedLift = new Lift();
 	}
 
 	if (!selectedLift.name) {
-	    selectedLift.name = ""
+	    selectedLift.name = "";
 	}
     }
 
@@ -70,7 +76,7 @@
     <TextInput placeholder="Search Lift..." value={selectedLift.name} hasAutofocus={true} on:input={(e) => filterLifts(e.detail.value)}/>
     {#if selectableLifts }
 	<div class="h-80 overflow-y-scroll mt-4">
-	    <LiftTable bind:lifts={selectableLifts}/>
+	    <LiftTable on:clickExercice={(e) => setLift(e.detail)} bind:lifts={selectableLifts}/>
 	</div>
 	<button class="btn btn-warning mt-4" on:click={() => dispatch("openLiftForm")}>Lift Missing ?</button>
     {:else}

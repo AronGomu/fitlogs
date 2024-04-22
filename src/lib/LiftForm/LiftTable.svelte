@@ -1,7 +1,13 @@
 <script lang="ts">
-    import type { Lift } from "../../shared/class/Lift/Lift";
+	import { createEventDispatcher } from "svelte";
+	import type { Lift } from "../../shared/class/Lift/Lift";
+	const dispatch = createEventDispatcher();
+
 
 	export let lifts: Lift[];
+	function clickExercice(lift: Lift): void {
+		dispatch("clickExercice", lift)
+	}
 </script>
 
 <div class="overflow-x-auto">
@@ -11,7 +17,9 @@
 				<tr class="hover">
 					<td>
 					{#if l}
-						{l.getExerciceName()}
+						<div on:click={() => clickExercice(l)}>
+							{l.getExerciceName()}
+						</div>
 					{:else}
 						{"empty"}
 					{/if}
