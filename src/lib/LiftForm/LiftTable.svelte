@@ -18,7 +18,7 @@
 					<td>
 					{#if l}
 						<div on:click={() => clickExercice(l)}>
-							{l.getExerciceName()}
+							{l.getFullName()}
 						</div>
 					{:else}
 						{"empty"}

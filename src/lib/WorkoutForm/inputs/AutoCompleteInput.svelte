@@ -52,7 +52,7 @@
 		for (const suggestion of allSuggestions) {
 			if (
 				suggestion
-					.getExerciceName()
+					.getFullName()
 					.toLowerCase()
 					.includes(value.toLowerCase())
 			) {
@@ -74,7 +74,7 @@
 
 	/** Handle the event when the user select a suggestion from the list by clicking/tapping.*/
 	function handleClickSuggestion(l: Lift) {
-		value = l.getExerciceName();
+		value = l.getFullName();
 		isEntered = false;
 		dispatch("update", value);
 	}
@@ -111,7 +111,7 @@
 						on:mouseleave={handleMouseLeave}
 						on:click={() => handleClickSuggestion(vs)}
 					>
-						{vs.getExerciceName()}
+						{vs.getFullName()}
 					</button>
 				</li>
 			{/each}

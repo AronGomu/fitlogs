@@ -55,12 +55,12 @@ export async function putLiftInDatabase(l: Lift): Promise<Lift> {
 	const tx = db.transaction(StoreName.LIFT, "readwrite");
 	const store = tx.objectStore(StoreName.LIFT);
 
-	const fakeLift =  await store.get(l.getExerciceName())
+	const fakeLift =  await store.get(l.getFullName())
 	if (fakeLift) {
 		return getRealLift(fakeLift);
 	}
 
-	const id = await store.add(l, l.getExerciceName());
+	const id = await store.add(l, l.getFullName());
 	return await store.get(id);
 }
 
@@ -92,8 +92,8 @@ export async function loadLifts(lifts: Lift[], resetDB: boolean): Promise<void> 
 	console.log(`Adding Lifts from baseLifts to database`)
 	for (let i = 0; i < lifts.length; i++) {
 		const a = lifts[i];
-		console.log(`Adding ${a.getExerciceName()}`);
-		await store.add(a, a.getExerciceName());
+		console.log(`Adding ${a.getFullName()}`);
+		await store.add(a, a.getFullName());
 	}
 
 	const fakeLifts = await store.getAll();

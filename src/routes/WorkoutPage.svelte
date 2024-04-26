@@ -12,7 +12,8 @@
 	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
 	import type { Lift } from "../shared/class/Lift/Lift";
 	import type { Exercice } from "../shared/class/Workout/Exercice";
-    import Modal from "../lib/Generic/Modal.svelte";
+	import Modal from "../lib/Generic/Modal.svelte";
+	import { LiftSelectorEvents } from "../shared/enum/Events";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -22,32 +23,20 @@
 
 	let isWorkoutLoaded: boolean = false;
 
-
-	let exerciceConcerned: Exercice = null;
-	// UI Stuff
-	let liftSelectorFormDialog: HTMLElement;
-	function openLiftSelectorFormDialog(exerciceConcerned: Exercice, asModal = true) {
-		console.log(`openLiftSelectorFormDialog`)
-		liftSelectorFormDialog[asModal ? "showModal" : "show"]();
-	}
-
-	let liftFormFormDialog: HTMLElement;
-	function openLiftFormFormDialog(asModal = true) {
-		console.log(`openLiftFormFormDialog`)
-		liftFormFormDialog[asModal ? "showModal" : "show"]();
-	}
-
 	let showLiftSelector: boolean = false;
+	// Exercice opened by the LiftSelector
+	let liftSelectorExercice: Exercice = null;
+
 
 	init()
 
 	async function init() {
+
 		fetchSettings().then((fs) => (settings = fs));
 
 		const emptyWorkout = parseURLWorkoutDate()
 		await fetchWorkout(emptyWorkout);
 
-		console.log(workout)	
 		isWorkoutLoaded = true;
 	}
 
@@ -85,6 +74,7 @@
 		}
 
 		workout = fetchedWorkout;
+		workout.el = workout.el;
 	}
 
 
@@ -97,7 +87,6 @@
 	function updateExercice(e, event) {
 		updateWorkout();
 	}
-
 
 	/** Add a new exercice to the workout and update it in the database. */
 	function newExercice() {
@@ -113,11 +102,18 @@
 		updateWorkout();
 	}
 
+	function onSetLift(event): void {
+		liftSelectorExercice.lift = event.detail
+		updateWorkout()
+		showLiftSelector = false
+		liftSelectorExercice = null
+	}
 
-    async function addLiftFormLiftForm(exerciceConcerned: Exercice, newLift: Lift) {
-	exerciceConcerned.lift = await putLiftInDatabase(newLift);
-	console.log("exerciceConcerned.lift", exerciceConcerned.lift)	
-    }
+
+	async function addLiftFormLiftForm(exerciceConcerned: Exercice, newLift: Lift) {
+		exerciceConcerned.lift = await putLiftInDatabase(newLift);
+		console.log("exerciceConcerned.lift", exerciceConcerned.lift)	
+	}
 </script>
 
 {#if !isWorkoutLoaded}
@@ -132,19 +128,30 @@
 			)}
 		</h1>
 
-		{#each workout.el as e, index}
+		{#each workout.el as exercice, index}
 			<span>index : {index}</span>
-			<LiftInput lift={e.lift} on:openLiftSelector={() => {
-				console.log("TEST");
-				showLiftSelector = true
-			} } />
+			<LiftInput 
+				lift={exercice.lift} 
+				value={exercice.lift.getFullName()}
+				on:openLiftSelector={
+					(e) => {
+						liftSelectorExercice = exercice;
+						showLiftSelector = true;
+					} 
+				} >
+			</LiftInput>
 		{/each}
 
 		<button class="btn btn-primary w-30" on:click={() => onClickAddExercice()}>Add Exercice</button>
 	</div>
 {/if}
 
-<Modal component={LiftSelector} bind:show={showLiftSelector}></Modal>
+<Modal 
+	component={LiftSelector} 
+	events={LiftSelectorEvents} 
+	bind:show={showLiftSelector}  
+	on:setLift={(event) => onSetLift(event)} >
+</Modal>
 
 <!-- <dialog id="modal" class="modal" bind:this={liftSelectorFormDialog}> -->
 <!-- 	<form class="modal-box h-3/4"> -->

@@ -6,10 +6,12 @@
     import LiftTable from "./LiftTable.svelte";
     
     import { createEventDispatcher } from "svelte";
+    import { LiftSelectorEvents } from "../../shared/enum/Events";
     const dispatch = createEventDispatcher();
 
-
+    export let isInModal: boolean = null;
     export let selectedLift: Lift = null;
+
     let lifts: Lift[] = [];
     let selectableLifts: Lift[] = [];
     let fuse;
@@ -36,6 +38,7 @@
     init()
 
     function init() {
+	if (isInModal === null) console.error("You must give isInModal parameter !");
 	fetchLifts();
 	setLift(null);
     }
@@ -47,10 +50,16 @@
     }
 
     function setLift(lift: Lift) {
-	console.log("setLift", lift)
 	if (lift) {
 	    selectedLift = lift;
-	    dispatch("setLift", lift)
+	    if (isInModal) {
+		dispatch(
+		    "bubbleToModal", 
+		    {type: LiftSelectorEvents.setLift, detail: lift}
+		)
+	    } else {
+		dispatch(LiftSelectorEvents.setLift, lift)
+	    }
 	}
 
 	if (!selectedLift) {

@@ -5,21 +5,21 @@ import { MuscleWork, getRealMuscleWork } from "./MuscleWork";
 export class Lift {
 	constructor(
 		/** Name of the exercice. */
-		public name?: string,
+		public name: string = "",
 		/** Name of the variation of the lift (what is between parenthese). */
-		public variation?: string,
+		public variation: string = "",
 		/** List of muscle targeted by the exercice with the estimated average percentage of work for each. */
 		public targets: MuscleWork[] = [new MuscleWork(null, 0)]
 	) {}
 
 	/** Return true if they have the same id. False otherwise. */
 	compareByName(l: Lift): boolean {
-		if (l.getExerciceName() === this.getExerciceName()) return true;
+		if (l.getFullName() === this.getFullName()) return true;
 		return false;
 	}
 
 	/** Return the complete name of the exercice. */
-	getExerciceName(): string {
+	getFullName(): string {
 		// in the case there is the variation specified
 		if (isStringNotEmpty(this.variation)) {
 			return `${this.name} (${this.variation})`;
