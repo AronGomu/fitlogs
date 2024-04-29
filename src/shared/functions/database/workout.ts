@@ -49,6 +49,7 @@ export async function getWorkoutFromDatabase(key: string): Promise<Workout> {
 }
 
 export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
+	console.log("workout to put : ", w)
 	const db = await openDatabaseWorkout();
 
 	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
@@ -59,11 +60,13 @@ export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 		const key = await store.put(w, w.getKey());
 		let fakeWorkout = await store.get(key);
 		await store.get(w.getKey());
+		console.log("workout returned : ", getRealWorkout(fakeWorkout))	
 		return getRealWorkout(fakeWorkout);
 	}
 
 	const id = await store.add(w, w.getKey());
 	fakeWorkout = await store.get(id)
+	console.log("workout returned : ", getRealWorkout(fakeWorkout))	
 	return getRealWorkout(fakeWorkout);
 ;
 }

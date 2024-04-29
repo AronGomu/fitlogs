@@ -53,6 +53,7 @@
   // On input trigger the input event for this component.
   function handleInput(event: any) {
     // todo : check why reseting value then inputing again prevent new characters to be inputed
+    console.log(`handleInput`)
     dispatch("input", { input: event.data, value: event.target.value });
   }
 </script>
@@ -82,7 +83,7 @@
         on:keypress={handleKeyPress}
         on:input={handleInput}
       />
-      {#if value}
+      {#if value || value == 0}
         <div
           class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
         >

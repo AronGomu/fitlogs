@@ -10,12 +10,21 @@
 		selectWholeTextOnFocus,
 	} from "../../shared/functions/Utilitary";
 	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
+    import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
+    import { LiftFormEvents } from "../../shared/enum/Events";
 
 	const dispatch = createEventDispatcher();
 
-	export var lift: Lift = new Lift();
+	export let isInModal: boolean = null;
+	export let lift: Lift = new Lift();
 
 	var exerciceIsValid: boolean = setExerciceIsValid();
+
+	init();
+
+	function init() {
+		if (isInModal === null) console.error("You must give isInModal parameter !");
+	}
 
 	function setExerciceIsValid() {
 		if (!lift) return false;
@@ -62,7 +71,7 @@
 	}
 
 	function addLift() {
-		dispatch("addLift", lift);
+		dispatchPossiblyModalEvent(dispatch, isInModal, LiftFormEvents.addLift, lift)
 	}
 </script>
 

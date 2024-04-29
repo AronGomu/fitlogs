@@ -39,5 +39,6 @@ export class Weight {
 }
 
 export function getRealWeigth(w: Weight) {
-	return new Weight(w.weight, w.metric);
+	console.log(`getRealWeigth`, w)
+	return new Weight(Number(w.weight), w.metric);
 }

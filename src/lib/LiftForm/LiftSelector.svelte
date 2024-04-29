@@ -7,6 +7,7 @@
     
     import { createEventDispatcher } from "svelte";
     import { LiftSelectorEvents } from "../../shared/enum/Events";
+    import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
     const dispatch = createEventDispatcher();
 
     export let isInModal: boolean = null;
@@ -49,17 +50,10 @@
 	fuse = new Fuse(lifts, fuseOptions);
     }
 
-    function setLift(lift: Lift) {
+    function setLift(lift: Lift): void {
 	if (lift) {
 	    selectedLift = lift;
-	    if (isInModal) {
-		dispatch(
-		    "bubbleToModal", 
-		    {type: LiftSelectorEvents.setLift, detail: lift}
-		)
-	    } else {
-		dispatch(LiftSelectorEvents.setLift, lift)
-	    }
+	    dispatchPossiblyModalEvent(dispatch, isInModal, LiftSelectorEvents.setLift, lift)
 	}
 
 	if (!selectedLift) {
@@ -70,6 +64,11 @@
 	    selectedLift.name = "";
 	}
     }
+
+    function openLiftForm(): void {
+	    dispatchPossiblyModalEvent(dispatch, isInModal, LiftSelectorEvents.openLiftForm, null)
+    }
+
 
     function filterLifts(value: string) {
 	const fuseResult = fuse.search(value);
@@ -87,7 +86,13 @@
 	<div class="h-80 overflow-y-scroll mt-4">
 	    <LiftTable on:clickExercice={(e) => setLift(e.detail)} bind:lifts={selectableLifts}/>
 	</div>
-	<button class="btn btn-warning mt-4" on:click={() => dispatch("openLiftForm")}>Lift Missing ?</button>
+	<button class="btn btn-warning mt-4" on:click={() => {
+		openLiftForm()
+		// console.log(`openLiftForm from button`)
+		// dispatch("openLiftForm")
+	}}>
+	    Lift Missing ?
+	</button>
     {:else}
 	<span class="text-center loading loading-spinner loading-lg"></span>
     {/if}

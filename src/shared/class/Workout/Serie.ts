@@ -10,13 +10,11 @@ export class Serie {
 		public reps: number,
 		/** Weight used in the set. */
 		public weight: Weight,
-
-		// GUI VARIABLES
-		/** Indicate if the collapse element is open or close. */
-		public isOpen: boolean = true) { }
+	) { }
 }
 
 /** Take a Serie from the database and transform it into a class instance.*/
 export function getRealSerie(s: Serie) {
+	console.log(`getRealSerie`, s)
 	return new Serie(s.rank, s.reps, getRealWeigth(s.weight));
 }
