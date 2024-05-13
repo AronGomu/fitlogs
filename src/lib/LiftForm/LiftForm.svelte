@@ -10,44 +10,64 @@
 		selectWholeTextOnFocus,
 	} from "../../shared/functions/Utilitary";
 	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
-    import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
-    import { LiftFormEvents } from "../../shared/enum/Events";
+	import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
+	import { LiftFormEvents } from "../../shared/enum/Events";
 
 	const dispatch = createEventDispatcher();
 
 	export let isInModal: boolean = null;
 	export let lift: Lift = new Lift();
 
-	var exerciceIsValid: boolean = setExerciceIsValid();
+	let exerciceIsValid: boolean = false;
 
 	init();
 
 	function init() {
+		setExerciceIsValid();
 		if (isInModal === null) console.error("You must give isInModal parameter !");
 	}
 
-	function setExerciceIsValid() {
-		if (!lift) return false;
-		if (!minLength(lift.name, 3)) return false;
-		if (lift.variation && !minLength(lift.variation, 3)) {
-			return false;
+	function setExerciceIsValid(): void {
+		if (!lift) {
+			console.error("Lift if null");
+			exerciceIsValid = false;
 		}
-		if (!minLength(lift.targets, 1)) return false;
 
-		let totalPercentage: number = 0;
+		else if (!minLength(lift.name, 3)) {
+			console.error("Name is under 3 characters");
+			exerciceIsValid = false;
+		}
 
-		setOnlyMuscleTo100();
+		else if (lift.variation && !minLength(lift.variation, 3)) {
+			console.error("Variation is not null but is under 3 characters");
+			exerciceIsValid = false;
+		}
 
-		for (const t of lift.targets) {
-			if (!t.work) t.work = 0;
-			if (t.muscle && !t.work && !isPercentage(t.work)) {
-				return false;
+		else if (lift.targets && lift.targets.length > 0) {
+			let totalPercentage: number = 0;
+
+			setOnlyMuscleTo100();
+
+			for (const t of lift.targets) {
+				if (!t.work) t.work = 0;
+				if (t.muscle && !t.work && !isPercentage(t.work)) {
+					console.error("Muscle work is not valid");
+					exerciceIsValid = false;
+					return;
+				}
+				totalPercentage += t.work;
 			}
-			totalPercentage += t.work;
-		}
-		if (totalPercentage !== 100) return false;
 
-		return true;
+			if (totalPercentage !== 100) {
+				console.error("Total percentage is not equal to 100%");
+				exerciceIsValid = false;
+			}
+		}
+
+		else {
+			console.log("Exercice is valid")
+			exerciceIsValid = true;
+		}
 	}
 
 	function setOnlyMuscleTo100() {
@@ -81,8 +101,7 @@
 		class="m-2 input input-bordered input-primary"
 		bind:value={lift.name}
 		on:focus={(e) => selectWholeTextOnFocus(e)}
-		on:input={() =>
-			(exerciceIsValid = setExerciceIsValid())}
+		on:input={() => setExerciceIsValid()}
 		placeholder="Main name of the lift..."
 	/>
 
@@ -92,8 +111,7 @@
 		class="m-2 input input-bordered input-secondary"
 		bind:value={lift.variation}
 		on:focus={(e) => selectWholeTextOnFocus(e)}
-		on:input={() =>
-			(exerciceIsValid = setExerciceIsValid())}
+		on:input={() => setExerciceIsValid()}
 		placeholder="Name of the variation of lift..."
 	/>
 
@@ -103,18 +121,11 @@
 			<select
 				class="m-2 select select-bordered w-3/5 max-w-xs"
 				bind:value={t.muscle}
-				on:change={() => {
-					exerciceIsValid =
-						setExerciceIsValid();
-				}}
+				on:change={() => { setExerciceIsValid() }}
 			>
-				<option disabled selected
-					>Select Muscle</option
-				>
+				<option disabled selected>Select Muscle</option>
 				{#each enumToList(Muscle) as muscle}
-					<option value={muscle}
-						>{muscle}</option
-					>
+					<option value={muscle}>{muscle}</option>
 				{/each}
 			</select>
 
@@ -127,9 +138,7 @@
 						selectWholeTextOnFocus(
 							e,
 						)}
-					on:input={() =>
-						(exerciceIsValid =
-							setExerciceIsValid())}
+					on:input={() => setExerciceIsValid()}
 				/>
 				<div
 					class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
@@ -142,8 +151,7 @@
 				on:click={() => {
 					lift.targets.splice(i, 1);
 					lift.targets = lift.targets;
-					exerciceIsValid =
-						setExerciceIsValid();
+					setExerciceIsValid();
 				}}
 			>
 				<Icon

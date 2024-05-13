@@ -9,7 +9,7 @@ export class Lift {
 		/** Name of the variation of the lift (what is between parenthese). */
 		public variation: string = "",
 		/** List of muscle targeted by the exercice with the estimated average percentage of work for each. */
-		public targets: MuscleWork[] = [new MuscleWork(null, 0)]
+		public targets: MuscleWork[] = []
 	) {}
 
 	/** Return true if they have the same id. False otherwise. */

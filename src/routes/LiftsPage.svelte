@@ -1,58 +1,38 @@
 <script lang="ts">
-	import trashCanOutline from '@iconify/icons-mdi/trash-can-outline';
-	import Icon from '@iconify/svelte';
-	import magnifyIcon from '@iconify/icons-mdi/magnify';
 	import { Lift } from '../shared/class/Lift/Lift';
 	import {
-		StoreName,
-		deleteFromDatabase,
-	} from '../shared/functions/Database';
-	import {
 		isStringNotEmpty,
-		selectWholeTextOnFocus,
 	} from '../shared/functions/Utilitary';
 	import { FiltersLift } from '../shared/class/Lift/FiltersLift';
-	import { MuscleWork } from '../shared/class/Lift/MuscleWork';
+    import { getLiftsFromDatabase } from '../shared/functions/database/lift';
 
 	/** All the filters for the lift list. */
 	const filtersLift: FiltersLift = new FiltersLift();
-	/** All the exercices stored that can be shown as suggestions. */
-	var ll: Lift[] = [];
 
-	// if we're fetching the global lift (online ressource)
-	if (window.location.pathname === '/fitlogs/globalLifts') {
-		fetchGlobalLifts().then((globalLifts) => {
-			ll = globalLifts;
-			applyFilters();
-		});
-	}
-	// by default we're fetching the local ressources
-	else {
-		lifts.subscribe((lifts) => {
-			ll = lifts;
-			applyFilters();
-		});
+	let ll: Lift[] = [];
+	let llFiltered: Lift[] = [];
+
+	init()
+
+	async function init() {
+		await setLl();
+		applyFilters();
 	}
 
-	var llFiltered: Lift[] = [];
-
-	/** New Lift object that will be modified then added to the database. */
-	var nl: Lift = new Lift();
-	nl.targets.push(new MuscleWork(null, 0));
-
-	/** HTML element containing the filter form for the lifts opening on modal/dialog. */
-	var filterDialog: HTMLElement;
-	/** Show the dialog for trying to delete a set. */
-	function showFilterDialog(asModal = true) {
-		try {
-			filterDialog[asModal ? 'showModal' : 'show']();
-		} catch (e) {
-			throw new Error(e);
+	async function setLl() {
+		const fetchLifts = await getLiftsFromDatabase();
+		if (!fetchLifts) {
+			console.error("fetchLifts if null ?");
+		} else if (fetchLifts.length === 0) {
+			console.error("fetchLifts has no lift ?");
+		} else {
+			ll = fetchLifts;
 		}
 	}
 
+
 	/** Apply the filters from filtersLift to llFiltered */
-	function applyFilters() {
+	function applyFilters(): void {
 		llFiltered = ll;
 		// TODO apply the filter taking the ll to llFiltered
 		if (isStringNotEmpty(filtersLift.name)) {
@@ -75,50 +55,17 @@
 			}
 		}
 	}
+
+	function showLift(lift: Lift): void {
+		console.log(`showLift`, lift);
+	}
 </script>
 
-<div class="h-full flex flex-col overflow-hidden">
-	<div>
-		{#if nl}
-			<LiftForm
-				lift={nl}
-				on:liftAdded={(event) => {
-					lifts.update((toUpdate) => {
-						toUpdate.push(event.detail);
-						return toUpdate;
-					});
-					nl = null;
-				}}
-				on:liftUpdated={(event) => {
-					lifts.update((toUpdate) => {
-						for (let l of toUpdate) {
-							if (l.id === event.detail.id) {
-								l = event.detail;
-							}
-						}
-						return toUpdate;
-					});
-					nl = null;
-				}}
-			/>
-		{:else}
-			<div class="m-4 flex justify-center">
-				<button
-					class="btn btn-primary"
-					on:click={() => {
-						nl = new Lift();
-						nl.targets = [new MuscleWork(null, 0)];
-					}}
-				>
-					New Exercice
-				</button>
-			</div>
-		{/if}
-	</div>
+<div class="flex flex-col justify-center h-full w-full">
+	<button class="btn btn-primary" on:click={() => showLift(null)}>New Lift</button>
 
 	<div class="flex-1 overflow-y-auto">
 		<table class="table">
-			<!-- head -->
 			<thead>
 				<tr>
 					<th>
@@ -131,70 +78,14 @@
 							<span class="font-bold">Variation</span>
 						</div>
 					</th>
-					<!-- <th>Muscles Targeted</th> -->
-					<th>
-						<button
-							on:click={() => {
-								showFilterDialog(true);
-							}}
-						>
-							<Icon
-								icon={magnifyIcon}
-								color="white"
-								width="15"
-								height="15"
-								class="cursor-pointer"
-							/>
-						</button>
-					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each llFiltered as l, i}
-					<tr>
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<td
-							class="font-bold"
-							on:click={() => {
-								nl = l;
-							}}>{l.name}</td
-						>
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<tr class="hover cursor-pointer border-2 border-neutral-700"
+						on:click={() => { showLift(l) }}>
+						<td class="font-bold w-40">{l.name}</td>
 						<td>{l.variation}</td>
-						<!-- <td>
-                    {#each l.targets as mw, i}
-                    
-                    {#if l.targets[i] !== last(l.targets)}
-                    <span>{`${mw.work}% `}</span>
-                    <span class="font-bold">{`${mw.muscle}, `}</span>
-                    {:else}
-                    <span>{`${mw.work}% `}</span>
-                    <span class="font-bold">{`${mw.muscle}`}</span>
-                    {/if}
-                    {/each}
-                </td> -->
-						<td>
-							<!-- svelte-ignore missing-declaration -->
-							<button
-								on:click={() => {
-									deleteFromDatabase(
-										StoreName.LIFT,
-										l.id
-									).then(() => {
-										ll.splice(i, 1);
-										ll = ll;
-									});
-								}}
-							>
-								<Icon
-									icon={trashCanOutline}
-									color="red"
-									width="15"
-									height="15"
-									class="cursor-pointer"
-								/>
-							</button>
-						</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -202,11 +93,11 @@
 	</div>
 </div>
 
+<!--
 <dialog id="modal" class="modal" bind:this={filterDialog}>
 	<form method="dialog" class="modal-box">
 		<div class="flex flex-col justify-center items-center">
 			<div class="form-control w-full max-w-xs">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label class="label">
 					<span class="label-text-alt">Name</span>
 				</label>
@@ -218,7 +109,6 @@
 					on:focus={(e) => selectWholeTextOnFocus(e)}
 				/>
 
-				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label class="label">
 					<span class="label-text-alt">Variation</span>
 				</label>
@@ -254,3 +144,4 @@
 		<button>close</button>
 	</form>
 </dialog>
+-->

@@ -12,41 +12,40 @@
 
 <div class="flex flex-col items-center">
 	<button
-		class="btn btn-error"
+		class="btn btn-error m-4 w-40"
 		on:click={() => {
 			deleteDatabase();
 			location.reload();
-		}}>DELETE ALL</button
-	>
+		}}>DELETE ALL DBS
+	</button>
 
 	<button
-		class="btn btn-error"
+		class="btn btn-error m-4 w-40"
 		on:click={() => {
 			deleteDatabasePlan();
 			location.reload();
-		}}>DELETE PLAN DB</button
-	>
+		}}>DELETE PLAN DB
+	</button>
 
 	<button
-		class="btn btn-error"
+		class="btn btn-error m-4 w-40"
 		on:click={() => {
 			deleteDatabaseWorkout();
 			location.reload();
-		}}>DELETE WORKOUT DB</button
-	>
+		}}>DELETE WORKOUT DB
+	</button>
 
 	<button
-		class="btn btn-warning"
+		class="btn btn-warning m-4 w-40"
 		on:click={() => {
 			loadActivities(baseActivities, true);
-			location.reload();
-		}}>POPULATE ACTIVITIES</button
-	>
+		}}>POPULATE ACTIVITIES
+	</button>
 
 	<button
-		class="btn btn-warning"
+		class="btn btn-warning m-4 w-40"
 		on:click={() => {
 			loadLifts(baseLifts, true);
-		}}>POPULATE LIFTS</button
-	>
+		}}>POPULATE LIFTS
+	</button>
 </div>
