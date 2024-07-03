@@ -18,6 +18,7 @@
     import { WeightMetric } from "../shared/enum/WeightMetrics";
     import { Serie } from "../shared/class/Workout/Serie";
     import { Weight } from "../shared/class/Workout/Weight";
+    import { navigate } from "svelte-routing";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -175,6 +176,10 @@
 		showLiftForm = false;
 		liftSelectorExercice = null
 	}
+
+	function gotoWorkouts(): void {
+		navigate("/fitlogs/workouts");
+	}
 </script>
 
 {#if !isWorkoutLoaded}
@@ -241,3 +246,5 @@
 	on:addLift={(event) => onAddLift(event)}
 >
 </Modal>
+
+<button class="btn btn-primary w-30 m-20" on:click={() => gotoWorkouts()}>GOTO WORKOUTS</button>
