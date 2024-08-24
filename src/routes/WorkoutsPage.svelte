@@ -4,12 +4,16 @@
 		deleteFromDatabase,
 		updateInDatabase,
 	} from "../shared/functions/Database";
+
 	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";
-    import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
-    import Modal from "../lib/Generic/Modal.svelte";
+	import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
+	import Modal from "../lib/Generic/Modal.svelte";
+	import NewWorkoutDateForm from "../lib/WorkoutForm/NewWorkoutDateForm.svelte";
+	import { NewWorkoutDateFormEvents } from "../shared/enum/Events";
+    import type { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 
 	document.querySelector("html").setAttribute("data-theme", "black");
 
@@ -19,6 +23,8 @@
 
 	let deleteDialog: HTMLElement;
 	let workoutToBeDeleted: Workout = null;
+
+	let showNewWorkoutDateForm: boolean = false;
 
 	let isWorkoutsLoaded: boolean = false;
 
@@ -45,20 +51,16 @@
 
 	/** Creates a new empty workout in the database and add it in the GUI. */
 	async function onNewWorkout() {
-		const today = new Date();
-		const todayYear = today.getFullYear();
-		const todayMonth = today.getMonth() + 1;
-		const todayDay = today.getDate();
+		showNewWorkoutDateForm = true;
+	}
+
+	async function openWorkout(wd: WorkoutDate) {
+		console.log(`OPEN WORKOUT`, wd)
 		navigate(
-			`/fitlogs/workout/${todayYear}-${todayMonth}-${todayDay}`,
+			`/fitlogs/workout/${wd.year}-${wd.month}-${wd.day}`,
 		);
 	}
 
-	// /** Open or close the workout by clicking on it. */
-	// async function onOpenWorkout(id: number) {
-	// 	navigate(`/fitlogs/workout/${id}`);
-	// }
-	//
 	// /** Delete a workout in the database and remove it in the GUI. */
 	// async function deleteWorkout(w: Workout) {
 	// 	await deleteFromDatabase(StoreName.WORKOUT, w.id);
@@ -76,6 +78,13 @@
 	// }
 </script>
 
+<div class="flex flex-row justify-center mb-4">
+	<button class="btn btn-primary" on:click={onNewWorkout}>
+		New Workout
+	</button>
+</div>
+
+
 {#if !isWorkoutsLoaded}
 	<div class="flex items-center justify-center h-screen">
 		<span class="text-center loading loading-spinner loading-lg"></span>
@@ -83,12 +92,7 @@
 {/if}
 
 {#if isWorkoutsLoaded}
-	<div class="flex flex-row justify-center mb-4">
-		<button class="btn btn-primary" on:click={onNewWorkout}>
-			New Workout
-		</button>
-	</div>
-
+	
 	<div class="overflow-x-auto">
 		<table class="table">
 			<!-- <thead> -->
@@ -102,7 +106,7 @@
 					<tr>
 						<th
 							class="cursor-pointer"
-							on:click={onOpenWorkout(w)}
+							on:click={() => {openWorkout(w.createdAt)}}
 						>
 							<span
 								>{formatDateWithSpelledOutMonth(
@@ -117,11 +121,12 @@
 	</div>
 {/if}
 
+<!-- TODO Comprendre comment remonter la date -->
 <Modal 
-	component={WorkoutDateForm} 
-	events={WorkoutDateFormEvents} 
-	bind:show={showWorkoutDateForm}  
-	on:addLift={(event) => onAddLift(event)}
+	component={NewWorkoutDateForm} 
+	events={NewWorkoutDateFormEvents} 
+	bind:show={showNewWorkoutDateForm}
+	on:submitTodayDate={wd => openWorkout(wd)}
 >
 </Modal>
 

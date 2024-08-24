@@ -20,7 +20,7 @@
 
 {#if show}
 	<div class="bg-black fixed top-0 left-0 h-full w-full flex items-center justify-center">
-		<div class="modal-box bg-primary opacity-100">
+		<div class="modal-box bg-primary opacity-100 border border-red-900">
 			{#if component}
 				<svelte:component this={component} isInModal={true} on:bubbleToModal={(e) => bubbleToParent(e.detail)}>
 				</svelte:component>

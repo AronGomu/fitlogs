@@ -6,3 +6,8 @@ export const LiftSelectorEvents = {
 export const LiftFormEvents = {
     addLift: "addLift"
 } as const
+
+export const NewWorkoutDateFormEvents = {
+    submitTodayDate: "submitTodayDate",
+    submitDate: "submitDate",
+} as const
