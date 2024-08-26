@@ -40,7 +40,8 @@ export class WorkoutDate {
     }
 
     public getDate(): Date {
-        return new Date(this.year, this.month, this.day);
+        console.log(this)
+        return new Date(this.year, this.month-1, this.day);
     }
 
     public hasBeenCreatedToday(): boolean {
@@ -52,9 +53,9 @@ export class WorkoutDate {
 
 export function getRealWorkoutDate(wd: WorkoutDate): WorkoutDate {
     return new WorkoutDate(
-        wd.day,
+        wd.year,
         wd.month,
-        wd.year
+        wd.day
     );
 }
 

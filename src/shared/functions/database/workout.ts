@@ -23,10 +23,13 @@ async function openDatabaseWorkout(): Promise<IDBPDatabase<Database>> {
 }
 
 export async function getWorkoutsFromDatabase(): Promise<Workout[]> {
+	console.log("getting workouts from database...");
 	const db = await openDatabaseWorkout();
 	const tx = db.transaction(StoreName.WORKOUT, "readonly");
 	const store = tx.objectStore(StoreName.WORKOUT);
 	const fakeWorkouts = await store.getAll()
+
+	console.log("all workouts from store : ", fakeWorkouts);
 	const realWorkouts: Workout[] = [];
 	for (let i = 0; i < fakeWorkouts.length; i++) {
 		const fakeWorkout = fakeWorkouts[i];
@@ -35,16 +38,23 @@ export async function getWorkoutsFromDatabase(): Promise<Workout[]> {
 	return realWorkouts;
 }
 
-export async function getWorkoutFromDatabase(key: string): Promise<Workout> {
+export async function getWorkoutFromDatabase(wd: WorkoutDate): Promise<Workout> {
+	console.log("getting workout from database...");
 	const db = await openDatabaseWorkout();
 
 	const tx = db.transaction(StoreName.WORKOUT, "readonly");
 	const store = tx.objectStore(StoreName.WORKOUT);
 
-	const fakeWorkout =  await store.get(key)
+	const key: string = wd.convertToKey()
+	console.log("key converted : ", key)
+	const fakeWorkout = await store.get(key)
+
 	if (fakeWorkout) {
+		console.log(`workout ${key} returned`, fakeWorkout);
 		return getRealWorkout(fakeWorkout);
 	} 
+
+	console.log(`workout ${key} was not found`);
 	return null;	
 }
 
@@ -60,7 +70,7 @@ export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 		const key = await store.put(w, w.getKey());
 		let fakeWorkout = await store.get(key);
 		await store.get(w.getKey());
-		console.log("workout returned : ", getRealWorkout(fakeWorkout))	
+		console.log("workout returned : ", getRealWorkout(fakeWorkout));
 		return getRealWorkout(fakeWorkout);
 	}
 

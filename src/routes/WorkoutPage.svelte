@@ -14,11 +14,11 @@
 	import type { Exercice } from "../shared/class/Workout/Exercice";
 	import Modal from "../lib/Generic/Modal.svelte";
 	import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
-    import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
-    import { WeightMetric } from "../shared/enum/WeightMetrics";
-    import { Serie } from "../shared/class/Workout/Serie";
-    import { Weight } from "../shared/class/Workout/Weight";
-    import { navigate } from "svelte-routing";
+	import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
+	import { WeightMetric } from "../shared/enum/WeightMetrics";
+	import { Serie } from "../shared/class/Workout/Serie";
+	import { Weight } from "../shared/class/Workout/Weight";
+	import { navigate } from "svelte-routing";
 
 	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
@@ -43,7 +43,12 @@
 		fetchSettings().then((fs) => (settings = fs));
 
 		const emptyWorkout = parseURLWorkoutDate()
-		await fetchWorkout(emptyWorkout);
+		workout = await fetchWorkout(emptyWorkout);
+
+		// if the workout does not exist, we create it
+		if (!workout) {
+			workout = await putWorkoutInDatabase(emptyWorkout)
+		}
 
 		isWorkoutLoaded = true;
 	}
@@ -64,17 +69,8 @@
 		return new Workout(wd, []);
 	}
 
-	async function fetchWorkout(w: Workout) {
-
-		const fetchedWorkout: Workout = await getWorkoutFromDatabase(w.getKey());
-
-		if (!fetchedWorkout) {
-			workout = w;
-		} else {
-			workout = fetchedWorkout;
-		}
-
-		console.log("fetched workout", fetchedWorkout)
+	async function fetchWorkout(w: Workout): Promise<Workout> {
+		return await getWorkoutFromDatabase(w.createdAt);
 	}
 
 	// Events functions

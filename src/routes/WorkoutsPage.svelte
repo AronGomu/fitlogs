@@ -9,7 +9,7 @@
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";
-	import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
+	import { getWorkoutsFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
 	import Modal from "../lib/Generic/Modal.svelte";
 	import NewWorkoutDateForm from "../lib/WorkoutForm/NewWorkoutDateForm.svelte";
 	import { NewWorkoutDateFormEvents } from "../shared/enum/Events";
@@ -55,8 +55,7 @@
 	}
 
 	async function openWorkout(wd: WorkoutDate) {
-		console.log(`OPEN WORKOUT`, wd)
-
+		console.log(`OPEN WORKOUT`, wd);
 		navigate(
 			`/fitlogs/workout/${wd.year}-${wd.month}-${wd.day}`,
 		);
