@@ -3,28 +3,38 @@
 	import { WorkoutDate } from "../../shared/class/Workout/WorkoutDate";
 	import { NewWorkoutDateFormEvents } from "../../shared/enum/Events";
     import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
+    import DateInput from "../DateInput.svelte";
 
 	const dispatch = createEventDispatcher();
 
-	function submitTodayDate(): void {
+	let date: Date = new Date();
+
+	function submitDate(): void {
 		console.log(NewWorkoutDateFormEvents.submitTodayDate, "comment faire remonter")
 
-		const today = new Date();
-		const date = new WorkoutDate (
-			today.getFullYear(),
-			today.getMonth() + 1,
-			today.getDate()
+		const wd = new WorkoutDate (
+			date.getFullYear(),
+			date.getMonth() + 1,
+			date.getDate()
 		)
 
-		dispatchPossiblyModalEvent(dispatch, true, NewWorkoutDateFormEvents.submitTodayDate, date)
+		dispatchPossiblyModalEvent(dispatch, true, NewWorkoutDateFormEvents.submitTodayDate, wd)
 
 		// dispatch(NewWorkoutDateFormEvents.submitTodayDate, date)
 	}
 </script>
 
 <div class="flex flex-row justify-center mb-4">
-	<button class="btn btn-primary" on:click={submitTodayDate}>
-		Today	
+	<DateInput
+		bind:date
+		on:input={() => { console.log("date input activity") }}
+	/>
+
+	<button class="btn btn-primary" on:click={submitDate}>
+		Create New workout	
 	</button>
+
+
+	
 </div>
 
