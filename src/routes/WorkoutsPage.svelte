@@ -56,6 +56,7 @@
 
 	async function openWorkout(wd: WorkoutDate) {
 		console.log(`OPEN WORKOUT`, wd)
+
 		navigate(
 			`/fitlogs/workout/${wd.year}-${wd.month}-${wd.day}`,
 		);
@@ -126,7 +127,7 @@
 	component={NewWorkoutDateForm} 
 	events={NewWorkoutDateFormEvents} 
 	bind:show={showNewWorkoutDateForm}
-	on:submitTodayDate={wd => openWorkout(wd)}
+	on:submitTodayDate={e => openWorkout(e.detail)}
 >
 </Modal>
 

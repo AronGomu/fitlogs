@@ -2,17 +2,23 @@
 	import { createEventDispatcher } from "svelte";
 	import { WorkoutDate } from "../../shared/class/Workout/WorkoutDate";
 	import { NewWorkoutDateFormEvents } from "../../shared/enum/Events";
+    import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
 
 	const dispatch = createEventDispatcher();
 
 	function submitTodayDate(): void {
 		console.log(NewWorkoutDateFormEvents.submitTodayDate, "comment faire remonter")
+
 		const today = new Date();
-		dispatch(NewWorkoutDateFormEvents.submitTodayDate, new WorkoutDate (
+		const date = new WorkoutDate (
 			today.getFullYear(),
 			today.getMonth() + 1,
 			today.getDate()
-		))
+		)
+
+		dispatchPossiblyModalEvent(dispatch, true, NewWorkoutDateFormEvents.submitTodayDate, date)
+
+		// dispatch(NewWorkoutDateFormEvents.submitTodayDate, date)
 	}
 </script>
 
