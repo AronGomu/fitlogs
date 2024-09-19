@@ -23,6 +23,7 @@
 	init();
 
 	function init() {
+		console.log(`liftform`);
 		setExerciceIsValid();
 		if (isInModal === null) console.error("You must give isInModal parameter !");
 	}

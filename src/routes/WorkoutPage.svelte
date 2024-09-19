@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { Settings } from "../shared/class/Settings";
@@ -10,17 +9,14 @@
 	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
 	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
 	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-	import type { Lift } from "../shared/class/Lift/Lift";
 	import type { Exercice } from "../shared/class/Workout/Exercice";
 	import Modal from "../lib/Generic/Modal.svelte";
 	import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
 	import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
-	import { WeightMetric } from "../shared/enum/WeightMetrics";
 	import { Serie } from "../shared/class/Workout/Serie";
 	import { Weight } from "../shared/class/Workout/Weight";
 	import { navigate } from "svelte-routing";
 
-	const dispatch = createEventDispatcher();
 	export let urlWorkoutDate: string = null;
 	let settings: Settings = new Settings();
 
@@ -129,6 +125,25 @@
 		}
 
 	}
+
+	async function updateReps(exercice: Exercice, serie: Serie, event: any): Promise<void> {
+		console.log("updateReps")
+		console.log("exercice", exercice)
+		console.log("event.detail", event.detail)
+		console.log(`${serie.reps} =? ${event.detail.value}`)
+
+		liftSelectorExercice = exercice;
+		serie.reps = Number(event.detail.value)
+		console.log(workout)
+
+		updateWorkout()
+
+		for (const s of exercice.series) {
+			console.log(s == serie)
+			console.log(s.reps)
+		}
+
+	}
 	
 
 	function onSetLift(event): void {
@@ -212,7 +227,12 @@
 						(e) => updateWeight(exercice, serie, e)
 					}>
 				</InputNumber>
-				<InputNumber placeholder="Repetitions" value={serie.reps}>
+				<InputNumber 
+					placeholder="Repetitions" 
+					value={serie.reps}
+					on:input={
+						(e) => updateReps(exercice, serie, e)
+					}>
 				</InputNumber>
 			{/each}
 			<button class="btn btn-primary w-30" on:click={() => onClickAddSet(exercice)}>Add set</button>
