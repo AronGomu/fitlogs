@@ -16,6 +16,7 @@
 	import { Serie } from "../shared/class/Workout/Serie";
 	import { Weight } from "../shared/class/Workout/Weight";
 	import { navigate } from "svelte-routing";
+	import Loading from "../lib/Generic/Loading.svelte";
 
 	export let urlWorkoutDate: string = null;
 	let settings: Settings = new Settings();
@@ -194,9 +195,7 @@
 </script>
 
 {#if !isWorkoutLoaded}
-	<div class="flex items-center justify-center h-screen">
-		<span class="text-center loading loading-spinner loading-lg"/>
-	</div>
+	<Loading/>
 {:else}
 	<div id="workout" class="flex flex-col items-center">
 		<h1 class="text-xl">
