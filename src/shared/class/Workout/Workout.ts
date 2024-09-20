@@ -65,3 +65,11 @@ export function getRealWorkout(w: Workout): Workout {
 
     return realWorkout;
 }
+
+export function compareWorkouts(w1: Workout, w2: Workout): number {
+        const w1Date = w1.createdAt.getDate();
+        const w2Date = w2.createdAt.getDate();
+        if (w1Date == w2Date) return 0;
+        else if (w1Date > w2Date) return -1;
+        else return 1;
+    }

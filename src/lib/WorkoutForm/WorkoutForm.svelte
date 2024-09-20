@@ -117,7 +117,6 @@
 		</h1>
 
 		{#each workout.el as e, index}
-			<span>index : {index}</span>
 			<ExerciceForm
 				{e}
 				{index}

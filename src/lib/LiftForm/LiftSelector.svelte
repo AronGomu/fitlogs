@@ -39,7 +39,6 @@
     init()
 
     function init() {
-	console.log(`lift has been launched`);
 	if (isInModal === null) console.error("You must give isInModal parameter !");
 	fetchLifts();
 	setLift(null);
@@ -48,8 +47,6 @@
     async function fetchLifts() {
 	lifts = await getLiftsFromDatabase();
 	selectableLifts = lifts;
-	console.log(`lifts`, lifts);
-	console.log(`selectableLifts`, selectableLifts);
 	fuse = new Fuse(lifts, fuseOptions);
     }
 
@@ -74,7 +71,6 @@
 
 
     function filterLifts(value: string) {
-	console.log(`filterLifts`, fuse);
 	const fuseResult = fuse.search(value);
 	let fuzeLifts = []
 	for (const fr of fuseResult) {
@@ -92,8 +88,6 @@
 	</div>
 	<button class="btn btn-warning mt-4" on:click={() => {
 		openLiftForm()
-		// console.log(`openLiftForm from button`)
-		// dispatch("openLiftForm")
 	}}>
 	    Lift Missing ?
 	</button>

@@ -5,9 +5,6 @@ export class WorkoutDate {
         public month: number,
         public day: number,
     ) {
-
-        console.log(`year`, year, 'month', month, 'day', day)
-
         const currentDate = new Date();
         if (!year && !month && !day) {
             this.year = currentDate.getFullYear();
@@ -40,7 +37,6 @@ export class WorkoutDate {
     }
 
     public getDate(): Date {
-        console.log(this)
         return new Date(this.year, this.month-1, this.day);
     }
 
