@@ -197,49 +197,61 @@
 {#if !isWorkoutLoaded}
 	<Loading/>
 {:else}
-	<div id="workout" class="flex flex-col items-center">
-		<h1 class="text-xl">
+	<div id="workout" class="flex flex-grow flex-col items-center">
+		<h1 class="text-xl mb-4">
 			{formatDateWithSpelledOutMonth(
 				workout.createdAt.getDate(),
 			)}
 		</h1>
 
-		{#each workout.el as exercice, index}
-			<span>index : {index}</span>
+		{#each workout.el as exercice}
 			<LiftInput 
 				lift={exercice.lift} 
 				value={exercice.lift.getFullName()}
 				on:openLiftSelector={
-					(e) => {
+					() => {
 						liftSelectorExercice = exercice;
 						showLiftSelector = true;
 					} 
-				} >
+				}>
 			</LiftInput>
+
 			{#each exercice.series as serie, index}
-				<div>Set {index}</div>
-				<InputNumber 
-					placeholder="Weight" 
-					metric={settings.wm} 
-					value={serie.weight.weight} 
-					on:input={
-						(e) => updateWeight(exercice, serie, e)
-					}>
-				</InputNumber>
-				<InputNumber 
-					placeholder="Repetitions" 
-					value={serie.reps}
-					on:input={
-						(e) => updateReps(exercice, serie, e)
-					}>
-				</InputNumber>
+				<div class="flex space-x-4 mt-4">
+					<div>Set {index+1}</div>
+					<InputNumber 
+						placeholder="Weight" 
+						metric={settings.wm} 
+						value={serie.weight.weight} 
+						on:input={
+							(e) => updateWeight(exercice, serie, e)
+						}
+						className="input-lg w-20"
+						>
+					</InputNumber>
+					<div class="ml-4 mr-4">X</div>
+					<InputNumber 
+						placeholder="Repetitions" 
+						value={serie.reps}
+						on:input={
+							(e) => updateReps(exercice, serie, e)
+						}
+						className="input-lg w-10"
+						>
+					</InputNumber>
+				</div>
 			{/each}
-			<button class="btn btn-primary w-30" on:click={() => onClickAddSet(exercice)}>Add set</button>
+			<button class="btn btn-primary w-30 mt-2 mb-12" on:click={() => onClickAddSet(exercice)}>Add set</button>
 		{/each}
 
 
-		<button class="btn btn-primary w-30" on:click={() => onClickAddExercice()}>Add Exercice</button>
+		<button class="btn btn-secondary w-30 mt-14" on:click={() => onClickAddExercice()}>Add Exercice</button>
 	</div>
+
+	<div class="flex justify-center">
+		<button class="btn btn-warning w-30 m-10" on:click={() => gotoWorkouts()}>GOTO WORKOUTS</button>
+	</div>
+
 {/if}
 
 <Modal 
@@ -262,4 +274,3 @@
 >
 </Modal>
 
-<button class="btn btn-primary w-30 m-20" on:click={() => gotoWorkouts()}>GOTO WORKOUTS</button>
