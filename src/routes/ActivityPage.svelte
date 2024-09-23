@@ -4,6 +4,7 @@
   import ActivityStats from "../lib/Activity/ActivityStats.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
+  import { navigate } from "svelte-routing";
 
   let activities: Activity[] = null;
   type TabType = "list" | "stats" | "plan";
@@ -49,6 +50,10 @@
       else tabs[key].class = "";
     }
   }
+
+  async function gotoMenu() {
+    navigate("/fitlogs/");
+  }
 </script>
 
 <div role="tablist" class="tabs tabs-boxed">
@@ -69,7 +74,7 @@
   >
 </div>
 {#if activities}
-  <div class="w-full h-full mt-4">
+  <div class="w-max-full h-max-full mt-4">
     {#if tabs.plan.class == "tab-active"}
       <ActivityPlan {activities} />
     {:else if tabs.list.class == "tab-active"}
@@ -81,3 +86,8 @@
     {/if}
   </div>
 {/if}
+
+<div class="flex justify-center">
+  <button class="btn btn-warning w-30 m-10" on:click={() => gotoMenu()}>Back To Menu</button>
+</div>
+

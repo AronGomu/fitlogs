@@ -136,12 +136,12 @@
 
 	{#if isMissingDays}
 		<div class="flex flex-col items-center">
-			<div class="text-xl text-error">
+			<div class="text-xl text-error text-center">
 				Some days in the week are not complete.
 			</div>
-			<div class="text-sm text-warning">
+			<div class="text-sm text-warning text-center">
 				Even if you don't have the exact data, it's
-				better to estimate it yourself than have nothing
+				better to estimate if you want to see some numbers
 			</div>
 		</div>
 	{:else if averageCaloriesTodo && averageStepsTodo}

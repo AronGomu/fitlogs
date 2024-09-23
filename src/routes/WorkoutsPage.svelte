@@ -41,7 +41,11 @@
 			`/fitlogs/workout/${wd.year}-${wd.month}-${wd.day}`,
 		);
 	}
-	</script>
+
+	async function gotoMenu() {
+		navigate("/fitlogs/");
+	}
+</script>
 
 <div class="flex flex-row justify-center mb-4">
 	<button class="btn btn-primary" on:click={onNewWorkout}>
@@ -67,11 +71,11 @@
 							class="cursor-pointer"
 							on:click={() => {openWorkout(w.createdAt)}}
 						>
-							<span
-								>{formatDateWithSpelledOutMonth(
+							<span>
+								{formatDateWithSpelledOutMonth(
 									w.createdAt.getDate(),
-								)}</span
-							>
+								)}
+							</span>
 						</th>
 					</tr>
 				{/each}
@@ -80,6 +84,10 @@
 	</div>
 {/if}
 
+<div class="flex justify-center">
+	<button class="btn btn-warning w-30 m-10" on:click={() => gotoMenu()}>Back To Menu</button>
+</div>
+
 <Modal 
 	component={NewWorkoutDateForm} 
 	events={NewWorkoutDateFormEvents} 
@@ -87,4 +95,3 @@
 	on:submitTodayDate={e => openWorkout(e.detail)}
 >
 </Modal>
-

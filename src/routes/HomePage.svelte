@@ -19,7 +19,14 @@
 	<button
 		class="btn btn-primary mt-4"
 		on:click={() => {
+			navigate(`/fitlogs/workouts`);
+		}}>Workouts</button
+	>
+
+	<button
+		class="btn btn-primary mt-4"
+		on:click={() => {
 			navigate(`/fitlogs/activity`);
-		}}>Go to Activities</button
+		}}>Activities</button
 	>
 </div>

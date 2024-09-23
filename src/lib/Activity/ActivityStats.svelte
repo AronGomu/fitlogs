@@ -82,6 +82,10 @@
 	function calculateValues() {
 		averageActivities = setAverageActivities(activities, nbDays);
 
+		if (averageActivities.length < 1) {
+			return;
+		}
+
 		averageCalories = averageActivities[0].calories;
 		averageWeight = averageActivities[0].weight;
 		averageSteps = averageActivities[0].steps;
