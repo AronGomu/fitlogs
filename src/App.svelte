@@ -23,6 +23,10 @@
 		<div class="page-content">
 			<Router>
 				<Route
+					path="/fitlogs/about"
+					component={AboutPage}
+				/>
+				<Route
 					path="/fitlogs/settings"
 					component={SettingsPage}
 				/>

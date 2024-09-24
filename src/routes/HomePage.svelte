@@ -29,4 +29,25 @@
 			navigate(`/fitlogs/activity`);
 		}}>Activities</button
 	>
+
+	<button
+		class="btn btn-primary mt-4"
+		on:click={() => {
+			navigate(`/fitlogs/exports`);
+		}}>Exports</button
+	>
+
+	<button
+		class="btn btn-primary mt-4"
+		on:click={() => {
+			navigate(`/fitlogs/settings`);
+		}}>Settings</button
+	>
+
+	<button
+		class="btn btn-primary mt-4"
+		on:click={() => {
+			navigate(`/fitlogs/about`);
+		}}>About</button
+	>
 </div>
