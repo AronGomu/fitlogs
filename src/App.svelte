@@ -12,6 +12,7 @@
 	import WorkoutsPage from "./routes/WorkoutsPage.svelte";
 	import WorkoutPage from "./routes/WorkoutPage.svelte";
 	import HomePage from "./routes/HomePage.svelte";
+	import AboutPage from "./routes/AboutPage.svelte";
 </script>
 
 <div class="h-screen flex flex-col overflow-auto">
