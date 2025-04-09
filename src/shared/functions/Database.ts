@@ -21,26 +21,11 @@ export type databaseObject = Workout | Lift | Program | Activity;
 
 // Define the database schema
 export interface Database extends DBSchema {
-	"workout-store": {
-		key: number;
-		value: any;
-	};
-	"lift-store": {
-		key: number;
-		value: any;
-	};
-	"program-store": {
-		key: number;
-		value: any;
-	};
-	"settings-store": {
-		key: number;
-		value: any;
-	};
-	"activity-store": {
-		key: number;
-		value: any;
-	};
+	"workout-store": { key: number; value: any; };
+	"lift-store": { key: number; value: any; };
+	"program-store": { key: number; value: any; };
+	"settings-store": { key: number; value: any; };
+	"activity-store": { key: number; value: any; };
 }
 
 // GENERIC FUNCTIONS
@@ -50,6 +35,11 @@ export interface Database extends DBSchema {
  * @returns {Promise<IDBPDatabase<Database>>} - Promise of the IndexedDB database instance.
  */
 export async function openDatabase(): Promise<IDBPDatabase<Database>> {
+	if (typeof indexedDB === 'undefined') { 
+		console.error("indexedDB is UNDEFINED");
+		return null;
+	}
+
 	return openDB<Database>(DB_NAME, 1, {
 
 		upgrade(db) {
@@ -86,6 +76,7 @@ export async function addToDatabase<T>(
 	key?: number,
 ): Promise<T> {
 	const db = await openDatabase();
+	if (!db) return null;	
 	const tx = db.transaction(storeName, "readwrite");
 	const store = tx.objectStore(storeName);
 	const id = await store.add(value, key);
@@ -130,6 +121,7 @@ export async function getObjectByIdInDatabase<T>(
 	id: number
 ): Promise<T> {
 	const db = await openDatabase();
+	if (!db) return null;
 	const tx = db.transaction(storeName, "readonly");
 	const store = tx.objectStore(storeName);
 
@@ -246,6 +238,7 @@ export async function saveSettings(s: Settings): Promise<Settings> {
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY 
 export async function getActivitiesFromDatabase(): Promise<Activity[]> {
 	const db = await openDatabase();
+	if (!db) return null;
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);
 	let activities = await store.getAll();
@@ -257,6 +250,7 @@ export async function getActivitiesFromDatabase(): Promise<Activity[]> {
 
 export async function getActivityFromDatabase(year: number, month: number, day: number): Promise<Activity> {
 	const db = await openDatabase();
+	if (!db) return null;
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);
 

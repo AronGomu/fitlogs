@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import ActivityList from "../lib/Activity/ActivityList.svelte";
   import ActivityPlan from "../lib/Activity/ActivityPlan.svelte";
   import ActivityStats from "../lib/Activity/ActivityStats.svelte";
@@ -11,21 +12,19 @@
   let selectedTab: TabType = "list";
 
   const tabs = {
-    list: {
-      class: "tab-active",
-    },
-    stats: {
-      class: "",
-    },
-    plan: {
-      class: "",
-    },
+    list: { class: "tab-active" },
+    stats: { class: "" },
+    plan: { class: "" },
   };
 
   setActivities();
 
   async function setActivities() {
     activities = await getActivitiesFromDatabase();
+    if (!activities) {
+      console.error("activities is null");
+      return;
+    }
     activities.sort((a: Activity, b: Activity) => {
       if (!a && b) return -1;
       if (a && !b) return 1;
@@ -90,4 +89,3 @@
 <div class="flex justify-center">
   <button class="btn btn-warning w-30 m-10" on:click={() => {navigate("/fitlogs/");}}>Back To Menu</button>
 </div>
-
