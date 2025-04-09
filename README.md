@@ -25,3 +25,15 @@ npm run dev
 ### Deving
 
 Make sure you test the application of a chromium based browser. This being a PWA, I don't care about supporting other browsers that cannot install the app.
+
+
+## Possible problems when trying to run
+
+### Failed to load url /src/main.ts (resolved id: C:/Data/DVLT/fitlogs/src/main.ts). Does the file exist?
+
+**MAKE SURE** that you are not in a virtual driver ! I had this problem because I tried to run while being in :
+    D:/DVLT/fitlogs/
+instead of :
+    C:/Data/DVLT/fitlogs/
+
+It may happen only on Windows, who knows
