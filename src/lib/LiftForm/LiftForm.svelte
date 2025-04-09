@@ -94,6 +94,12 @@
 	function addLift() {
 		dispatchPossiblyModalEvent(dispatch, isInModal, LiftFormEvents.addLift, lift)
 	}
+
+	function deleteLift(l: Lift, i) {
+		l.targets.splice(i, 1);
+		l.targets = lift.targets;
+		setExerciceIsValid();
+	}
 </script>
 
 <div class="flex flex-col justify-center">
@@ -148,13 +154,7 @@
 				</div>
 			</div>
 
-			<div
-				on:click={() => {
-					lift.targets.splice(i, 1);
-					lift.targets = lift.targets;
-					setExerciceIsValid();
-				}}
-			>
+			<button on:click={() => {deleteLift(lift, i)}} >
 				<Icon
 					icon={trashCanOutline}
 					color="red"
@@ -162,14 +162,16 @@
 					height="15"
 					class="cursor-pointer"
 				/>
-			</div>
+			</button>
 		</div>
 	{/each}
 
-	<div class="btn btn-neutral" on:click={() => addMuscle()}>Add Working Muscle</div>
+	<button class="btn btn-neutral" 
+		on:click={() => addMuscle()}
+	>Add Working Muscle</button>
 
 	{#if exerciceIsValid}
-		<div class="btn btn-success" on:click={() => addLift()}>Add Lift</div>
+		<button class="btn btn-success" on:click={() => addLift()}>Add Lift</button>
 	{:else}
 		<button class="btn btn-success" disabled>Add Lift</button>
 	{/if}

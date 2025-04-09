@@ -17,9 +17,9 @@
 				<tr class="hover">
 					<td>
 					{#if l}
-						<div on:click={() => clickExercice(l)}>
+						<button on:click={() => clickExercice(l)}>
 							{l.getFullName()}
-						</div>
+						</button>
 					{:else}
 						{"empty"}
 					{/if}

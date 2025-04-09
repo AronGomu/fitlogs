@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let component: ComponentType;
-	export let events: Record<string, string>;
+	export const events: Record<string, string> = {};
 	export let show: boolean = false;
 
 	function bubbleToParent(event) {
