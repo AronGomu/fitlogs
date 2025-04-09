@@ -83,7 +83,7 @@
 				</Route>
 
 				<Route path="/fitlogs" component={HomePage} />
-				<Route path="/" component={HomePage} />
+				<Route path="**" component={HomePage} />
 			</Router>
 		</div>
 	</div>
