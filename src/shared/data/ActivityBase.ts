@@ -1,4 +1,5 @@
 import { Activity } from "../class/Activity/Activity"
+import { getDaysInMonth, getRandomNumber, truncateNumber } from "../functions/Utilitary";
 
 export const baseActivities: Activity[] = [
 	new Activity(2024, 1, 11, 86.3, 2600, 17041),
@@ -63,5 +64,103 @@ export const baseActivities: Activity[] = [
 	new Activity(2024, 3, 10, 81.6, 2350, 18172),
 	new Activity(2024, 3, 11, 81.6, null, null),
 ]
+
+export function generateMonthEmptyRandomActivities(year: number, month: number, day: number): Activity[] {
+	const activities = [];
+	for (let d = 1; d <= day; d++) {
+		const a = new Activity(year, month, d, null, null, null);
+		activities.push(a);
+	}
+	return activities;
+}
+
+export function generateYearEmptyRandomActivities(year: number, month: number, day: number): Activity[] {
+	const activities = [];
+	for (let m = 1; m <= month; m++) {
+		let mActivities = [];
+		if (m !== month) {
+			const dNumber = getDaysInMonth(year, m);
+			mActivities = generateMonthEmptyRandomActivities(year, m,  dNumber);
+			activities.push(...mActivities);
+		} else {
+			mActivities = generateMonthEmptyRandomActivities(year, m,  day);
+			activities.push(...mActivities);
+			break;
+		}
+	}
+	return activities;
+}
+
+export type Progression = 'Bulk' | 'Cut' | 'Maintenance';
+
+export function determineProgression() {
+
+}
+
+/** return updated weight */
+export function fillActivity(a: Activity, currentWeight: number, p: Progression): number {
+	let wFluctuation: number;
+	if (p === 'Bulk') wFluctuation = getRandomNumber(-2, 5);
+	else if (p === 'Cut') wFluctuation = getRandomNumber(-8, 2);
+	else if (p === 'Maintenance') wFluctuation = getRandomNumber(-2, 2);
+	wFluctuation = wFluctuation / 10;
+	
+	const baselineCalories = 3000;
+	const baselineSteps = 20000;
+	a.weight = currentWeight + wFluctuation;
+	a.calories = baselineCalories + (wFluctuation * 770);
+	a.steps = baselineSteps;
+
+	return a.weight;
+}
+
+export function setNewGoal(p: Progression, currentWeight: number, weightGoal: number, daysLeft: number) {
+	const progressionTypeChoice = getRandomNumber(0, 2);
+	if (progressionTypeChoice === 0) p = 'Bulk';
+	if (progressionTypeChoice === 1) p = 'Cut';
+	if (progressionTypeChoice === 2) p = 'Maintenance';
+	daysLeft = getRandomNumber(15, 180);
+	console.log(`CURRENT WEIGHT ${currentWeight} - STARTING ${p} - WEIGHT GOAL ${weightGoal} - DAYS LEFT ${daysLeft}`);
+
+}
+
+
+/** Generate semi-realistic random activities for the last n years of a lifter. */
+export function generateRandomActivities(n: number, startingWeight: number): Activity[] {
+	const today = new Date();
+	const year = today.getFullYear();
+	const month = today.getMonth() + 1;
+	const day = today.getDate();
+
+	const activities = [];
+
+	for (let i = n; i >= 0; i--) {
+		const yearToGenerate = year - i;
+		if (yearToGenerate === year) activities.push(...generateYearEmptyRandomActivities(year, month, day));
+		else activities.push(
+			...generateYearEmptyRandomActivities(
+				yearToGenerate, 12, getDaysInMonth(yearToGenerate, 12)
+			)
+		);
+	}
+
+	let currentWeight: number = startingWeight;
+	let weightGoal: number;
+	let p: Progression;
+	let daysLeft: number = 0;
+
+	for (let i = 0; i < activities.length; i++) {
+		const a = activities[i];
+
+		if (p === 'Bulk' && currentWeight > weightGoal) setNewGoal(p, currentWeight, weightGoal, daysLeft);
+		else if (p === 'Cut' && currentWeight < weightGoal) setNewGoal(p, currentWeight, weightGoal, daysLeft);
+		else if (p === 'Maintenance' && daysLeft === 0) setNewGoal(p, currentWeight, weightGoal, daysLeft);
+
+		currentWeight = fillActivity(a, currentWeight, p);
+		daysLeft--;
+	}
+
+	return activities;
+}
 
 

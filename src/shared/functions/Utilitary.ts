@@ -300,3 +300,40 @@ export function assert(condition: any, message: string) {
         throw new Error(message || "Assertion failed");
     }
 }
+
+/** x (inclusive) and y (exclusive) | swap values if x is greater than y */
+export function getRandomNumber(x, y) {
+    if (x > y) [x, y] = [y, x]; 
+    const rn = Math.random() * (y - x) + x;
+	return truncateNumber(rn, 0);
+}
+
+export function generateRandomWeight(startingWeight: number, n: number, maxInterval: number) {
+	const weights: number[] = [];
+	for (let i = 0; i < n; i++) {
+
+		
+	}
+}
+
+export /**
+ * Returns the number of days in a given month of a specified year.
+ * 
+ * @param year - The year for which to determine the number of days in the month.
+ * @param month - The month (1-12) for which to determine the number of days. 
+ *                Note: January is 1 and December is 12.
+ * @returns The number of days in the specified month of the specified year.
+ * @throws Error if the month is not between 1 and 12.
+ */
+function getDaysInMonth(year: number, month: number): number {
+    // Validate month input
+    if (month < 1 || month > 12) {
+        throw new Error('Month must be between 1 and 12.');
+    }
+
+    // Create a Date object for the first day of the next month
+    const date = new Date(year, month, 0); // 0 gives us the last day of the previous month
+
+    // Return the date's day value which corresponds to the last day of the month
+    return date.getDate();
+}

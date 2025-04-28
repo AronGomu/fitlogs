@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { baseActivities } from "../shared/data/ActivityBase";
+	import { baseActivities, generateRandomActivities } from "../shared/data/ActivityBase";
     import { baseLifts } from "../shared/data/LiftsBase";
 	import {
 		deleteDatabase,
@@ -8,6 +8,9 @@
     import { loadLifts } from "../shared/functions/database/lift";
 	import { deleteDatabasePlan } from "../shared/functions/database/plan";
     import { deleteDatabaseWorkout } from "../shared/functions/database/workout";
+
+	const l = generateRandomActivities(1, 80);
+	console.log(l);
 </script>
 
 <div class="flex flex-col items-center">
