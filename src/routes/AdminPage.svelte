@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { baseActivities, generateRandomActivities } from "../shared/data/ActivityBase";
+	import { generateRandomActivities } from "../shared/data/ActivityBase";
     import { baseLifts } from "../shared/data/LiftsBase";
 	import {
 		deleteDatabase,
@@ -9,8 +9,7 @@
 	import { deleteDatabasePlan } from "../shared/functions/database/plan";
     import { deleteDatabaseWorkout } from "../shared/functions/database/workout";
 
-	const l = generateRandomActivities(1, 80);
-	console.log(l);
+	generateRandomActivities(10, 80);
 </script>
 
 <div class="flex flex-col items-center">
@@ -41,7 +40,7 @@
 	<button
 		class="btn btn-warning m-4 w-40"
 		on:click={() => {
-			loadActivities(baseActivities, true);
+			loadActivities(generateRandomActivities(10, 80), true);
 		}}>POPULATE ACTIVITIES
 	</button>
 
