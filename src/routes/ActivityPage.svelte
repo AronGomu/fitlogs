@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import ActivityList from "../lib/Activity/ActivityList.svelte";
   import ActivityPlan from "../lib/Activity/ActivityPlan.svelte";
   import ActivityStats from "../lib/Activity/ActivityStats.svelte";
@@ -7,7 +6,8 @@
   import { getActivitiesFromDatabase } from "../shared/functions/Database";
   import { navigate } from "svelte-routing";
 
-  let activities: Activity[] = null;
+  let last30Activities: Activity[] = null;
+  let allActivities: Activity[] = null;
   type TabType = "list" | "stats" | "plan";
   let selectedTab: TabType = "list";
 
@@ -17,14 +17,27 @@
     plan: { class: "" },
   };
 
-  setActivities();
+  init();
 
-  async function setActivities() {
-    activities = await getActivitiesFromDatabase();
-    if (!activities) {
-      console.error("activities is null");
-      return;
-    }
+  function init() {
+    setLast30Activities();
+    setAllActivities();
+  }
+
+
+  async function setLast30Activities(): Promise<void> {
+    last30Activities = await getActivitiesFromDatabase(30);
+    if (!last30Activities) { console.error("allActivities is null"); return; }
+    sortActivities(last30Activities);
+  }
+
+  async function setAllActivities(): Promise<void> {
+    allActivities = await getActivitiesFromDatabase();
+    if (!allActivities) { console.error("allActivities is null"); return; }
+    sortActivities(allActivities)
+  }
+
+  function sortActivities(activities): Activity[] {
     activities.sort((a: Activity, b: Activity) => {
       if (!a && b) return -1;
       if (a && !b) return 1;
@@ -41,6 +54,8 @@
       total = a.day - b.day;
       return -total;
     });
+
+    return activities;
   }
 
   function setTabs(activeTab: TabType) {
@@ -56,30 +71,27 @@
 </script>
 
 <div role="tablist" class="tabs tabs-boxed">
-  <button
-    role="tab"
-    class="tab {tabs.list.class}"
-    on:click={() => setTabs("list")}>List</button
-  >
-  <button
-    role="tab"
-    class="tab {tabs.stats.class}"
-    on:click={() => setTabs("stats")}>Stats</button
-  >
-  <button
-    role="tab"
-    class="tab {tabs.plan.class}"
-    on:click={() => setTabs("plan")}>Plan</button
-  >
+  <button role="tab" class="tab {tabs.list.class}" on:click={() => setTabs("list")}>
+    List
+  </button>
+
+  <button role="tab" class="tab {tabs.stats.class}" on:click={() => setTabs("stats")}>
+    Stats
+  </button>
+
+  <button role="tab" class="tab {tabs.plan.class}" on:click={() => setTabs("plan")}>
+    Plan
+  </button>
 </div>
-{#if activities}
+
+{#if allActivities}
   <div class="w-max-full h-max-full mt-4">
     {#if tabs.plan.class == "tab-active"}
-      <ActivityPlan {activities} />
+      <ActivityPlan activities={allActivities} />
     {:else if tabs.list.class == "tab-active"}
-      <ActivityList {activities} on:refreshActivities={() => setActivities()} />
+      <ActivityList last30={last30Activities} all={allActivities} on:refreshActivities={() => init()} />
     {:else if tabs.stats.class == "tab-active"}
-      <ActivityStats {activities} />
+      <ActivityStats activities={allActivities} />
     {:else}
       <div class="text-red-100">ERROR WRONG TAB SELECTED : {selectedTab}</div>
     {/if}

@@ -236,15 +236,29 @@ export async function saveSettings(s: Settings): Promise<Settings> {
 
 
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY 
-export async function getActivitiesFromDatabase(): Promise<Activity[]> {
+export async function getActivitiesFromDatabase(nLast: number | null = null): Promise<Activity[]> {
 	const db = await openDatabase();
 	if (!db) return null;
+
 	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
 	const store = tx.objectStore(StoreName.ACTIVITY);
-	let activities = await store.getAll();
-	for (let i = 0; i < activities.length; i++) {
-		activities[i] = getRealActivity(activities[i]);
+
+	let activities: Activity[] = [];
+	if (!nLast) activities = await store.getAll();
+	else {
+		let cursor = await store.openCursor(undefined, 'prev');
+		while (cursor && nLast < 0) {
+			const a = cursor.value as Activity;
+			activities.unshift(a);
+
+			// RECURSION
+			cursor = await cursor.continue();
+			nLast--;
+		}
 	}
+
+	for (let i = 0; i < activities.length; i++) activities[i] = getRealActivity(activities[i]);
+
 	return activities;
 }
 

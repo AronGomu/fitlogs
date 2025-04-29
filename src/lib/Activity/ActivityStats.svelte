@@ -12,53 +12,18 @@
 
 	// parameters
 
-	let nbDays: number = 7;
+	let nbDays: number | null = 7;
 	const nbDaysChoice = {
-		one: {
-			label: "1 Week",
-			value: 7,
-			class: "",
-		},
-		two: {
-			label: "2 Weeks",
-			value: 15,
-			class: "",
-		},
-		three: {
-			label: "1 Month",
-			value: 30,
-			class: "",
-		},
-		four: {
-			label: "2 Month",
-			value: 60,
-			class: "",
-		},
-		five: {
-			label: "3 Month",
-			value: 90,
-			class: "",
-		},
-		six: {
-			label: "6 Month",
-			value: 180,
-			class: "",
-		},
-		seven: {
-			label: "1 Year",
-			value: 365,
-			class: "",
-		},
-		eight: {
-			label: "2 Year",
-			value: 730,
-			class: "",
-		},
-		nine: {
-			label: "3 Year",
-			value: 1045,
-			class: "",
-		},
+		oneWeek: { label: "1 Week", value: 7, class: "" },
+		twoWeeks: { label: "2 Weeks", value: 15, class: "" },
+		oneMonth: { label: "1 Month", value: 30, class: "" },
+		twoMonth: { label: "2 Month", value: 60, class: "" },
+		threeMonth: { label: "3 Month", value: 90, class: "" },
+		sixMonth: { label: "6 Month", value: 180, class: "" },
+		oneYear: {label: "1 Year",value: 365, class: "" },
+		twoYears: { label: "2 Year", value: 730, class: "" },
+		threeYears: { label: "3 Year", value: 1045, class: "" },
+		all: { label: "All", value: null, class: "" },
 	};
 
 	// info to show
@@ -82,9 +47,7 @@
 	function calculateValues() {
 		averageActivities = setAverageActivities(activities, nbDays);
 
-		if (averageActivities.length < 1) {
-			return;
-		}
+		if (averageActivities.length < 1) return;
 
 		averageCalories = averageActivities[0].calories;
 		averageWeight = averageActivities[0].weight;
@@ -152,50 +115,52 @@
 <div class="h-full w-full">
 	<div class="flex flex-row overflow-x-auto">
 		<button
-			class="btn {nbDaysChoice.one.class}"
-			on:click={() => setNbDays(nbDaysChoice.one.value)}
-			>{nbDaysChoice.one.label}</button
+			class="btn {nbDaysChoice.oneWeek.class}"
+			on:click={() => setNbDays(nbDaysChoice.oneWeek.value)}
+			>{nbDaysChoice.oneWeek.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.two.class}"
-			on:click={() => setNbDays(nbDaysChoice.two.value)}
-			>{nbDaysChoice.two.label}</button
+			class="btn {nbDaysChoice.twoWeeks.class}"
+			on:click={() => setNbDays(nbDaysChoice.twoWeeks.value)}
+			>{nbDaysChoice.twoWeeks.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.three.class}"
-			on:click={() => setNbDays(nbDaysChoice.three.value)}
-			>{nbDaysChoice.three.label}</button
+			class="btn {nbDaysChoice.oneMonth.class}"
+			on:click={() => setNbDays(nbDaysChoice.oneMonth.value)}
+			>{nbDaysChoice.oneMonth.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.four.class}"
-			on:click={() => setNbDays(nbDaysChoice.four.value)}
-			>{nbDaysChoice.four.label}</button
+			class="btn {nbDaysChoice.twoMonth.class}"
+			on:click={() => setNbDays(nbDaysChoice.twoMonth.value)}
+			>{nbDaysChoice.twoMonth.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.five.class}"
-			on:click={() => setNbDays(nbDaysChoice.five.value)}
-			>{nbDaysChoice.five.label}</button
+			class="btn {nbDaysChoice.threeMonth.class}"
+			on:click={() => setNbDays(nbDaysChoice.threeMonth.value)}
+			>{nbDaysChoice.threeMonth.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.six.class}"
-			on:click={() => setNbDays(nbDaysChoice.six.value)}
-			>{nbDaysChoice.six.label}</button
+			class="btn {nbDaysChoice.sixMonth.class}"
+			on:click={() => setNbDays(nbDaysChoice.sixMonth.value)}
+			>{nbDaysChoice.sixMonth.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.seven.class}"
-			on:click={() => setNbDays(nbDaysChoice.seven.value)}
-			>{nbDaysChoice.seven.label}</button
+			class="btn {nbDaysChoice.oneYear.class}"
+			on:click={() => setNbDays(nbDaysChoice.oneYear.value)}
+			>{nbDaysChoice.oneYear.label}</button
 		>
 		<button
-			class="btn {nbDaysChoice.eight.class}"
-			on:click={() => setNbDays(nbDaysChoice.eight.value)}
-			>{nbDaysChoice.eight.label}</button
+			class="btn {nbDaysChoice.twoYears.class}"
+			on:click={() => setNbDays(nbDaysChoice.twoYears.value)}
+			>{nbDaysChoice.twoYears.label}</button
 		>
-		<button
-			class="btn {nbDaysChoice.nine.class}"
-			on:click={() => setNbDays(nbDaysChoice.nine.value)}
-			>{nbDaysChoice.nine.label}</button
-		>
+		<button class="btn {nbDaysChoice.threeYears.class}" on:click={ () => setNbDays(nbDaysChoice.threeYears.value) }>
+			{nbDaysChoice.threeYears.label}
+		</button>
+
+		<button class="btn {nbDaysChoice.all.class}" on:click={ () => setNbDays(nbDaysChoice.all.value) }>
+			{nbDaysChoice.all.label}
+		</button>
 	</div>
 
 	<div class="w-full flex items-center justify-center mt-6 mb-4">

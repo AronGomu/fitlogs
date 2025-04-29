@@ -15,9 +15,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let activityDate: ActivityDate;
-	export const functions: {
-		refresh(updatedActivityDate: ActivityDate): void;
-	} = {
+	export const functions: { refresh(updatedActivityDate: ActivityDate): void; } = {
 		refresh(updatedActivityDate: ActivityDate) {
 			activityDate = updatedActivityDate;
 			initialLoad = true;

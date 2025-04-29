@@ -1,0 +1,10 @@
+export class ActivityRangeSelectorData {
+    constructor(
+        /** Text of the button. */
+        public label: string = "",
+        /** Number of days selected to show in the activity. */
+        public nbDays: number = null,
+        /** needed for highlighting the button. */
+        public className: string = "",
+    ) {}
+}
