@@ -24,6 +24,7 @@
 	function init(): void {
 		setTodayDataForAddingNewActivity();
 		setYesterdayDataForAddingNewActivity();
+		setActivitiesShowed();
 	}
 
 	function setTodayDataForAddingNewActivity(): void {
@@ -42,7 +43,8 @@
 	}
 
 	function setActivitiesShowed(): void {
-		if (all)
+		if (all) showed = all;
+		else if (last30) showed = all;
 	}
 
 	// UI Stuff // 
@@ -103,9 +105,9 @@
 
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
 	<form method="dialog" class="modal-box">
-		<ActivityForm 
+		<ActivityForm
 			bind:functions={activityFormFunctions}
-			on:saveActivity={() => refreshActivities()}
+			on:saveActivity={() => {refreshActivities()}}
 		/>
 	</form>
 	<form method="dialog" class="modal-backdrop">

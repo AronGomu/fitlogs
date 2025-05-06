@@ -14,7 +14,7 @@
 	import { createEventDispatcher } from "svelte";
 	const dispatch = createEventDispatcher();
 
-	export let activityDate: ActivityDate;
+	let activityDate: ActivityDate;
 	export const functions: { refresh(updatedActivityDate: ActivityDate): void; } = {
 		refresh(updatedActivityDate: ActivityDate) {
 			activityDate = updatedActivityDate;

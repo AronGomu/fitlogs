@@ -4,6 +4,7 @@
 	import type { Settings } from "../../shared/class/Settings";
 	import { truncateNumber } from "../../shared/functions/Utilitary";
     import { setAverageActivities } from "../../shared/functions/Activity";
+  import StatLabel from "./StatLabel.svelte";
 
 	let si: Settings;
 	settings.subscribe((s) => (si = s));
@@ -110,10 +111,17 @@
 	function convertWeightIntoCalories(weight: number): number {
 		return weight * 7700;
 	}
+
+	function determineWeightLossLabel(): string {
+		if (!totalAverageWeightLoss) return "";
+		if (totalAverageWeightLoss < 0) return "gained";
+		if (totalAverageWeightLoss > 0) return "losed";
+		else return "";
+	}
 </script>
 
 <div class="h-full w-full">
-	<div class="flex flex-row overflow-x-auto">
+	<div class="flex flex-row overflow-x-auto content-center">
 		<button
 			class="btn {nbDaysChoice.oneWeek.class}"
 			on:click={() => setNbDays(nbDaysChoice.oneWeek.value)}
@@ -163,112 +171,29 @@
 		</button>
 	</div>
 
-	<div class="w-full flex items-center justify-center mt-6 mb-4">
-		<span class="text-3xl text-secondary"
-			>Averages on Last {nbDays} Days</span
-		>
+	<div class="w-full flex flex-row items-center mt-6 mb-4">
+		<span class="text-3xl text-secondary">Averages on Last {nbDays} Days</span>
 	</div>
 
-	{#if averageWeight}
-		<div class="w-full flex justify-left">
-			<span class="text-6xl text-accent ml-4">
-				{averageWeight}</span
-			>
-			<span class="text-xl text-neutral-content mt-auto">
-				{si.wm.toLowerCase()}</span
-			>
-		</div>
-	{/if}
+	<div class="w-full justify-left">
+		<StatLabel data={String(averageWeight)} label={si.wm.toLowerCase()} />
+		<StatLabel data={String(averageCalories)} label="cals eaten" />
+		<StatLabel data={String(averageCaloriesBurned)} label="cals burned" />
+		<StatLabel data={String(averageTDEE)} label="cals total / TDEE" />
+		<StatLabel data={String(averageSteps)} label="steps" />
+	</div>
 
-	{#if averageCalories}
-		<div class="w-full flex items-center justify-left">
-			<span class="text-6xl text-accent ml-4">
-				{averageCalories}</span
-			><span class="text-xl text-neutral-content mt-auto">
-				cals eaten</span
-			>
-		</div>
-	{/if}
-
-	{#if averageCaloriesBurned}
-		<div class="w-full flex items-center justify-left">
-			<span class="text-6xl text-accent ml-4">
-				{averageCaloriesBurned}</span
-			><span class="text-xl text-neutral-content mt-auto">
-				cals burned</span
-			>
-		</div>
-	{/if}
-
-	{#if averageTDEE}
-		<div class="w-full flex items-center justify-left">
-			<!-- <span class="text-6xl text-neutral-content ml-4"> -->
-			<!-- 	TDEE : -->
-			<!-- </span> -->
-			<span class="text-6xl text-accent ml-4">
-				{averageTDEE}</span
-			>
-			<span class="text-xl text-neutral-content mt-auto">
-				cals total / TDEE</span
-			>
-		</div>
-	{/if}
-
-	{#if averageSteps}
-		<div class="w-full flex items-center justify-left">
-			<span class="text-6xl text-accent ml-4">
-				{averageSteps}</span
-			><span class="text-xl text-neutral-content mt-auto">
-				steps</span
-			>
-		</div>
-	{/if}
-
-	<div class="w-full flex items-center justify-center mt-12 mb-4">
+	<div class="w-full flex items-center mt-12 mb-4">
 		<span class="text-3xl text-secondary">Totals</span>
 	</div>
 
-	{#if totalAverageCaloriesBurned && totalAverageWeightLoss}
-		<div class="w-full flex flex-col justify-left">
-			<div>
-				<span class="text-6xl text-accent ml-4">
-					{totalAverageCaloriesBurned}
-				</span>
-				<span
-					class="text-xl text-neutral-content mt-auto"
-				>
-					cals burned</span
-				>
-			</div>
-
-			<div>
-				<span class="text-6xl text-accent ml-4">
-					{totalAverageWeightLoss}
-				</span>
-				<span
-					class="text-xl text-neutral-content mt-auto"
-				>
-					kilo
-					{#if totalAverageWeightLoss < 0}
-						gained
-					{:else if totalAverageWeightLoss > 0}
-						losed
-					{/if}
-				</span>
-			</div>
-
-			<div>
-				<span class="text-6xl text-accent ml-4">
-					{totalAverageSteps}
-				</span>
-				<span
-					class="text-xl text-neutral-content mt-auto"
-				>
-					steps
-				</span>
-			</div>
-		</div>
-	{/if}
+	<div class="w-full justify-left">
+		{#if totalAverageCaloriesBurned && totalAverageWeightLoss}
+			<StatLabel data={String(totalAverageCaloriesBurned)} label="cals burned" />
+			<StatLabel data={String(totalAverageWeightLoss)} label={determineWeightLossLabel()} />
+			<StatLabel data={String(totalAverageSteps)} label="steps" />
+		{/if}
+	</div>
 
 	<div class="w-full flex items-center justify-center mt-12 mb-4">
 		<span class="text-3xl text-secondary">All the Averages</span>
