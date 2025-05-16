@@ -16,7 +16,6 @@
 	$: output(internal);
 
 	function handleInput(event: any) {
-		console.log(`\n\nhandleInput InputDate`);
 		dispatch("input", {
 			input: event.data,
 			value: event.target.value,

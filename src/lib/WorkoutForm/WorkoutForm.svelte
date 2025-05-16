@@ -2,7 +2,7 @@
 	import minusIcon from "@iconify/icons-mdi/minus";
 	import plusIcon from "@iconify/icons-mdi/plus";
 	import Icon from "@iconify/svelte";
-	import { Settings } from "../../shared/class/Settings";
+	import { Setting } from "../../shared/class/Settings";
 	import { Exercice } from "../../shared/class/Workout/Exercice";
 	import {
 		Workout,
@@ -25,7 +25,7 @@
 	const dispatch = createEventDispatcher();
 	export let id: number = null;
 
-	let settings: Settings = new Settings();
+	let settings: Setting = new Setting();
 	fetchSettings().then((fs) => (settings = fs));
 
 	let isWorkoutLoaded: boolean = false;
@@ -44,7 +44,7 @@
 
 	async function fetchWorkout() {
 		const fetchedWorkout = await getObjectByIdInDatabase<Workout>(
-			StoreName.WORKOUT,
+			"workout-store",
 			Number(id),
 		);
 
@@ -63,7 +63,7 @@
 
 	async function updateWorkout() {
 		const fetchedWorkout = await updateInDatabase<Workout>(
-			StoreName.WORKOUT,
+			"workout-store",
 			workout.id,
 			workout,
 			true,

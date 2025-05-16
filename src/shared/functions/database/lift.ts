@@ -1,5 +1,4 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
-import { StoreName } from "../Database";
 import { getRealLift, type Lift } from "../../class/Lift/Lift";
 
 const DB_NAME = "db_lift";
@@ -14,8 +13,8 @@ interface Database extends DBSchema {
 async function openDatabaseLift(): Promise<IDBPDatabase<Database>> {
 	return openDB<Database>(DB_NAME, 1, {
 		upgrade(db) {
-			if (!db.objectStoreNames.contains(StoreName.LIFT)) {
-				db.createObjectStore(StoreName.LIFT);
+			if (!db.objectStoreNames.contains("lift-store")) {
+				db.createObjectStore("lift-store");
 			}
 		},
 	});
@@ -23,8 +22,8 @@ async function openDatabaseLift(): Promise<IDBPDatabase<Database>> {
 
 export async function getLiftsFromDatabase(): Promise<Lift[]> {
 	const db = await openDatabaseLift();
-	const tx = db.transaction(StoreName.LIFT, "readonly");
-	const store = tx.objectStore(StoreName.LIFT);
+	const tx = db.transaction("lift-store", "readonly");
+	const store = tx.objectStore("lift-store");
 	const fakeLifts = await store.getAll()
 	const realLifts: Lift[] = [];
 	for (let i = 0; i < fakeLifts.length; i++) {
@@ -37,8 +36,8 @@ export async function getLiftsFromDatabase(): Promise<Lift[]> {
 export async function getLiftFromDatabase(exerciceName: string): Promise<Lift> {
 	const db = await openDatabaseLift();
 
-	const tx = db.transaction(StoreName.LIFT, "readonly");
-	const store = tx.objectStore(StoreName.LIFT);
+	const tx = db.transaction("lift-store", "readonly");
+	const store = tx.objectStore("lift-store");
 
 	const fakeLift =  await store.get(exerciceName)
 	if (fakeLift) {
@@ -52,8 +51,8 @@ export async function putLiftInDatabase(l: Lift): Promise<Lift> {
 	console.log(l)
 	const db = await openDatabaseLift();
 
-	const tx = db.transaction(StoreName.LIFT, "readwrite");
-	const store = tx.objectStore(StoreName.LIFT);
+	const tx = db.transaction("lift-store", "readwrite");
+	const store = tx.objectStore("lift-store");
 
 	const fakeLift =  await store.get(l.getFullName())
 	if (fakeLift) {
@@ -75,8 +74,8 @@ export async function loadLifts(lifts: Lift[], resetDB: boolean): Promise<void> 
 	console.log(`Populating lifts with resetDB=${resetDB}\nLifts :\n`, lifts)
 
 	const db = await openDatabaseLift();
-	const tx = db.transaction(StoreName.LIFT, "readwrite");
-	const store = tx.objectStore(StoreName.LIFT);
+	const tx = db.transaction("lift-store", "readwrite");
+	const store = tx.objectStore("lift-store");
 
 	if (resetDB) {
 		console.log(`Deleting whole Lift database content...`)

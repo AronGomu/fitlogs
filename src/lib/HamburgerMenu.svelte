@@ -7,48 +7,30 @@
 	let mp: string = null;
 	menuPath.subscribe((newMenuPath) => (mp = newMenuPath));
 
-	function toggleMenu() {
-		showMenu = !showMenu;
+	function goto(path: string): void {
+		navigate(path);
+		toggleMenu();
 	}
 
-	// function setMenuPath(menus: string[]) {
-	// 	mp = "";
-	// 	for (let i = 0; i < menus.length; i++) {
-	// 		if (i != 0) {
-	// 			mp += " > ";
-	// 		}
-	// 		mp += menus[i];
-	// 	}
-	// }
-	//
-	// function handleOnclickExportData() {
-	// 	fetchWorkoutList().then((wl) => {
-	// 		downloadAsJson(wl, "data");
-	// 	});
-	// }
+	function toggleMenu(): void {
+		showMenu = !showMenu;
+	}
 </script>
 
 <div class="z-20 navbar bg-base-100 override-nav p-0 m-0">
+
 	<div class="flex-none">
 		<button class="btn btn-square btn-ghost" on:click={toggleMenu}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				class="inline-block w-5 h-5 stroke-current"
-				><path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M4 6h16M4 12h16M4 18h16"
-				/></svg
-			>
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+			</svg>
 		</button>
 	</div>
+
 	<a href="/"><span>FitLogs</span></a>
-	{#if mp}
-		<span class="menuPath-container">{mp}</span>
-	{/if}
+
+	{#if mp} <span class="menuPath-container">{mp}</span> {/if}
+
 </div>
 
 <!-- content here -->
@@ -57,71 +39,38 @@
 	class:menu-expanded={showMenu}
 >
 	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs");
-				toggleMenu();
-			}}
-		>
+		<button class="btn" on:click={() => { goto("/fitlogs") }}>
 			<span>Home</span>
 		</button>
 	</li>
+
 	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs/workouts");
-				toggleMenu();
-			}}
-		>
-			<span>Workouts</span>
-		</button>
-	</li>
-	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs/activity");
-				toggleMenu();
-			}}
-		>
+		<button class="btn" on:click={ () => { goto("/fitlogs/activity") }} >
 			<span>Activity</span>
 		</button>
 	</li>
-	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs/lifts");
-				toggleMenu();
-			}}
-		>
+
+	<!-- <li>
+		<button class="btn" on:click={() => { goto("/fitlogs/workouts") }}>
+			<span>Workouts</span>
+		</button>
+	</li> -->
+	
+	<!-- <li>
+		<button class="btn" on:click={ () => { goto("/fitlogs/lifts") }} >
 			<span>Lifts</span>
 		</button>
-	</li>
-	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs/programs");
-				toggleMenu();
-			}}
-		>
+	</li> -->
+	<!-- <li>
+		<button class="btn" on:click={ () => { goto("/fitlogs/programs") }} >
 			<span>Programs</span>
 		</button>
-	</li>
-	<li>
-		<button
-			class="btn"
-			on:click={() => {
-				navigate("/fitlogs/settings");
-				toggleMenu();
-			}}
-		>
+	</li> -->
+	<!-- <li>
+		<button class="btn" on:click={ () => { goto("/fitlogs/settings") }} >
 			<span>Settings</span>
 		</button>
-	</li>
+	</li> -->
 </ul>
 
 <style>

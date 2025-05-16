@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
-	import { Settings } from "../shared/class/Settings";
+	import { Setting } from "../shared/class/Settings";
 	import { fetchSettings } from "../shared/functions/Database";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
@@ -19,7 +19,7 @@
 	import Loading from "../lib/Generic/Loading.svelte";
 
 	export let urlWorkoutDate: string = null;
-	let settings: Settings = new Settings();
+	let settings: Setting = new Setting();
 
 	let workout: Workout;
 

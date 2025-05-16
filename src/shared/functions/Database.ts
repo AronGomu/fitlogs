@@ -1,21 +1,13 @@
 import { deleteDB, openDB, type DBSchema, type IDBPDatabase } from "idb";
-import { Settings } from "../class/Settings";
-import { Workout, getRealWorkout } from "../class/Workout/Workout";
-import { WorkoutDate, getRealWorkoutDate } from "../class/Workout/WorkoutDate";
+import { Setting } from "../class/Settings";
+import { Workout } from "../class/Workout/Workout";
 import type { Lift } from "../class/Lift/Lift";
 import type { Program } from "../class/Program/Program";
 import { getRealActivity, Activity } from "../class/Activity/Activity";
 
 const DB_NAME = "db";
 
-export enum StoreName {
-	WORKOUT = "workout-store",
-	LIFT = "lift-store",
-	PROGRAM = "program-store",
-	SETTINGS = "settings-store",
-	ACTIVITY = "activity-store",
-	PLAN = "plan-store"
-}
+export type StoreName =	"workout-store" | "lift-store" | "program-store" | "settings-store" | "activity-store";
 
 export type databaseObject = Workout | Lift | Program | Activity;
 
@@ -43,28 +35,28 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 	return openDB<Database>(DB_NAME, 1, {
 
 		upgrade(db) {
-			if (!db.objectStoreNames.contains(StoreName.WORKOUT)) {
-				db.createObjectStore(StoreName.WORKOUT, {
+			if (!db.objectStoreNames.contains("workout-store")) {
+				db.createObjectStore("workout-store", {
 					autoIncrement: true,
 				});
 			}
 
-			if (!db.objectStoreNames.contains(StoreName.LIFT)) {
-				db.createObjectStore(StoreName.LIFT, { autoIncrement: true });
+			if (!db.objectStoreNames.contains("lift-store")) {
+				db.createObjectStore("lift-store", { autoIncrement: true });
 			}
 
-			if (!db.objectStoreNames.contains(StoreName.PROGRAM)) {
-				db.createObjectStore(StoreName.PROGRAM, {
+			if (!db.objectStoreNames.contains("program-store")) {
+				db.createObjectStore("program-store", {
 					autoIncrement: true,
 				});
 			}
 
-			if (!db.objectStoreNames.contains(StoreName.SETTINGS)) {
-				db.createObjectStore(StoreName.SETTINGS, { keyPath: "key" });
+			if (!db.objectStoreNames.contains("settings-store")) {
+				db.createObjectStore("settings-store", { keyPath: "key" });
 			}
 
-			if (!db.objectStoreNames.contains(StoreName.ACTIVITY)) {
-				db.createObjectStore(StoreName.ACTIVITY, { autoIncrement: true });
+			if (!db.objectStoreNames.contains("activity-store")) {
+				db.createObjectStore("activity-store", { autoIncrement: true });
 			}
 		},
 	});
@@ -209,50 +201,69 @@ export async function deleteDatabase(): Promise<void> {
 // (Use only those to avoid errors with the settings database errors)
 
 /** Fetch the settings */
-export async function fetchSettings(): Promise<Settings> {
+export async function fetchSettings(): Promise<Setting> {
 	/** Load the only one settings object in the database. */
-	const fakeS: Settings = await getObjectByIdInDatabase<Settings>(
-		StoreName.SETTINGS, 0
+	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
+		"settings-store", 0
 	);
 
-	if (!fakeS) return new Settings();
+	if (!fakeS) return new Setting();
 
 	/** Return correctly instanciated settings. */
-	return new Settings(fakeS.wm);
+	return new Setting(fakeS.wm);
 }
 
 /** Save the settings. If there is no settings already, create the settings in the database. */
-export async function saveSettings(s: Settings): Promise<Settings> {
+export async function saveSettings(s: Setting): Promise<Setting> {
 	/** Load the settings from the database to make sure it exists. */
-	const fakeS: Settings = await getObjectByIdInDatabase<Settings>(
-		StoreName.SETTINGS,
+	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
+		"settings-store",
 		0
 	);
 
-	if (!fakeS) return addToDatabase<Settings>(StoreName.SETTINGS, s, 0);
+	if (!fakeS) return addToDatabase<Setting>("settings-store", s, 0);
 
-	return updateInDatabase<Settings>(StoreName.SETTINGS, 0, s, false);
+	return updateInDatabase<Setting>("settings-store", 0, s, false);
 }
 
 
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY 
-export async function getActivitiesFromDatabase(): Promise<Activity[]> {
+export async function getActivitiesFromDatabase(
+	/** How many to load */
+	n: number | null = null,
+	/** asc : From older to newer
+	 * desc : from newer to older
+	 */
+	sort: 'asc' | 'desc' = 'desc'
+): Promise<Activity[]> {
 	const db = await openDatabase();
 	if (!db) return null;
-	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
-	const store = tx.objectStore(StoreName.ACTIVITY);
-	let activities = await store.getAll();
-	for (let i = 0; i < activities.length; i++) {
-		activities[i] = getRealActivity(activities[i]);
+
+	const tx = db.transaction("activity-store", "readonly");
+	const store = tx.objectStore("activity-store");
+
+	let activities: Activity[] = [];
+	let cursor;
+	if (sort === 'asc') cursor = await store.openCursor(undefined, 'prev');
+	else if (sort === 'desc') cursor = await store.openCursor();
+	
+	while (cursor) {
+		const activity = cursor.value as Activity;
+		activities.push(getRealActivity(activity));
+
+		cursor = await cursor.continue();
+
+		if (n && activities.length >= n) break;
 	}
+
 	return activities;
 }
 
 export async function getActivityFromDatabase(year: number, month: number, day: number): Promise<Activity> {
 	const db = await openDatabase();
 	if (!db) return null;
-	const tx = db.transaction(StoreName.ACTIVITY, "readonly");
-	const store = tx.objectStore(StoreName.ACTIVITY);
+	const tx = db.transaction("activity-store", "readonly");
+	const store = tx.objectStore("activity-store");
 
 	let cursor = await store.openCursor();
 	while (cursor) {
@@ -272,8 +283,8 @@ export async function getActivityFromDatabase(year: number, month: number, day: 
 export async function putActivityInDatabase(activity: Activity): Promise<Activity> {
 	console.log(`putActivity`)
 	const db = await openDatabase();
-	const tx = db.transaction(StoreName.ACTIVITY, "readwrite");
-	const store = tx.objectStore(StoreName.ACTIVITY);
+	const tx = db.transaction("activity-store", "readwrite");
+	const store = tx.objectStore("activity-store");
 
 	let cursor = await store.openCursor();
 	while (cursor) {
@@ -297,9 +308,9 @@ export async function deleteActivityFromDatabase(year: number, month: number, da
 	console.log(`delete Activity ${year}-${month}-${day}`);
 	const db = await openDatabase();
 
-	const tx = db.transaction(StoreName.ACTIVITY, "readwrite");
+	const tx = db.transaction("activity-store", "readwrite");
 
-	const store = tx.objectStore(StoreName.ACTIVITY);
+	const store = tx.objectStore("activity-store");
 
 	let cursor = await store.openCursor();
 	while (cursor) {
@@ -320,8 +331,8 @@ export async function deleteActivityFromDatabase(year: number, month: number, da
 
 export async function loadActivities(activities: Activity[], resetDB: boolean): Promise<void> {
 	const db = await openDatabase();
-	const tx = db.transaction(StoreName.ACTIVITY, "readwrite");
-	const store = tx.objectStore(StoreName.ACTIVITY);
+	const tx = db.transaction("activity-store", "readwrite");
+	const store = tx.objectStore("activity-store");
 
 	if (resetDB) {
 		let cursor = await store.openCursor();

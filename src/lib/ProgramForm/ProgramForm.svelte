@@ -1,18 +1,9 @@
 <script lang="ts">
 	import { Lift } from "../../shared/class/Lift/Lift";
 	import { Day } from "../../shared/class/Program/Day";
-	import {
-		Program,
-		getRealProgram,
-	} from "../../shared/class/Program/Program";
-	import { RepRange } from "../../shared/class/Program/RepRange";
+	import { Program, getRealProgram } from "../../shared/class/Program/Program";
 	import { Superset } from "../../shared/class/Program/Superset";
-	import { Exercice } from "../../shared/class/Workout/Exercice";
-	import { ProgramType } from "../../shared/enum/ProgramType";
-	import {
-		StoreName,
-		getObjectByIdInDatabase,
-	} from "../../shared/functions/Database";
+	import { getObjectByIdInDatabase } from "../../shared/functions/Database";
 	import { isPositive } from "../../shared/functions/Utilitary";
 	import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
 
@@ -29,7 +20,7 @@
 
 	// If no program has been given and we receive an id from the url, we go fetch the program and instanciate it for the form
 	if (!p && isPositive(id)) {
-		getObjectByIdInDatabase<Program>(StoreName.PROGRAM, id).then(
+		getObjectByIdInDatabase<Program>("program-store", id).then(
 			(pFetched) => {
 				p = getRealProgram(pFetched);
 			},

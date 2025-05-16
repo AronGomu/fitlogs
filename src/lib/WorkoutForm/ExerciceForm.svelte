@@ -3,7 +3,7 @@
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
 	import { createEventDispatcher, onMount } from "svelte";
-	import type { Settings } from "../../shared/class/Settings";
+	import type { Setting } from "../../shared/class/Settings";
 	import { settings } from "../../shared/store/settingsStore";
 	import InputNumber from "./inputs/InputNumber.svelte";
 	import type { Serie } from "../../shared/class/Workout/Serie";
@@ -17,7 +17,7 @@
 	export let e: Exercice;
 
 	/** Settings Imported form the store. */
-	let si: Settings;
+	let si: Setting;
 	settings.subscribe((s) => (si = s));
 
 	// defining values

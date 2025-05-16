@@ -1,11 +1,6 @@
-* Plan : stop needing all data to show numbers
-* Activity : when clicking on weight, autofocus on weight
-* Activity : when clicking on activity, autofocus on calories 
-* Activity : put fixed number on mean
-* Add settings for fixed mean number
-* Menu : Make it disapear clicking outside OR take all space with big X button
-* Implement graph section for checking stats trends
-    * for brut data
-    * for average data
-* Exports for all and each data
-* Import for all and each data
+1. Transformer les boutons activityRange en component
+2. Les ajouter pour ActivityList et set a 4 semaines par defaut
+3. Les ajouters pour toutes les moyennes
+4. Rajouter une page graph :
+    1. implementer graph evolution poids, calorie, steps avec options cochable (4 semaines par defaut)
+    2. pouvoir selectionner la periode de temps via les selectorRange

@@ -1,5 +1,8 @@
 export class Plan {
-    constructor(public targetWeeklyAverageCalories: number, public targetWeeklyAverageSteps: number) { }
+    constructor(
+        public targetWeeklyAverageCalories: number,
+        public targetWeeklyAverageSteps: number
+    ) { }
 }
 
 export function getRealPlan(plan: Plan): Plan {

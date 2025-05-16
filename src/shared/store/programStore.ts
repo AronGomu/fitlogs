@@ -1,12 +1,6 @@
 import { writable, type Writable } from "svelte/store";
-import {
-  addToDatabase,
-  getAllFromDatabase,
-  StoreName,
-  updateInDatabase,
-} from "../functions/Database";
+import { addToDatabase, getAllFromDatabase, updateInDatabase } from "../functions/Database";
 import { getRealProgram, type Program } from "../class/Program/Program";
-import { isArrayWithElements } from "../functions/Utilitary";
 
 // FROM WORKOUT DATA WAY
 /** Exercice suggestions in inputs of form. */
@@ -16,7 +10,7 @@ loadProgram();
 
 /** Load the list of programs stored locally. */
 function loadProgram() {
-  getAllFromDatabase<Program>(StoreName.PROGRAM).then((fakePl) => {
+  getAllFromDatabase<Program>("program-store").then((fakePl) => {
     let realPl = [];
 
     for (const fakeProgram of fakePl) realPl.push(getRealProgram(fakeProgram));
@@ -30,8 +24,8 @@ function loadProgram() {
 export async function addProgram(newProgram: Program) {
   if (newProgram.id) throw new Error("Cannot add Program if it already has an id.");
 
-  addToDatabase(StoreName.PROGRAM, newProgram).then((addedProgram) => {
-    getAllFromDatabase<Program>(StoreName.PROGRAM).then((fetchedPl) => {
+  addToDatabase("program-store", newProgram).then((addedProgram) => {
+    getAllFromDatabase<Program>("program-store").then((fetchedPl) => {
       programs.set(fetchedPl);
     });
   });
@@ -43,8 +37,8 @@ export async function addProgram(newProgram: Program) {
 export async function updateProgram(newProgram: Program) {
   if (!newProgram.id) throw new Error("Cannot update Program if it has no id.");
 
-  updateInDatabase(StoreName.LIFT, newProgram.id, newProgram).then((updatedProgram) => {
-    getAllFromDatabase<Program>(StoreName.PROGRAM).then((fetchedPl) => {
+  updateInDatabase("lift-store", newProgram.id, newProgram).then((updatedProgram) => {
+    getAllFromDatabase<Program>("program-store").then((fetchedPl) => {
       programs.set(fetchedPl);
     });
   });

@@ -1,5 +1,4 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
-import { StoreName } from "../Database";
 import { getRealWorkout, type Workout } from "../../class/Workout/Workout";
 import type { WorkoutDate } from "../../class/Workout/WorkoutDate";
 
@@ -15,8 +14,8 @@ interface Database extends DBSchema {
 async function openDatabaseWorkout(): Promise<IDBPDatabase<Database>> {
 	return openDB<Database>(DB_NAME, 1, {
 		upgrade(db) {
-			if (!db.objectStoreNames.contains(StoreName.WORKOUT)) {
-				db.createObjectStore(StoreName.WORKOUT);
+			if (!db.objectStoreNames.contains("workout-store")) {
+				db.createObjectStore("workout-store");
 			}
 		},
 	});
@@ -25,8 +24,8 @@ async function openDatabaseWorkout(): Promise<IDBPDatabase<Database>> {
 export async function getWorkoutsFromDatabase(): Promise<Workout[]> {
 	console.log("getting workouts from database...");
 	const db = await openDatabaseWorkout();
-	const tx = db.transaction(StoreName.WORKOUT, "readonly");
-	const store = tx.objectStore(StoreName.WORKOUT);
+	const tx = db.transaction("workout-store", "readonly");
+	const store = tx.objectStore("workout-store");
 	const fakeWorkouts = await store.getAll()
 
 	console.log("all workouts from store : ", fakeWorkouts);
@@ -42,8 +41,8 @@ export async function getWorkoutFromDatabase(wd: WorkoutDate): Promise<Workout> 
 	console.log("getting workout from database...");
 	const db = await openDatabaseWorkout();
 
-	const tx = db.transaction(StoreName.WORKOUT, "readonly");
-	const store = tx.objectStore(StoreName.WORKOUT);
+	const tx = db.transaction("workout-store", "readonly");
+	const store = tx.objectStore("workout-store");
 
 	const key: string = wd.convertToKey()
 	console.log("key converted : ", key)
@@ -62,8 +61,8 @@ export async function putWorkoutInDatabase(w: Workout): Promise<Workout> {
 	console.log("workout to put : ", w)
 	const db = await openDatabaseWorkout();
 
-	const tx = db.transaction(StoreName.WORKOUT, "readwrite");
-	const store = tx.objectStore(StoreName.WORKOUT);
+	const tx = db.transaction("workout-store", "readwrite");
+	const store = tx.objectStore("workout-store");
 
 	let fakeWorkout = await store.get(w.getKey());
 	if (fakeWorkout) {

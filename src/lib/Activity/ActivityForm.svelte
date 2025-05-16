@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { Activity } from "../../shared/class/Activity/Activity";
 	import { ActivityDate } from "../../shared/class/Activity/ActivityDate";
-	import type { Settings } from "../../shared/class/Settings";
+	import type { Setting } from "../../shared/class/Settings";
 	import {
 		getActivityFromDatabase,
 		putActivityInDatabase,
 		deleteActivityFromDatabase,
 	} from "../../shared/functions/Database";
+	import { adToModify } from "../../shared/store/activityStore";
 	import { settings } from "../../shared/store/settingsStore";
 	import DateInput from "../DateInput.svelte";
 	import InputNumber from "../WorkoutForm/inputs/InputNumber.svelte";
@@ -14,18 +15,7 @@
 	import { createEventDispatcher } from "svelte";
 	const dispatch = createEventDispatcher();
 
-	export let activityDate: ActivityDate;
-	export const functions: {
-		refresh(updatedActivityDate: ActivityDate): void;
-	} = {
-		refresh(updatedActivityDate: ActivityDate) {
-			activityDate = updatedActivityDate;
-			initialLoad = true;
-			checkActivityExistence();
-		},
-	};
-
-	let si: Settings;
+	let si: Setting;
 	settings.subscribe((s) => (si = s));
 
 	// Activity form
@@ -46,32 +36,23 @@
 	let isItYesterday = false;
 	let isActivityValid: boolean = false;
 
+	let selectedActivityDate: ActivityDate;
+	adToModify.subscribe((adToUpdate) => {
+		selectedActivityDate = adToUpdate;
+		initialLoad = true;
+		checkActivityExistence();
+	})
+
 	init();
 
 	function init() {
 		checkActivityExistence();
 	}
 
-	function checkIfIsItYesterday(): void {
-		if (date.getFullYear() !== yesterday.getFullYear()) {
-			isItYesterday = false;
-			return;
-		}
-		if (date.getMonth() !== yesterday.getMonth()) {
-			isItYesterday = false;
-			return;
-		}
-		if (date.getDay() !== yesterday.getDay()) {
-			isItYesterday = false;
-			return;
-		}
-		isItYesterday = true;
-	}
-
 	async function checkActivityExistence() {
-		if (activityDate) {
-			date = activityDate.toDate();
-			activityDate = null;
+		if (selectedActivityDate) {
+			date = selectedActivityDate.toDate();
+			selectedActivityDate = null;
 		}
 
 		const activity = await getActivityFromDatabase(
@@ -91,6 +72,22 @@
 		initialLoad = false;
 		assignFetchedData(activity);
 		checkIfIsItYesterday();
+	}
+
+	function checkIfIsItYesterday(): void {
+		if (date.getFullYear() !== yesterday.getFullYear()) {
+			isItYesterday = false;
+			return;
+		}
+		if (date.getMonth() !== yesterday.getMonth()) {
+			isItYesterday = false;
+			return;
+		}
+		if (date.getDay() !== yesterday.getDay()) {
+			isItYesterday = false;
+			return;
+		}
+		isItYesterday = true;
 	}
 
 	function assignFetchedData(activity: Activity) {
@@ -135,20 +132,26 @@
 		);
 
 		if (!activity) {
-			throw new Error(
-				"Activity to delete is not found in the database !",
-			);
+			throw new Error("Activity to delete is not found in the database !");
 		}
 
 		checkActivityExistence();
 		dispatch("saveActivity");
+	}
+
+	function changeActivityDate(e) {
+		console.log(e);
+		const d = new Date(e.detail.value);
+		const value = new ActivityDate(d.getFullYear(), d.getMonth()+1, d.getDate());
+		adToModify.set(value);
 	}
 </script>
 
 <div class="flex flex-col items-center">
 	<DateInput
 		bind:date
-		on:input={() => {
+		on:input={(e) => {
+			changeActivityDate(e)
 			checkActivityExistence();
 			checkIfIsItYesterday();
 		}}

@@ -1,10 +1,10 @@
 import { type Writable, writable } from 'svelte/store';
-import { Settings, getRealSettings } from '../class/Settings';
+import { Setting, getRealSettings } from '../class/Settings';
 import { fetchSettings } from '../functions/Database';
 
 /** Weight Metric used by the using */
 // !! DEFAULT SET TO REPLACE BY USER SETTINGS !! //
-export var settings: Writable<Settings> = writable(new Settings());
+export var settings: Writable<Setting> = writable(new Setting());
 // set(Keys.WeightMetric, WeightMetrics.Kilos);
 // !! DEFAULT SET TO REPLACE BY USER SETTINGS !! //
 

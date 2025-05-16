@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { Activity } from "../../shared/class/Activity/Activity";
-	import { Plan } from "../../shared/class/Plan/Plan";
-	import { truncateNumber } from "../../shared/functions/Utilitary";
-	import {
-		getPlanFromDatabase,
-		updatePlanInDatabase,
-	} from "../../shared/functions/database/plan";
-	import InputNumber from "../WorkoutForm/inputs/InputNumber.svelte";
+  import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
+  import type { Activity } from "../shared/class/Activity/Activity";
+  import { Plan } from "../shared/class/Plan/Plan";
+  import { getPlanFromDatabase, updatePlanInDatabase } from "../shared/functions/database/plan";
+  import { truncateNumber } from "../shared/functions/Utilitary";
+
+
 
 	export let activities: Activity[];
 	let plan: Plan;

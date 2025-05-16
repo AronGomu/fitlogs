@@ -1,3 +1,5 @@
+import type { Activity } from "../class/Activity/Activity";
+
 /** When clicking on some characters of an text input, this will automatically select the whole text */
 export function selectWholeTextOnFocus(e) {
 	e.target.select();
@@ -336,4 +338,26 @@ function getDaysInMonth(year: number, month: number): number {
 
     // Return the date's day value which corresponds to the last day of the month
     return date.getDate();
+}
+
+
+export function sortActivities(activities): Activity[] {
+	activities.sort((a: Activity, b: Activity) => {
+	if (!a && b) return -1;
+	if (a && !b) return 1;
+	if (!a && !b) return 0;
+
+	let total: number = 0;
+
+	total = a.year - b.year;
+	if (total !== 0) return -total;
+
+	total = a.month - b.month;
+	if (total !== 0) return -total;
+
+	total = a.day - b.day;
+	return -total;
+	});
+
+	return activities;
 }
