@@ -4,7 +4,8 @@ import { downloadAsJson, truncateNumber } from "./Utilitary";
 
 
 export function setAverageActivities(activities: Activity[], nbDays: number): Activity[] {
-	let r: Activity[] = [];
+	/** Average Activities */
+	let aaList: Activity[] = [];
 
 	if (nbDays > activities.length) {
 		nbDays = activities.length;
@@ -38,10 +39,10 @@ export function setAverageActivities(activities: Activity[], nbDays: number): Ac
 			averageCalories,
 			averageSteps,
 		);
-		r.push(newA);
+		aaList.push(newA);
 	}
 
-	return r;
+	return aaList;
 }
 
 export type AverageProperty = "calories" | "weight" | "steps";

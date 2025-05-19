@@ -2,8 +2,10 @@ import { writable, type Writable } from "svelte/store";
 import { getActivitiesFromDatabase } from "../functions/Database";
 import type { Activity } from "../class/Activity/Activity";
 import type { ActivityDate } from "../class/Activity/ActivityDate";
+import { setAverageActivities } from "../functions/Activity";
 
-export let activities: Writable<Activity[]> = writable([]);
+export let activities: Writable<Activity[]> = writable();
+export let aaList: Writable<Activity[]> = writable();
 
 loadActivitiesStore();
 
@@ -12,7 +14,12 @@ export async function loadActivitiesStore(
   n: number = 15,
   sort: 'asc' | 'desc' = 'asc'
 ): Promise<void> {
-  activities.set(await getActivitiesFromDatabase(n, sort));
+  const activitiesDatabase = await getActivitiesFromDatabase(n, sort);
+  activities.set(activitiesDatabase);
+
+  if (!n) n = activitiesDatabase.length;
+  const aaDatabase = setAverageActivities(activitiesDatabase, n);
+  aaList.set(aaDatabase);
 }
 
 

@@ -2,12 +2,14 @@
 	import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
 	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Activity } from "../shared/class/Activity/Activity";
-	import { activities, loadActivitiesStore } from "../shared/store/activityStore";
+	import { aaList, activities, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
 	import ActivityCharts from "./ActivityCharts.svelte";
   	import type Chart from "chart.js/auto";
 	import { onMount } from "svelte";
 	import type { ChartItem } from "chart.js/auto";
+  import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
+  import type { GraphType } from "../shared/enum/types";
 
 	let loadingActivities: boolean = true;
 	let loadingActivitiesChart: boolean = true;
@@ -15,6 +17,9 @@
 	let lineChart: Chart = undefined;
 	let chartItem: ChartItem = undefined;
 	let activitiesShowed: Activity[];
+	let aaListShowed: Activity[];
+
+	let gtTab: GraphType = 'average';
 
 	function loadData() {
 		activities.subscribe((activities) => {
@@ -24,11 +29,18 @@
 			activitiesShowed = activities;
 			loadingActivities = false;
 		});
+
+		aaList.subscribe((aaList) => {
+			if (!aaList) return;
+			if (aaList.length < 1) return;
+			loadingActivities = true;
+			aaListShowed = aaList;
+			loadingActivities = false;
+		});
 	}
 
-	onMount(() => {
-		loadData();
-	});
+	onMount(() => { loadData() });
+
 </script>
 
 <div class="h-full w-full flex flex-col justify-between">
@@ -46,11 +58,17 @@
 						isMountingChart = true;
 						loadingActivitiesChart = true;
 						loadingActivities = true;
-						activitiesShowed = null;
+						activitiesShowed = undefined;
+						aaListShowed = undefined
 						loadActivitiesStore(e.detail.value);
 					}}
 				/>
-				<ActivityCharts {activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+				{#if gtTab === 'normal'}
+					<ActivityCharts {activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+				{:else if gtTab === 'average'}
+					<ActivityCharts activitiesShowed={aaListShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+				{/if}
+
 			{:else}
 				<div class="flex items-center justify-center">
 					<span class="loading loading-spinner loading-xl"></span>
@@ -59,6 +77,11 @@
 
 		</div>
 	</div>
+
+	<ActivityAverageSelector on:graphSelect={(e) => {
+		if (e.detail.value === 'normal') gtTab = 'normal';
+		if (e.detail.value === 'average') gtTab = 'average';
+	}} />
 
 	<ActivityFooter/>
 

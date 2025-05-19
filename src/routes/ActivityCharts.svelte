@@ -26,6 +26,7 @@
 </script>
 
 <canvas id="myChart"></canvas>
+
 {#if isMountingChart || loadingActivitiesChart || !activitiesShowed}
 	<div class="flex items-center justify-center">
 		<span class="loading loading-spinner loading-xl"></span>
