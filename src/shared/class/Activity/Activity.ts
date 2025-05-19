@@ -9,3 +9,24 @@ export class Activity {
 export function getRealActivity(activity: Activity): Activity {
     return new Activity(activity.year, activity.month, activity.day, activity.weight, activity.calories, activity.steps);
 }
+
+/** Create the labels and all data arrays for charts. */
+export function createAxesForChart(activities: Activity[]): { 
+    lList: string[]; wList: number[]; cList: number[]; sList: number[]; 
+    minCalories: number, maxCalories: number,
+} {
+    const lList: string[] = [];
+    const wList: number[] = [];
+    const cList: number[] = [];
+    const sList: number[] = [];
+    
+    for (let i = 0; i < activities.length; i++) {
+        const a = activities[i];
+        lList.push(a.printDate());
+        wList.push(a.weight);
+        cList.push(a.calories);
+        sList.push(a.steps);
+    }
+
+    return { lList, wList, cList, sList }
+}

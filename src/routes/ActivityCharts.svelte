@@ -1,0 +1,37 @@
+<script lang="ts">
+  	import { onMount } from "svelte";
+	import { createAxesForChart, type Activity } from "../shared/class/Activity/Activity";
+  	import { buildLineChart } from "../shared/functions/Chart";
+  	import type Chart from "chart.js/auto";
+  	import type { ChartItem } from "chart.js/auto";
+
+	export let activitiesShowed: Activity[] = null;
+	export let loadingActivitiesChart: boolean = true;
+	export let isMountingChart: boolean = true;
+	export let lineChart: Chart = undefined;
+	export let chartItem: ChartItem = undefined;
+
+	function loadData() {
+		if (!chartItem) chartItem = document.getElementById('myChart').getContext('2d');
+		const datas = createAxesForChart(activitiesShowed);
+		
+		lineChart = buildLineChart(
+			chartItem, datas.lList, datas.wList, datas.cList, datas.sList,
+		)
+		loadingActivitiesChart = false;
+	}
+
+
+	onMount(() => {
+		loadData();
+		isMountingChart = false;
+	});
+
+</script>
+
+<canvas id="myChart"></canvas>
+{#if isMountingChart || loadingActivitiesChart || !activitiesShowed}
+	<div class="flex items-center justify-center">
+		<span class="loading loading-spinner loading-xl"></span>
+	</div>
+{/if}
