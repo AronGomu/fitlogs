@@ -13,14 +13,10 @@
 
 	function loadData() {
 		if (!chartItem) chartItem = document.getElementById('myChart').getContext('2d');
-		const datas = createAxesForChart(activitiesShowed);
-		
-		lineChart = buildLineChart(
-			chartItem, datas.lList, datas.wList, datas.cList, datas.sList,
-		)
+		const cp = createAxesForChart(chartItem, activitiesShowed);
+		lineChart = buildLineChart(cp);
 		loadingActivitiesChart = false;
 	}
-
 
 	onMount(() => {
 		loadData();

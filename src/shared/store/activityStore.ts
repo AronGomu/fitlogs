@@ -9,7 +9,7 @@ loadActivitiesStore();
 
 /** Load the list of programs stored locally. */
 export async function loadActivitiesStore(
-  n: number = 90,
+  n: number = 15,
   sort: 'asc' | 'desc' = 'asc'
 ): Promise<void> {
   activities.set(await getActivitiesFromDatabase(n, sort));

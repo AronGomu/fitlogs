@@ -1,39 +1,62 @@
 import Chart, { type ChartItem } from "chart.js/auto";
 
-export function buildLineChart(
-    item: ChartItem,
-    lList: string[], wList: number[], cList: number[], sList: number[],
-): Chart {  
+export class ChartParameter {
+    constructor(
+        public item: ChartItem,
+        public lList: string[], public wList: number[], public cList: number[], public sList: number[],
+        public minWeight: number, public maxWeight: number,
+        public minCalories: number, public maxCalories: number,
+        public minSteps: number, public maxSteps: number,
+    ) {}
+}
+
+export function buildLineChart(cp: ChartParameter): Chart {  
     return new Chart(
-            item,
+            cp.item,
 			{
 				type: 'line',
 				data: {
-					labels: lList,
+					labels: cp.lList,
 					datasets: [
                         {
                             label: 'Weights (kg)',
-                            data: wList,
+                            data: cp.wList,
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            yAxisID: 'y1',
+                            yAxisID: 'weight',
                         },
                         {
                             label: 'Calories',
-                            data: cList,
+                            data: cp.cList,
                             borderColor: 'rgb(192, 75, 75)',
-                            yAxisID: 'y2',
+                            yAxisID: 'calories',
                             hidden: true,
                         },
                         {
                             label: 'Steps',
-                            data: sList,
+                            data: cp.sList,
                             borderColor: 'rgb(83, 75, 192)',
-                            yAxisID: 'y3',
+                            yAxisID: 'steps',
                             hidden: true,
                         }
                     ]
 				},
-				options: { responsive: true }
+				options: { 
+                    responsive: true,
+                    scales: {
+                        weight: {
+                            min: cp.minWeight,
+                            max: cp.maxWeight
+                        },
+                        calories: {
+                            min: cp.minCalories,
+                            max: cp.maxCalories
+                        },
+                        steps: {
+                            min: cp.minSteps,
+                            max: cp.maxSteps
+                        },
+                    }
+                }
 			}
 		)
 }
