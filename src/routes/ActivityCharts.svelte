@@ -11,6 +11,11 @@
 	export let lineChart: Chart = undefined;
 	export let chartItem: ChartItem = undefined;
 
+	onMount(() => {
+		loadData();
+		isMountingChart = false;
+	});
+
 	function loadData() {
 		if (!chartItem) chartItem = document.getElementById('myChart').getContext('2d');
 		const cp = createAxesForChart(chartItem, activitiesShowed);
@@ -18,10 +23,9 @@
 		loadingActivitiesChart = false;
 	}
 
-	onMount(() => {
-		loadData();
-		isMountingChart = false;
-	});
+	function onClickLegendLineChart() {
+		
+	}
 
 </script>
 

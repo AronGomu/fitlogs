@@ -52,6 +52,7 @@ export function createAxesForChart(chartItem: ChartItem, activities: Activity[])
     return new ChartParameter(
         chartItem,
         lList, wList, cList, sList,
-        minWeight, maxWeight, minCalories, maxCalories, minSteps, maxSteps
+        minWeight, maxWeight, minCalories, maxCalories, minSteps, maxSteps,
     )
 }
+
