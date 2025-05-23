@@ -26,7 +26,7 @@
 		
 	<Router>
 		<Route path="/fitlogs/about" component={AboutPage} />
-		<Route path="/fitlogs/settings" component={SettingsPage} />
+		<Route path="/fitlogs/setting" component={SettingsPage} />
 		<Route path="/fitlogs/exports" component={ExportsPage} />
 		<Route path="/fitlogs/imports" component={ImportsPage} />
 		<Route path="/fitlogs/admin" component={AdminPage} />

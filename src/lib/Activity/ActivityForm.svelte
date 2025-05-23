@@ -8,7 +8,7 @@
 		deleteActivityFromDatabase,
 	} from "../../shared/functions/Database";
 	import { adToModify } from "../../shared/store/activityStore";
-	import { settingsStore } from "../../shared/store/settingsStore";
+	import { settingStore } from "../../shared/store/settingStore";
 	import DateInput from "../DateInput.svelte";
 	import InputNumber from "../WorkoutForm/inputs/InputNumber.svelte";
 
@@ -16,7 +16,7 @@
 	const dispatch = createEventDispatcher();
 
 	let si: Setting;
-	settingsStore.subscribe((s) => (si = s));
+	settingStore.subscribe((s) => (si = s));
 
 	// Activity form
 	let date = new Date();

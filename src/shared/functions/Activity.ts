@@ -3,91 +3,52 @@ import { getActivitiesFromDatabase } from "./Database";
 import { downloadAsJson, truncateNumber } from "./Utilitary";
 
 
-export function setAverageActivities(activities: Activity[], nbDays: number): Activity[] {
-	/** Average Activities */
-	let aaList: Activity[] = [];
+export function setAverageActivities(
+	activities: Activity[], 
+	nbDaysForAveraging: number
+): Activity[] {
+	let averageActivities: Activity[] = [];
 
-	if (nbDays > activities.length) {
-		nbDays = activities.length;
-	}
-
-	let averageCalories: number;
+	let howManyActivities: number;
 	let averageWeight: number;
+	let averageCalories: number;
 	let averageSteps: number;
 
-	for (let i = 0; i < nbDays; i++) {
+	for (let i = 0; i < activities.length; i++) {
 		const a = activities[i];
 
-		averageCalories = truncateNumber(
-			getAverage(activities, nbDays, "calories", i),
-			0,
-		);
-		averageWeight = truncateNumber(
-			getAverage(activities, nbDays, "weight", i),
-			1,
-		);
-		averageSteps = truncateNumber(
-			getAverage(activities, nbDays, "steps", i),
-			0,
-		);
+		howManyActivities = 0;
+		averageWeight = 0;
+		averageCalories = 0;
+		averageSteps = 0;
 
-		const newA = new Activity(
-			a.year,
-			a.month,
-			a.day,
-			averageWeight,
-			averageCalories,
-			averageSteps,
+		for (let j = 0; j < nbDaysForAveraging; j++) {
+			const activityToUseForAverage = activities[i+j];
+			averageWeight += activityToUseForAverage.weight;
+			averageCalories += activityToUseForAverage.calories;
+			averageSteps += activityToUseForAverage.steps;
+			howManyActivities++;
+
+			if (i+j+1 >= activities.length) break; 
+		}
+
+		averageCalories = truncateNumber(averageCalories / howManyActivities, 0);
+		averageWeight = truncateNumber( averageWeight / howManyActivities, 1);
+		averageSteps = truncateNumber( averageSteps / howManyActivities, 0);
+
+		const averageActivity = new Activity(
+			a.year, a.month, a.day, averageWeight, averageCalories, averageSteps
 		);
-		aaList.push(newA);
+		averageActivities.push(averageActivity);
 	}
 
-	return aaList;
+	return averageActivities;
 }
 
-export type AverageProperty = "calories" | "weight" | "steps";
-export function getAverage(
-	activities: Activity[],
-	nbDays: number,
-	propertyName: AverageProperty,
-	nbDaysBefore: number,
-): number {
-	if (!activities || activities.length < 1) return 0;
-
-	let total: number = 0;
-	let nbElements: number = 0;
-
-	let startingDay = 0 + nbDaysBefore;
-	let len = nbDays + nbDaysBefore;
-
-	if (startingDay > activities.length) return 0;
-	if (len > activities.length) len = activities.length;
-
-	for (let i = startingDay; i < len; i++) {
-		const a = activities[i];
-		if (!a) continue;
-		if (!a[propertyName]) continue;
-
-		total += a[propertyName];
-		nbElements += 1;
-	}
-
-	// if (propertyName === "weight") {
-	// 	console.log(`nbDaysBefore: `, nbDaysBefore);
-	// 	console.log(`startingDay: `, startingDay);
-	// 	console.log(`len: `, len);
-	// 	console.log(`total : `, total);
-	// 	console.log(`nbElements: `, nbElements);
-	// 	console.log(`total / nbElements: `, total / nbElements);
-	// }
-
-	return total / nbElements;
-}
-
-export async function exportActivities() {
+export async function exportActivities(nbDaysForAveraging: number) {
 	const activities = await getActivitiesFromDatabase();
 
-	const averageActivities = setAverageActivities(activities, activities.length - 1);
+	const averageActivities = setAverageActivities(activities, nbDaysForAveraging);
 
 	downloadAsJson(activities, "activities");
 	downloadAsJson(averageActivities, "averageActivities");

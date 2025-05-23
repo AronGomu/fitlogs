@@ -2,7 +2,7 @@
 	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { Setting } from "../shared/class/Settings";
-	import { fetchSettings } from "../shared/functions/Database";
+	import { getSettingFromDatabase } from "../shared/functions/Database";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
 	import { putLiftInDatabase } from "../shared/functions/database/lift";
@@ -19,7 +19,7 @@
 	import Loading from "../lib/Generic/Loading.svelte";
 
 	export let urlWorkoutDate: string = null;
-	let settings: Setting = new Setting();
+	let setting: Setting = new Setting();
 
 	let workout: Workout;
 
@@ -37,7 +37,7 @@
 
 	async function init() {
 
-		fetchSettings().then((fs) => (settings = fs));
+		getSettingFromDatabase().then((fs) => (setting = fs));
 
 		const emptyWorkout = parseURLWorkoutDate()
 		workout = await fetchWorkout(emptyWorkout);
@@ -91,7 +91,7 @@
 
 		if (!e.series) e.series = []
 
-		let newSerieWeight: Weight = new Weight(0, settings.wm); 
+		let newSerieWeight: Weight = new Weight(0, setting.wm); 
 		let newSerieReps: number = 0;
 		let newSerieRank: number = 1;
 
@@ -221,7 +221,7 @@
 					<div>Set {index+1}</div>
 					<InputNumber 
 						placeholder="Weight" 
-						metric={settings.wm} 
+						metric={setting.wm} 
 						value={serie.weight.weight} 
 						on:input={
 							(e) => updateWeight(exercice, serie, e)

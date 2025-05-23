@@ -1,2 +1,1 @@
-* fix average calculation
-* set in settings every variables
+* set in setting every variables

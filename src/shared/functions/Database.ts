@@ -7,7 +7,7 @@ import { getRealActivity, Activity } from "../class/Activity/Activity";
 
 const DB_NAME = "db";
 
-export type StoreName =	"workout-store" | "lift-store" | "program-store" | "settings-store" | "activity-store";
+export type StoreName =	"workout-store" | "lift-store" | "program-store" | "setting-store" | "activity-store";
 
 export type databaseObject = Workout | Lift | Program | Activity;
 
@@ -16,7 +16,7 @@ export interface Database extends DBSchema {
 	"workout-store": { key: number; value: any; };
 	"lift-store": { key: number; value: any; };
 	"program-store": { key: number; value: any; };
-	"settings-store": { key: number; value: any; };
+	"setting-store": { key: number; value: any; };
 	"activity-store": { key: number; value: any; };
 }
 
@@ -51,8 +51,8 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 				});
 			}
 
-			if (!db.objectStoreNames.contains("settings-store")) {
-				db.createObjectStore("settings-store", { keyPath: "key" });
+			if (!db.objectStoreNames.contains("setting-store")) {
+				db.createObjectStore("setting-store", { keyPath: "key" });
 			}
 
 			if (!db.objectStoreNames.contains("activity-store")) {
@@ -198,32 +198,32 @@ export async function deleteDatabase(): Promise<void> {
 
 
 // SPECIFIC DATABASE FUNCTIONS - Settings 
-// (Use only those to avoid errors with the settings database errors)
+// (Use only those to avoid errors with the setting database errors)
 
-/** Fetch the settings */
-export async function fetchSettings(): Promise<Setting> {
-	/** Load the only one settings object in the database. */
+/** Fetch the setting */
+export async function getSettingFromDatabase(): Promise<Setting> {
+	/** Load the only one setting object in the database. */
 	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
-		"settings-store", 0
+		"setting-store", 0
 	);
 
 	if (!fakeS) return new Setting();
 
-	/** Return correctly instanciated settings. */
+	/** Return correctly instanciated setting. */
 	return new Setting(fakeS.wm);
 }
 
-/** Save the settings. If there is no settings already, create the settings in the database. */
+/** Save the setting. If there is no setting already, create the setting in the database. */
 export async function saveSettings(s: Setting): Promise<Setting> {
-	/** Load the settings from the database to make sure it exists. */
+	/** Load the setting from the database to make sure it exists. */
 	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
-		"settings-store",
+		"setting-store",
 		0
 	);
 
-	if (!fakeS) return addToDatabase<Setting>("settings-store", s, 0);
+	if (!fakeS) return addToDatabase<Setting>("setting-store", s, 0);
 
-	return updateInDatabase<Setting>("settings-store", 0, s, false);
+	return updateInDatabase<Setting>("setting-store", 0, s, false);
 }
 
 
@@ -256,7 +256,7 @@ export async function getActivitiesFromDatabase(
 		if (n && activities.length >= n) break;
 	}
 
-	return activities;
+	return activities.reverse();
 }
 
 export async function getActivityFromDatabase(year: number, month: number, day: number): Promise<Activity> {

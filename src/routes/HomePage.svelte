@@ -36,7 +36,7 @@
 	</button>
 
 	<button disabled class="btn btn-secondary mt-4"
-		on:click={() => { navigate(`/fitlogs/settings`) }}
+		on:click={() => { navigate(`/fitlogs/setting`) }}
 	>
 		Settings
 	</button>

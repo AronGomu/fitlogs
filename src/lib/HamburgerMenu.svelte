@@ -73,7 +73,7 @@
 		</button>
 	</li> -->
 	<!-- <li>
-		<button class="btn" on:click={ () => { goto("/fitlogs/settings") }} >
+		<button class="btn" on:click={ () => { goto("/fitlogs/setting") }} >
 			<span>Settings</span>
 		</button>
 	</li> -->

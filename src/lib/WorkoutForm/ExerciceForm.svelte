@@ -4,7 +4,7 @@
 	import Icon from "@iconify/svelte";
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { Setting } from "../../shared/class/Settings";
-	import { settingsStore } from "../../shared/store/settingsStore";
+	import { settingStore } from "../../shared/store/settingStore";
 	import InputNumber from "./inputs/InputNumber.svelte";
 	import type { Serie } from "../../shared/class/Workout/Serie";
 	import type { Exercice } from "../../shared/class/Workout/Exercice";
@@ -18,7 +18,7 @@
 
 	/** Settings Imported form the store. */
 	let si: Setting;
-	settingsStore.subscribe((s) => (si = s));
+	settingStore.subscribe((s) => (si = s));
 
 	// defining values
 	let isMounted: boolean = false;

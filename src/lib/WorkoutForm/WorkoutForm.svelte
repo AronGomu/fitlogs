@@ -11,7 +11,7 @@
 	import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
 	import {
 		StoreName,
-		fetchSettings,
+		getSettingFromDatabase,
 		getObjectByIdInDatabase,
 		updateInDatabase,
 	} from "../../shared/functions/Database";
@@ -25,8 +25,8 @@
 	const dispatch = createEventDispatcher();
 	export let id: number = null;
 
-	let settings: Setting = new Setting();
-	fetchSettings().then((fs) => (settings = fs));
+	let setting: Setting = new Setting();
+	getSettingFromDatabase().then((fs) => (setting = fs));
 
 	let isWorkoutLoaded: boolean = false;
 	let doesWorkoutExist: boolean = true;
@@ -146,13 +146,13 @@
 			<!-- 				class="text-secondary text-sm" -->
 			<!-- 				>{`${e.series.length} Sets`} -->
 			<!-- 			</span> -->
-			<!-- 			{#if e.getMaxWeight(settings.wm)} -->
+			<!-- 			{#if e.getMaxWeight(setting.wm)} -->
 			<!-- 				<span -->
 			<!-- 					class="text-secondary text-sm" -->
 			<!-- 					>{` - Max : ${e.getMaxWeight( -->
-			<!-- 						settings.wm, -->
+			<!-- 						setting.wm, -->
 			<!-- 					)}${getReducedStringMetric( -->
-			<!-- 						settings.wm, -->
+			<!-- 						setting.wm, -->
 			<!-- 					)}`} -->
 			<!-- 					{e.isSelfOpen} -->
 			<!-- 					{e.isExtraOpen} -->

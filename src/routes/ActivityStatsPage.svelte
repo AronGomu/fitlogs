@@ -3,7 +3,7 @@
   import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import type { Setting } from "../shared/class/Settings";
-  import { settingsStore } from "../shared/store/settingsStore";
+  import { loadSetting, settingStore } from "../shared/store/settingStore";
   import { menuPath } from "../shared/store/menuPath";
 	import { activitiesStore, averageActivitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityCharts from "./ActivityCharts.svelte";
@@ -12,7 +12,7 @@
 	import type { Chart, ChartItem } from "chart.js";
 	import type { GraphType } from "../shared/enum/types";
 
-	let settings: Setting;
+	let setting: Setting;
 
 	let loadingActivities: boolean = true;
 	let loadingActivitiesChart: boolean = true;
@@ -45,22 +45,24 @@
 	})
 
 	function loadData() {
-		settingsStore.subscribe((storeValue) => (settings = storeValue));
 		activitiesStore.subscribe((storeValue) => {
-			if (!storeValue) return;
-			if (storeValue.length < 1) return;
 			loadingActivities = true;
 			activitiesShowed = storeValue;
 			loadingActivities = false;
 		});
 
 		averageActivitiesStore.subscribe((storeValue) => {
-			if (!storeValue) return;
-			if (storeValue.length < 1) return;
 			loadingActivities = true;
 			averageActivitiesShowed = storeValue;
 			loadingActivities = false;
 		});
+
+		settingStore.subscribe(async (storeValue) => {
+			setting = storeValue
+			loadActivitiesStore(setting);
+		});
+
+		loadSetting();
 	}
 
 	// function calculateValues() {
@@ -153,7 +155,7 @@
 						loadingActivities = true;
 						activitiesShowed = undefined;
 						averageActivitiesShowed = undefined
-						loadActivitiesStore(e.detail.value);
+						loadActivitiesStore(setting, e.detail.value);
 					}}
 				/>
 				{#if gtTab === 'normal'}

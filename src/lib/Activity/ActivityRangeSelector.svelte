@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { settingsStore } from "../../shared/store/settingsStore";
+	import { settingStore } from "../../shared/store/settingStore";
 	import type { Setting } from "../../shared/class/Settings";
   	import ActivityRangeSelectorButton from "./ActivityRangeSelectorButton.svelte";
   	import { ActivityRangeSelectorData } from "../../shared/class/Activity/ActivityRangeSelectorData";
@@ -22,7 +22,7 @@
 	} as Record<string, ActivityRangeSelectorData>;
 
 	let si: Setting;
-	settingsStore.subscribe((s) => (si = s));
+	settingStore.subscribe((s) => (si = s));
 
 	activitiesStore.subscribe((activities) => {
 		const keys = Object.keys(nbDaysChoice);
@@ -39,7 +39,6 @@
 	});
 
 	function dispatchSelection(e): void {
-		console.log(e.detail);
 		dispatch("click", { input: e.detail.input, value: e.detail.value});
 	}
 </script>
