@@ -9,15 +9,15 @@
 </script>
 
 {#if gtTab === 'normal'}
-    <div role="tablist" class="tabs tabs-boxed mb-2">
-        <button role="tab" class="tab tab-active" on:click={(e) => {
+    <div class="flex w-full">
+        <button class="w-1/2 btn btn-primary btn-xl" on:click={(e) => {
             dispatch("graphSelect", { input: e, value: "normal" });
             gtTab = 'normal';
         }}>
             Normal 
         </button>
 
-        <button role="tab" class="tab" on:click={(e) => {
+        <button class="w-1/2 btn btn-neutral btn-xl" on:click={(e) => {
             dispatch("graphSelect", { input: e, value: "average" });
             gtTab = 'average';
         }}>
@@ -25,15 +25,15 @@
         </button>
     </div>
 {:else if gtTab === 'average'}
-    <div role="tablist" class="tabs tabs-boxed mb-2">
-        <button role="tab" class="tab" on:click={(e) => {
+    <div class="flex w-full">
+        <button class="w-1/2 btn btn-neutral btn-xl" on:click={(e) => {
             dispatch("graphSelect", { input: e, value: "normal" });
             gtTab = 'normal';
         }}>
             Normal 
         </button>
 
-        <button role="tab" class="tab tab-active" on:click={(e) => {
+        <button class="w-1/2 btn btn-primary btn-xl" on:click={(e) => {
             dispatch("graphSelect", { input: e, value: "average" });
             gtTab = 'average';
         }}>

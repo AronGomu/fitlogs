@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
-  import StatLabel from "../lib/Activity/StatLabel.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import type { Setting } from "../shared/class/Settings";
   import { settingsStore } from "../shared/store/settingsStore";
