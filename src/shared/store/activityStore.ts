@@ -12,13 +12,12 @@ export let averageActivitiesStore: Writable<Activity[]> = writable();
 /** Load the list of programs stored locally. */
 export async function loadActivitiesStore(
   s: Setting,
-  n: number = 15,
   sort: 'asc' | 'desc' = 'asc',
 ): Promise<void> {
-  const activitiesDatabase = await getActivitiesFromDatabase(n, sort);
+  const activitiesDatabase = await getActivitiesFromDatabase(s.statsRangeSelected, sort);
   activitiesStore.set(activitiesDatabase);
 
-  if (!n) n = activitiesDatabase.length;
+  if (!s.statsRangeSelected) s.statsRangeSelected = activitiesDatabase.length;
   
   const aaDatabase = setAverageActivities(activitiesDatabase, s.nbDaysForAveraging);
   averageActivitiesStore.set(aaDatabase);

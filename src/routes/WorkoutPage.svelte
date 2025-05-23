@@ -2,7 +2,6 @@
 	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { Setting } from "../shared/class/Settings";
-	import { getSettingFromDatabase } from "../shared/functions/Database";
 	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
 	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
 	import { putLiftInDatabase } from "../shared/functions/database/lift";
@@ -17,6 +16,7 @@
 	import { Weight } from "../shared/class/Workout/Weight";
 	import { navigate } from "svelte-routing";
 	import Loading from "../lib/Generic/Loading.svelte";
+  	import { getSettingFromDatabase } from "../shared/functions/database/settingDatabase";
 
 	export let urlWorkoutDate: string = null;
 	let setting: Setting = new Setting();

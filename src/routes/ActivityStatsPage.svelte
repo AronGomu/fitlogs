@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
-  import type { Activity } from "../shared/class/Activity/Activity";
-  import type { Setting } from "../shared/class/Settings";
-  import { loadSetting, settingStore } from "../shared/store/settingStore";
-  import { menuPath } from "../shared/store/menuPath";
+	import { onMount } from "svelte";
+	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
+	import type { Activity } from "../shared/class/Activity/Activity";
+	import type { Setting } from "../shared/class/Settings";
+	import { loadSetting, settingStore } from "../shared/store/settingStore";
+	import { menuPath } from "../shared/store/menuPath";
 	import { activitiesStore, averageActivitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityCharts from "./ActivityCharts.svelte";
 	import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
 	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Chart, ChartItem } from "chart.js";
 	import type { GraphType } from "../shared/enum/types";
+  	import { saveSettings } from "../shared/functions/database/settingDatabase";
 
 	let setting: Setting;
 
@@ -57,76 +58,14 @@
 			loadingActivities = false;
 		});
 
-		settingStore.subscribe(async (storeValue) => {
-			setting = storeValue
+		settingStore.subscribe((storeValue) => {
+			if (storeValue) setting = storeValue;
+			else return;
 			loadActivitiesStore(setting);
 		});
 
 		loadSetting();
 	}
-
-	// function calculateValues() {
-	// 	averageActivities = setAverageActivities(activities, nbDays);
-
-	// 	if (averageActivities.length < 1) return;
-
-	// 	averageCalories = averageActivities[0].calories;
-	// 	averageWeight = averageActivities[0].weight;
-	// 	averageSteps = averageActivities[0].steps;
-
-	// 	totalAverageWeightLoss =
-	// 		averageActivities[nbDays - 1].weight -
-	// 		averageActivities[0].weight;
-	// 	totalAverageWeightLoss = Number(
-	// 		totalAverageWeightLoss.toFixed(1),
-	// 	);
-
-	// 	totalAverageCaloriesBurned = truncateNumber(
-	// 		convertWeightIntoCalories(totalAverageWeightLoss),
-	// 		0,
-	// 	);
-
-	// 	totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0);
-
-	// 	averageCaloriesBurned = truncateNumber(
-	// 		totalAverageCaloriesBurned / nbDays,
-	// 		0,
-	// 	);
-
-	// 	averageTDEE = truncateNumber(
-	// 		averageCalories + averageCaloriesBurned,
-	// 		0,
-	// 	);
-	// }
-
-	// function getTotalAverageSteps(): number {
-	// 	let total = 0;
-	// 	for (let i = 0; i < averageActivities.length; i++) {
-	// 		const a = averageActivities[i];
-	// 		total += a.steps;
-	// 	}
-	// 	return total;
-	// }
-
-	// function setNbDays(nb: number): void {
-	// 	nbDays = nb;
-	// 	for (const key of Object.keys(nbDaysChoice)) {
-	// 		nbDaysChoice[key].class = "";
-	// 		if (nbDaysChoice[key].value == nb) {
-	// 			nbDaysChoice[key].class = "btn-primary";
-	// 		}
-	// 	}
-
-	// 	calculateValues();
-	// }
-
-	// function getAverageWeightLoss(): number {
-	// 	const nbDaysAverageWeight = getAverage("weight", nbDays);
-	// 	console.log("averageCaloriesBurned", nbDaysAverageWeight);
-	// 	if (nbDaysAverageWeight == 0) return 0;
-	// 	const todayAverageWeight = getAverage("weight", 0);
-	// 	return nbDaysAverageWeight - todayAverageWeight;
-	// }
 
 	function convertWeightIntoCalories(weight: number): number {
 		return weight * 7700;
@@ -146,16 +85,20 @@
 
 		<div class="h-full overflow-y-auto">
 
-			{#if !loadingActivities && activitiesShowed}
-				<ActivityRangeSelector 
+			{#if !loadingActivities && activitiesShowed && setting?.statsRangeSelected}
+				<ActivityRangeSelector
 					on:click={ async (e) => {
+						const statsRangeSelected = e.detail.value
+						setting.statsRangeSelected = statsRangeSelected;
+						const s = await saveSettings(setting);
+						
 						if (lineChart) lineChart.destroy();
 						isMountingChart = true;
 						loadingActivitiesChart = true;
 						loadingActivities = true;
 						activitiesShowed = undefined;
 						averageActivitiesShowed = undefined
-						loadActivitiesStore(setting, e.detail.value);
+						loadActivitiesStore(setting);
 					}}
 				/>
 				{#if gtTab === 'normal'}

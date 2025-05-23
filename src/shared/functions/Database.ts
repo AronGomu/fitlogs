@@ -35,10 +35,12 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 	return openDB<Database>(DB_NAME, 1, {
 
 		upgrade(db) {
+			if (!db.objectStoreNames.contains("setting-store")) {
+				db.createObjectStore("setting-store", {keyPath: 'id'});
+			}
+
 			if (!db.objectStoreNames.contains("workout-store")) {
-				db.createObjectStore("workout-store", {
-					autoIncrement: true,
-				});
+				db.createObjectStore("workout-store", { autoIncrement: true, }); 
 			}
 
 			if (!db.objectStoreNames.contains("lift-store")) {
@@ -46,14 +48,9 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 			}
 
 			if (!db.objectStoreNames.contains("program-store")) {
-				db.createObjectStore("program-store", {
-					autoIncrement: true,
-				});
+				db.createObjectStore("program-store", { autoIncrement: true });
 			}
-
-			if (!db.objectStoreNames.contains("setting-store")) {
-				db.createObjectStore("setting-store", { keyPath: "key" });
-			}
+			
 
 			if (!db.objectStoreNames.contains("activity-store")) {
 				db.createObjectStore("activity-store", { autoIncrement: true });
@@ -108,21 +105,12 @@ export async function getAllFromDatabase<T>(
  * @param {number} id - The ID of the object to retrieve.
  * @returns {Promise<T>} - Promise that resolves with the retrieved object, or undefined if not found.
  */
-export async function getObjectByIdInDatabase<T>(
-	storeName: StoreName,
-	id: number
-): Promise<T> {
+export async function getObjectByIdInDatabase<T>(storeName: StoreName, id: number): Promise<T> {
 	const db = await openDatabase();
 	if (!db) return null;
 	const tx = db.transaction(storeName, "readonly");
 	const store = tx.objectStore(storeName);
-
-	let cursor = await store.openCursor();
-	while (cursor) {
-		cursor = await cursor.continue();
-	}
-
-	return store.get(id);
+	return await store.get(id);
 }
 
 /**
@@ -136,29 +124,11 @@ export async function updateInDatabase<T>(
 	updatedValue: T,
 	ifNotInDatabaseCreate: boolean
 ): Promise<T> {
-	console.log("updatedValue");
-	console.log(updatedValue);
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readwrite");
 	const store = tx.objectStore(storeName);
-
-	if (!id && ifNotInDatabaseCreate) {
-		id = await store.add(updatedValue)
-	}
-
-	if (!id && !ifNotInDatabaseCreate) {
-		throw new Error("Id given is null !")
-	}
-
-	if (id) {
-		id = await store.put(updatedValue, id);
-
-		if (!id) {
-			throw new Error(`Object from StoreName ${storeName} of id=${id} was not found !`)
-		}
-	}
-
-	return store.get(id);
+	id = await store.put(updatedValue, id);
+	return await store.get(id);
 }
 
 /**
@@ -166,10 +136,7 @@ export async function updateInDatabase<T>(
  * @param {number} key - The key of the data to be deleted.
  * @returns {Promise<void>} - Promise that resolves when the data is deleted.
  */
-export async function deleteFromDatabase(
-	storeName: StoreName,
-	id: number
-): Promise<void> {
+export async function deleteFromDatabase(storeName: StoreName, id: number): Promise<void> {
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readwrite");
 	const store = tx.objectStore(storeName);
@@ -197,34 +164,6 @@ export async function deleteDatabase(): Promise<void> {
 
 
 
-// SPECIFIC DATABASE FUNCTIONS - Settings 
-// (Use only those to avoid errors with the setting database errors)
-
-/** Fetch the setting */
-export async function getSettingFromDatabase(): Promise<Setting> {
-	/** Load the only one setting object in the database. */
-	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
-		"setting-store", 0
-	);
-
-	if (!fakeS) return new Setting();
-
-	/** Return correctly instanciated setting. */
-	return new Setting(fakeS.wm);
-}
-
-/** Save the setting. If there is no setting already, create the setting in the database. */
-export async function saveSettings(s: Setting): Promise<Setting> {
-	/** Load the setting from the database to make sure it exists. */
-	const fakeS: Setting = await getObjectByIdInDatabase<Setting>(
-		"setting-store",
-		0
-	);
-
-	if (!fakeS) return addToDatabase<Setting>("setting-store", s, 0);
-
-	return updateInDatabase<Setting>("setting-store", 0, s, false);
-}
 
 
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY 
@@ -281,7 +220,6 @@ export async function getActivityFromDatabase(year: number, month: number, day: 
 
 
 export async function putActivityInDatabase(activity: Activity): Promise<Activity> {
-	console.log(`putActivity`)
 	const db = await openDatabase();
 	const tx = db.transaction("activity-store", "readwrite");
 	const store = tx.objectStore("activity-store");
