@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
   import StatLabel from "../lib/Activity/StatLabel.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
@@ -6,6 +7,7 @@
   import { setAverageActivities } from "../shared/functions/Activity";
   import { truncateNumber } from "../shared/functions/Utilitary";
   import { settings } from "../shared/store/settingsStore";
+  import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
 
 	let si: Setting;
 	settings.subscribe((s) => (si = s));
@@ -40,11 +42,9 @@
 	let totalAverageWeightLoss: number;
 	let totalAverageSteps: number;
 
-	init();
+	onMount(() => {
 
-	function init() {
-		setNbDays(nbDays);
-	}
+	})
 
 	function calculateValues() {
 		averageActivities = setAverageActivities(activities, nbDays);
@@ -119,13 +119,18 @@
 		if (totalAverageWeightLoss > 0) return "losed";
 		else return "";
 	}
-
-	function test(e) {
-		console.log(e);
-	}
 </script>
 
-<div class="h-full w-full">
+<div class="h-full w-full flex flex-col justify-between">
+
+	<div class="flex-1 w-full flex flex-col">
+
+		<ActivityHeader selectedTab="stats"/>
+
+	</div>
+</div>
+<!-- 
+
 	<div class="flex flex-row overflow-x-auto content-center">
 		<ActivityRangeSelector on:click={(e) => test(e)}/>
 	</div>
@@ -162,7 +167,6 @@
 		<div class="h-full flex flex-col overflow-hidden">
 			<div class="flex-1">
 				<table class="table">
-					<!-- head -->
 					<thead>
 						<tr>
 							<th>
@@ -212,7 +216,6 @@
 				</table>
 			</div>
 		</div>
-		<!-- content here -->
 	{/if}
 
 	{#if !activities}
@@ -222,4 +225,4 @@
 			>
 		</div>
 	{/if}
-</div>
+</div> -->

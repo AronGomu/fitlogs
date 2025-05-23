@@ -28,7 +28,8 @@
     Stats
   </button>
 
-  <button role="tab" class="tab {tabs.plan.class}" on:click={() => navigate("/fitlogs/activity/plan")}>
+  <!-- Paying option -->
+  <!-- <button role="tab" class="tab {tabs.plan.class}" on:click={() => navigate("/fitlogs/activity/plan")}>
     Plan
-  </button>
+  </button> -->
 </div>

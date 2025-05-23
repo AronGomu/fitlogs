@@ -33,7 +33,6 @@
 
 		<Route path="/fitlogs/activity/plan" component={ActivityPlanPage} />
 		<Route path="/fitlogs/activity/stats" component={ActivityStatsPage} />
-		<Route path="/fitlogs/activity/charts" component={ActivityChartsPage} />
 		<Route path="/fitlogs/activity/list" component={ActivityListPage} />
 		<Route path="/fitlogs/activity/**" component={ActivityListPage} />
 		<Route path="/fitlogs/globalPrograms" component={ProgramsPage} />
