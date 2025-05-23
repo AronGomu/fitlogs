@@ -4,10 +4,10 @@ import { fetchSettings } from '../functions/Database';
 
 /** Weight Metric used by the using */
 // !! DEFAULT SET TO REPLACE BY USER SETTINGS !! //
-export var settings: Writable<Setting> = writable(new Setting());
+export var settingsStore: Writable<Setting> = writable(new Setting());
 // set(Keys.WeightMetric, WeightMetrics.Kilos);
 // !! DEFAULT SET TO REPLACE BY USER SETTINGS !! //
 
 fetchSettings().then(s => {
-    settings.set(getRealSettings(s));
+    settingsStore.set(getRealSettings(s));
 })

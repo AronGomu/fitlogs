@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { settings } from "../../shared/store/settingsStore";
+	import { settingsStore } from "../../shared/store/settingsStore";
 	import type { Setting } from "../../shared/class/Settings";
   	import ActivityRangeSelectorButton from "./ActivityRangeSelectorButton.svelte";
   	import { ActivityRangeSelectorData } from "../../shared/class/Activity/ActivityRangeSelectorData";
   	import { createEventDispatcher } from "svelte";
-  	import { activities } from "../../shared/store/activityStore";
+  	import { activitiesStore } from "../../shared/store/activityStore";
 
 	const dispatch = createEventDispatcher();
 
@@ -22,9 +22,9 @@
 	} as Record<string, ActivityRangeSelectorData>;
 
 	let si: Setting;
-	settings.subscribe((s) => (si = s));
+	settingsStore.subscribe((s) => (si = s));
 
-	activities.subscribe((activities) => {
+	activitiesStore.subscribe((activities) => {
 		const keys = Object.keys(nbDaysChoice);
 		let hasSet1Selected: boolean = false;
 		for (let i = 0; i < keys.length; i++) {

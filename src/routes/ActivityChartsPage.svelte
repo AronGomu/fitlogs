@@ -2,7 +2,7 @@
 	import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
 	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Activity } from "../shared/class/Activity/Activity";
-	import { aaList, activities, loadActivitiesStore } from "../shared/store/activityStore";
+	import { averageActivitiesStore, activitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
 	import ActivityCharts from "./ActivityCharts.svelte";
   	import type Chart from "chart.js/auto";
@@ -22,7 +22,7 @@
 	let gtTab: GraphType = 'average';
 
 	function loadData() {
-		activities.subscribe((activities) => {
+		activitiesStore.subscribe((activities) => {
 			if (!activities) return;
 			if (activities.length < 1) return;
 			loadingActivities = true;
@@ -30,7 +30,7 @@
 			loadingActivities = false;
 		});
 
-		aaList.subscribe((aaList) => {
+		averageActivitiesStore.subscribe((aaList) => {
 			if (!aaList) return;
 			if (aaList.length < 1) return;
 			loadingActivities = true;

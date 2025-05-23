@@ -5,14 +5,14 @@
 	import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
 	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Activity } from "../shared/class/Activity/Activity";
-	import { activities, adToModify, loadActivitiesStore } from "../shared/store/activityStore";
+	import { activitiesStore, adToModify, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
 	import { menuPath } from "../shared/store/menuPath";
 
 	let loadingActivities: boolean = true;
 
 	let activitiesShowed: Activity[];
-	activities.subscribe((activities) => {
+	activitiesStore.subscribe((activities) => {
 		activitiesShowed = activities;
 		loadingActivities = false;
 	});

@@ -4,8 +4,8 @@ import type { Activity } from "../class/Activity/Activity";
 import type { ActivityDate } from "../class/Activity/ActivityDate";
 import { setAverageActivities } from "../functions/Activity";
 
-export let activities: Writable<Activity[]> = writable();
-export let aaList: Writable<Activity[]> = writable();
+export let activitiesStore: Writable<Activity[]> = writable();
+export let averageActivitiesStore: Writable<Activity[]> = writable();
 
 loadActivitiesStore();
 
@@ -15,11 +15,11 @@ export async function loadActivitiesStore(
   sort: 'asc' | 'desc' = 'asc'
 ): Promise<void> {
   const activitiesDatabase = await getActivitiesFromDatabase(n, sort);
-  activities.set(activitiesDatabase);
+  activitiesStore.set(activitiesDatabase);
 
   if (!n) n = activitiesDatabase.length;
   const aaDatabase = setAverageActivities(activitiesDatabase, n);
-  aaList.set(aaDatabase);
+  averageActivitiesStore.set(aaDatabase);
 }
 
 

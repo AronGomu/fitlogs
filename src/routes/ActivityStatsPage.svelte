@@ -4,38 +4,35 @@
   import StatLabel from "../lib/Activity/StatLabel.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import type { Setting } from "../shared/class/Settings";
-  import { setAverageActivities } from "../shared/functions/Activity";
-  import { truncateNumber } from "../shared/functions/Utilitary";
-  import { settings } from "../shared/store/settingsStore";
-  import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
+  import { settingsStore } from "../shared/store/settingsStore";
   import { menuPath } from "../shared/store/menuPath";
+	import { activitiesStore, averageActivitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
+	import ActivityCharts from "./ActivityCharts.svelte";
+	import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
+	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
+	import type { Chart, ChartItem } from "chart.js";
+	import type { GraphType } from "../shared/enum/types";
 
-	let si: Setting;
-	settings.subscribe((s) => (si = s));
+	let settings: Setting;
 
-	export let activities: Activity[] = null;
+	let loadingActivities: boolean = true;
+	let loadingActivitiesChart: boolean = true;
+	let isMountingChart: boolean = true;
+	let lineChart: Chart = undefined;
+	let chartItem: ChartItem = undefined;
+	let activitiesShowed: Activity[];
+	let averageActivitiesShowed: Activity[];
+
+	let gtTab: GraphType = 'average';
+
 
 	// parameters
 
-	let nbDays: number | null = 7;
-	const nbDaysChoice = {
-		oneWeek: { label: "1 Week", value: 7, class: "" },
-		twoWeeks: { label: "2 Weeks", value: 15, class: "" },
-		oneMonth: { label: "1 Month", value: 30, class: "" },
-		twoMonth: { label: "2 Month", value: 60, class: "" },
-		threeMonth: { label: "3 Month", value: 90, class: "" },
-		sixMonth: { label: "6 Month", value: 180, class: "" },
-		oneYear: {label: "1 Year",value: 365, class: "" },
-		twoYears: { label: "2 Year", value: 730, class: "" },
-		threeYears: { label: "3 Year", value: 1045, class: "" },
-		all: { label: "All", value: null, class: "" },
-	};
 
 	// info to show
 	let averageCalories: number;
 	let averageWeight: number;
 	let averageSteps: number;
-	let averageActivities: Activity[];
 	let averageCaloriesBurned: number;
 	let averageTDEE: number;
 
@@ -45,62 +42,82 @@
 
 	onMount(() => {
 		menuPath.set("Statistics")
+		loadData();
 	})
 
-	function calculateValues() {
-		averageActivities = setAverageActivities(activities, nbDays);
+	function loadData() {
+		settingsStore.subscribe((storeValue) => (settings = storeValue));
+		activitiesStore.subscribe((storeValue) => {
+			if (!storeValue) return;
+			if (storeValue.length < 1) return;
+			loadingActivities = true;
+			activitiesShowed = storeValue;
+			loadingActivities = false;
+		});
 
-		if (averageActivities.length < 1) return;
-
-		averageCalories = averageActivities[0].calories;
-		averageWeight = averageActivities[0].weight;
-		averageSteps = averageActivities[0].steps;
-
-		totalAverageWeightLoss =
-			averageActivities[nbDays - 1].weight -
-			averageActivities[0].weight;
-		totalAverageWeightLoss = Number(
-			totalAverageWeightLoss.toFixed(1),
-		);
-
-		totalAverageCaloriesBurned = truncateNumber(
-			convertWeightIntoCalories(totalAverageWeightLoss),
-			0,
-		);
-
-		totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0);
-
-		averageCaloriesBurned = truncateNumber(
-			totalAverageCaloriesBurned / nbDays,
-			0,
-		);
-
-		averageTDEE = truncateNumber(
-			averageCalories + averageCaloriesBurned,
-			0,
-		);
+		averageActivitiesStore.subscribe((storeValue) => {
+			if (!storeValue) return;
+			if (storeValue.length < 1) return;
+			loadingActivities = true;
+			averageActivitiesShowed = storeValue;
+			loadingActivities = false;
+		});
 	}
 
-	function getTotalAverageSteps(): number {
-		let total = 0;
-		for (let i = 0; i < averageActivities.length; i++) {
-			const a = averageActivities[i];
-			total += a.steps;
-		}
-		return total;
-	}
+	// function calculateValues() {
+	// 	averageActivities = setAverageActivities(activities, nbDays);
 
-	function setNbDays(nb: number): void {
-		nbDays = nb;
-		for (const key of Object.keys(nbDaysChoice)) {
-			nbDaysChoice[key].class = "";
-			if (nbDaysChoice[key].value == nb) {
-				nbDaysChoice[key].class = "btn-primary";
-			}
-		}
+	// 	if (averageActivities.length < 1) return;
 
-		calculateValues();
-	}
+	// 	averageCalories = averageActivities[0].calories;
+	// 	averageWeight = averageActivities[0].weight;
+	// 	averageSteps = averageActivities[0].steps;
+
+	// 	totalAverageWeightLoss =
+	// 		averageActivities[nbDays - 1].weight -
+	// 		averageActivities[0].weight;
+	// 	totalAverageWeightLoss = Number(
+	// 		totalAverageWeightLoss.toFixed(1),
+	// 	);
+
+	// 	totalAverageCaloriesBurned = truncateNumber(
+	// 		convertWeightIntoCalories(totalAverageWeightLoss),
+	// 		0,
+	// 	);
+
+	// 	totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0);
+
+	// 	averageCaloriesBurned = truncateNumber(
+	// 		totalAverageCaloriesBurned / nbDays,
+	// 		0,
+	// 	);
+
+	// 	averageTDEE = truncateNumber(
+	// 		averageCalories + averageCaloriesBurned,
+	// 		0,
+	// 	);
+	// }
+
+	// function getTotalAverageSteps(): number {
+	// 	let total = 0;
+	// 	for (let i = 0; i < averageActivities.length; i++) {
+	// 		const a = averageActivities[i];
+	// 		total += a.steps;
+	// 	}
+	// 	return total;
+	// }
+
+	// function setNbDays(nb: number): void {
+	// 	nbDays = nb;
+	// 	for (const key of Object.keys(nbDaysChoice)) {
+	// 		nbDaysChoice[key].class = "";
+	// 		if (nbDaysChoice[key].value == nb) {
+	// 			nbDaysChoice[key].class = "btn-primary";
+	// 		}
+	// 	}
+
+	// 	calculateValues();
+	// }
 
 	// function getAverageWeightLoss(): number {
 	// 	const nbDaysAverageWeight = getAverage("weight", nbDays);
@@ -126,7 +143,42 @@
 
 	<div class="flex-1 w-full flex flex-col">
 
+		<div class="h-full overflow-y-auto">
+
+			{#if !loadingActivities && activitiesShowed}
+				<ActivityRangeSelector 
+					on:click={ async (e) => {
+						if (lineChart) lineChart.destroy();
+						isMountingChart = true;
+						loadingActivitiesChart = true;
+						loadingActivities = true;
+						activitiesShowed = undefined;
+						averageActivitiesShowed = undefined
+						loadActivitiesStore(e.detail.value);
+					}}
+				/>
+				{#if gtTab === 'normal'}
+					<ActivityCharts {activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+				{:else if gtTab === 'average'}
+					<ActivityCharts activitiesShowed={averageActivitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+				{/if}
+
+			{:else}
+				<div class="flex items-center justify-center">
+					<span class="loading loading-spinner loading-xl"></span>
+				</div>
+			{/if}
+
+		</div>
 	</div>
+
+	<ActivityAverageSelector on:graphSelect={(e) => {
+		if (e.detail.value === 'normal') gtTab = 'normal';
+		if (e.detail.value === 'average') gtTab = 'average';
+	}} />
+
+	<ActivityFooter/>
+
 </div>
 <!-- 
 
