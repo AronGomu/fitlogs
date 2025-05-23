@@ -19,7 +19,7 @@
     }
 </script>
 
-<div role="tablist" class="tabs tabs-boxed mb-2">
+<div role="tablist" class="w-full tabs tabs-lift tabs-xl">
   <button role="tab" class="tab {tabs.list.class}" on:click={() => navigate("/fitlogs/activity/list")}>
     List
   </button>

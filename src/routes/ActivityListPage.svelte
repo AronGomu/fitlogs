@@ -61,7 +61,7 @@
 
 	<div class="flex-1 w-full flex flex-col">
 
-		<ActivityHeader selectedTab="list"/>
+		<!-- <ActivityHeader selectedTab="list"/> -->
 
 		<div class="h-full overflow-y-auto">
 

@@ -8,6 +8,7 @@
   import { truncateNumber } from "../shared/functions/Utilitary";
   import { settings } from "../shared/store/settingsStore";
   import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
+  import { menuPath } from "../shared/store/menuPath";
 
 	let si: Setting;
 	settings.subscribe((s) => (si = s));
@@ -43,7 +44,7 @@
 	let totalAverageSteps: number;
 
 	onMount(() => {
-
+		menuPath.set("Statistics")
 	})
 
 	function calculateValues() {
@@ -124,8 +125,6 @@
 <div class="h-full w-full flex flex-col justify-between">
 
 	<div class="flex-1 w-full flex flex-col">
-
-		<ActivityHeader selectedTab="stats"/>
 
 	</div>
 </div>
