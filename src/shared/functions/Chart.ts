@@ -1,4 +1,4 @@
-import Chart, { type CartesianScaleOptions, type ChartConfiguration, type ChartData, type ChartDataset, type ChartEvent, type ChartItem, type ChartOptions, type LegendElement, type LegendItem, type PluginOptionsByType, type ScaleOptionsByType } from "chart.js/auto";
+import Chart, { type ChartConfiguration, type ChartData, type ChartDataset, type ChartEvent, type ChartItem, type ChartOptions, type LegendElement, type LegendItem, type PluginOptionsByType } from "chart.js/auto";
 
 export class ChartParameter {
     constructor(

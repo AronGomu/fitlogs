@@ -1,11 +1,20 @@
 import type { ChartItem } from "chart.js/auto";
 import { ChartParameter } from "../../functions/Chart";
+import { createActivityDateFromDate, type ActivityDate } from "./ActivityDate";
 
 export class Activity {
     constructor(public year: number, public month: number, public day: number, public weight: number | null, public calories: number | null, public steps: number | null) { }
 
     public printDate(): string {
         return `${this.year}-${this.month}-${this.day}`;
+    }
+
+    public getDate(): Date {
+        return new Date(this.printDate());
+    }
+
+    public getActivityDate(): ActivityDate {
+        return createActivityDateFromDate(this.getDate());
     }
 }
 

@@ -1,28 +1,31 @@
 import { writable, type Writable } from "svelte/store";
-import { getActivitiesFromDatabase } from "../functions/Database";
-import type { Activity } from "../class/Activity/Activity";
-import type { ActivityDate } from "../class/Activity/ActivityDate";
+import { Activity } from "../class/Activity/Activity";
+import { createActivityDateFromDate, type ActivityDate } from "../class/Activity/ActivityDate";
 import { setAverageActivities } from "../functions/Activity";
 import type { Setting } from "../class/Settings";
-import { settingStore } from "./settingStore";
+import { getDateFromXDays, getTomorrow, getYesterday } from "../functions/Utilitary";
+import { getActivitiesFromDatabaseWithinDates } from "../functions/database/activityDatabase";
 
 export let activitiesStore: Writable<Activity[]> = writable();
 export let averageActivitiesStore: Writable<Activity[]> = writable();
 
 /** Load the list of programs stored locally. */
-export async function loadActivitiesStore(
-  s: Setting,
-  sort: 'asc' | 'desc' = 'asc',
-): Promise<void> {
-  const activitiesDatabase = await getActivitiesFromDatabase(s.statsRangeSelected, sort);
-  activitiesStore.set(activitiesDatabase);
+export async function loadActivitiesStore(s: Setting): Promise<void> {
 
-  if (!s.statsRangeSelected) s.statsRangeSelected = activitiesDatabase.length;
-  
-  const aaDatabase = setAverageActivities(activitiesDatabase, s.nbDaysForAveraging);
-  averageActivitiesStore.set(aaDatabase);
+    const today = new Date();
+    const firstDate = getDateFromXDays(today, s.statsRangeSelected);
+
+    const startAD = createActivityDateFromDate(firstDate);
+    const endAD = createActivityDateFromDate(today);
+
+    const activitiesDatabase = await getActivitiesFromDatabaseWithinDates(startAD, endAD);
+    activitiesStore.set(activitiesDatabase);
+
+    if (!s.statsRangeSelected) s.statsRangeSelected = activitiesDatabase.length;
+    
+    const aaDatabase = setAverageActivities(activitiesDatabase, s.nbDaysForAveraging);
+    averageActivitiesStore.set(aaDatabase);
   
 }
-
 
 export let adToModify: Writable<ActivityDate> = writable(null);

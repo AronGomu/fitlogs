@@ -23,10 +23,6 @@
 		loadingActivitiesChart = false;
 	}
 
-	function onClickLegendLineChart() {
-		
-	}
-
 </script>
 
 <canvas id="myChart"></canvas>

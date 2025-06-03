@@ -2,12 +2,13 @@
 	import ActivityForm from "../lib/Activity/ActivityForm.svelte";
 	import { ActivityDate } from "../shared/class/Activity/ActivityDate";
 	import { onMount } from "svelte";
-	import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
 	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Activity } from "../shared/class/Activity/Activity";
 	import { activitiesStore, adToModify, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
 	import { menuPath } from "../shared/store/menuPath";
+	import type { Setting } from "../shared/class/Settings";
+	import { loadSetting, settingStore } from "../shared/store/settingStore";
 
 	let loadingActivities: boolean = true;
 
@@ -17,10 +18,14 @@
 		loadingActivities = false;
 	});
 
+	let setting: Setting;
+	settingStore.subscribe(s => setting = s);
+
 	let todayYear, todayMonth, todayDay;
 	let yesterdayYear, yesterdayMonth, yesterdayDay;
 
-	onMount(() => {
+	onMount(async () => {
+		await loadSetting();
 		menuPath.set("Activity");
 		setTodayDataForAddingNewActivity();
 		setYesterdayDataForAddingNewActivity();
@@ -52,8 +57,9 @@
 	}
 
 	function refreshActivities() {
+		if (!setting) return;
 		loadingActivities = true;
-		loadActivitiesStore();
+		loadActivitiesStore(setting);
 	}
 </script>
 
@@ -127,7 +133,7 @@
 
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
 	<form method="dialog" class="modal-box">
-		<ActivityForm on:saveActivity={() => { refreshActivities() }} />
+		<ActivityForm {setting} on:saveActivity={() => { refreshActivities() }} />
 	</form>
 	<form method="dialog" class="modal-backdrop">
 		<button on:click={() => { refreshActivities(); }}>close</button>

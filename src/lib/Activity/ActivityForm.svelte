@@ -8,16 +8,15 @@
 		deleteActivityFromDatabase,
 	} from "../../shared/functions/Database";
 	import { adToModify } from "../../shared/store/activityStore";
-	import { settingStore } from "../../shared/store/settingStore";
+	import { loadSetting, settingStore } from "../../shared/store/settingStore";
 	import DateInput from "../DateInput.svelte";
 	import InputNumber from "../WorkoutForm/inputs/InputNumber.svelte";
 
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 	const dispatch = createEventDispatcher();
 
-	let si: Setting;
-	settingStore.subscribe((s) => (si = s));
-
+	export let setting: Setting;
+	
 	// Activity form
 	let date = new Date();
 	let weight: number;
@@ -43,11 +42,7 @@
 		checkActivityExistence();
 	})
 
-	init();
-
-	function init() {
-		checkActivityExistence();
-	}
+	onMount(() => { checkActivityExistence(); })
 
 	async function checkActivityExistence() {
 		if (selectedActivityDate) {
@@ -157,18 +152,20 @@
 		}}
 	/>
 
-	<div class="mt-2">
-		<InputNumber
-			label="Weight"
-			placeholder="Weight"
-			className="input w-24  text-left"
-			value={weight}
-			metric={si.wm}
-			on:input={(event) => {
-				weight = event.detail.value;
-			}}
-		/>
-	</div>
+	{#if setting?.wm}
+		<div class="mt-2">
+			<InputNumber
+				label="Weight"
+				placeholder="Weight"
+				className="input w-24  text-left"
+				value={weight}
+				metric={setting.wm}
+				on:input={(event) => {
+					weight = event.detail.value;
+				}}
+			/>
+		</div>
+	{/if}
 
 	<div class="mt-2">
 		<InputNumber

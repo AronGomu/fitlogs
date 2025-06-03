@@ -13,10 +13,10 @@ export type databaseObject = Workout | Lift | Program | Activity;
 
 // Define the database schema
 export interface Database extends DBSchema {
+	"setting-store": { key: number; value: any; };
 	"workout-store": { key: number; value: any; };
 	"lift-store": { key: number; value: any; };
 	"program-store": { key: number; value: any; };
-	"setting-store": { key: number; value: any; };
 	"activity-store": { key: number; value: any; };
 }
 
@@ -36,11 +36,11 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 
 		upgrade(db) {
 			if (!db.objectStoreNames.contains("setting-store")) {
-				db.createObjectStore("setting-store", {keyPath: 'id'});
+				db.createObjectStore("setting-store", { autoIncrement: true });
 			}
 
 			if (!db.objectStoreNames.contains("workout-store")) {
-				db.createObjectStore("workout-store", { autoIncrement: true, }); 
+				db.createObjectStore("workout-store", { autoIncrement: true }); 
 			}
 
 			if (!db.objectStoreNames.contains("lift-store")) {
@@ -127,6 +127,7 @@ export async function updateInDatabase<T>(
 	const db = await openDatabase();
 	const tx = db.transaction(storeName, "readwrite");
 	const store = tx.objectStore(storeName);
+	
 	id = await store.put(updatedValue, id);
 	return await store.get(id);
 }
@@ -170,9 +171,7 @@ export async function deleteDatabase(): Promise<void> {
 export async function getActivitiesFromDatabase(
 	/** How many to load */
 	n: number | null = null,
-	/** asc : From older to newer
-	 * desc : from newer to older
-	 */
+	/** asc : From older to newer, desc : from newer to older */
 	sort: 'asc' | 'desc' = 'desc'
 ): Promise<Activity[]> {
 	const db = await openDatabase();

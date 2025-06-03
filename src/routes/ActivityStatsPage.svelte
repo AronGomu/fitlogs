@@ -40,9 +40,10 @@
 	let totalAverageWeightLoss: number;
 	let totalAverageSteps: number;
 
-	onMount(() => {
+	onMount(async () => {
 		menuPath.set("Statistics")
 		loadData();
+		loadSetting();
 	})
 
 	function loadData() {
@@ -64,7 +65,6 @@
 			loadActivitiesStore(setting);
 		});
 
-		loadSetting();
 	}
 
 	function convertWeightIntoCalories(weight: number): number {

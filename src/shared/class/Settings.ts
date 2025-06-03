@@ -17,5 +17,8 @@ export class Setting {
 }
 
 export function getRealSettings(s: Setting): Setting {
+    if (!s.wm) s.wm = WEIGHT_METRIC_DEFAULT;
+    if (!s.nbDaysForAveraging) s.nbDaysForAveraging = NB_DAYS_FOR_AVERAGING_DEFAULT;
+    if (!s.statsRangeSelected) s.statsRangeSelected = STATS_RANGE_SELECTED_DEFAULT;
     return new Setting(s.wm, s.nbDaysForAveraging, s.statsRangeSelected);
 }

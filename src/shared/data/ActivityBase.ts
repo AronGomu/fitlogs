@@ -12,8 +12,10 @@ let daysLeft: number;
 export function generateMonthEmptyRandomActivities(year: number, month: number, day: number): Activity[] {
 	const activities = [];
 	for (let d = 1; d <= day; d++) {
-		const a = new Activity(year, month, d, null, null, null);
-		activities.push(a);
+		if (Math.random() < 0.5) {
+			const a = new Activity(year, month, d, null, null, null);
+			activities.push(a);
+		}
 	}
 	return activities;
 }
@@ -86,6 +88,7 @@ export function generateRandomActivities(n: number, startingWeight: number): Act
 
 	const activities = [];
 
+	// generate empty activities
 	for (let i = n; i >= 0; i--) {
 		const yearToGenerate = year - i;
 		if (yearToGenerate === year) activities.push(...generateYearEmptyRandomActivities(year, month, day));
