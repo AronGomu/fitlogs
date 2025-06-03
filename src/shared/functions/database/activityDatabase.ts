@@ -18,13 +18,13 @@ export async function getActivitiesFromDatabaseWithinDates(startAD: ActivityDate
 		const adFromDatabase = activityFromDatabase.getActivityDate();
 
 		if (adFromDatabase.formatDate() === adToAdd.formatDate()) {
-			aList.push(activityFromDatabase);
+			aList.unshift(activityFromDatabase);
 			cursor = await cursor.continue();
 		} else {
-			aList.push(new Activity(adToAdd.year, adToAdd.month, adToAdd.day, null, null, null))
+			aList.unshift(new Activity(adToAdd.year, adToAdd.month, adToAdd.day, null, null, null))
 		}
 
-		if (startAD.formatDate() === adToAdd.formatDate()) break 
+		if (startAD && startAD.formatDate() === adToAdd.formatDate()) break 
 
 		adToAdd = createActivityDateFromDate(getYesterday(dToAdd));
 	}

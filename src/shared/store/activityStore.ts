@@ -3,7 +3,7 @@ import { Activity } from "../class/Activity/Activity";
 import { createActivityDateFromDate, type ActivityDate } from "../class/Activity/ActivityDate";
 import { setAverageActivities } from "../functions/Activity";
 import type { Setting } from "../class/Settings";
-import { getDateFromXDays, getTomorrow, getYesterday } from "../functions/Utilitary";
+import { getDateFromXDays } from "../functions/Utilitary";
 import { getActivitiesFromDatabaseWithinDates } from "../functions/database/activityDatabase";
 
 export let activitiesStore: Writable<Activity[]> = writable();
@@ -13,9 +13,12 @@ export let averageActivitiesStore: Writable<Activity[]> = writable();
 export async function loadActivitiesStore(s: Setting): Promise<void> {
 
     const today = new Date();
-    const firstDate = getDateFromXDays(today, s.statsRangeSelected);
+    let startAD = null;
+    if (s.statsRangeSelected) {
+        const firstDate = getDateFromXDays(today, s.statsRangeSelected);
+        startAD = createActivityDateFromDate(firstDate);
+    }
 
-    const startAD = createActivityDateFromDate(firstDate);
     const endAD = createActivityDateFromDate(today);
 
     const activitiesDatabase = await getActivitiesFromDatabaseWithinDates(startAD, endAD);
