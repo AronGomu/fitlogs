@@ -13,22 +13,24 @@
 	let loadingActivities: boolean = true;
 
 	let activitiesShowed: Activity[];
-	activitiesStore.subscribe((activities) => {
-		activitiesShowed = activities;
-		loadingActivities = false;
-	});
 
 	let setting: Setting;
-	settingStore.subscribe(s => setting = s);
 
 	let todayYear, todayMonth, todayDay;
 	let yesterdayYear, yesterdayMonth, yesterdayDay;
 
 	onMount(async () => {
-		await loadSetting();
 		menuPath.set("Activity");
 		setTodayDataForAddingNewActivity();
 		setYesterdayDataForAddingNewActivity();
+		settingStore.subscribe(s => setting = s);
+		activitiesStore.subscribe((activities) => {
+			activitiesShowed = activities;
+			loadingActivities = false;
+		});
+		await loadSetting();
+		loadActivitiesStore(setting);
+		
 	})
 
 	function setTodayDataForAddingNewActivity(): void {

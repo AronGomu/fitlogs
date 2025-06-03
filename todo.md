@@ -1,5 +1,8 @@
-* Make better header
-* add stats under graph
 * Make activity selector work
-* clean activity page
+* make copy
 * clean menu page
+* clean activity page
+* add stats under graph
+* Make better header
+* make export CSV
+* make export JSON

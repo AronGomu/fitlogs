@@ -28,7 +28,6 @@ export async function loadActivitiesStore(s: Setting): Promise<void> {
     
     const aaDatabase = setAverageActivities(activitiesDatabase, s.nbDaysForAveraging);
     averageActivitiesStore.set(aaDatabase);
-  
 }
 
 export let adToModify: Writable<ActivityDate> = writable(null);
