@@ -90,7 +90,7 @@
 					on:click={ async (e) => {
 						const statsRangeSelected = e.detail.value
 						setting.statsRangeSelected = statsRangeSelected;
-						const s = await saveSettings(setting);
+						await saveSettings(setting);
 						
 						if (lineChart) lineChart.destroy();
 						isMountingChart = true;

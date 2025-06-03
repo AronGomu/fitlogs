@@ -9,6 +9,7 @@
 	import { menuPath } from "../shared/store/menuPath";
 	import type { Setting } from "../shared/class/Settings";
 	import { loadSetting, settingStore } from "../shared/store/settingStore";
+  import { saveSettings } from "../shared/functions/database/settingDatabase";
 
 	let loadingActivities: boolean = true;
 
@@ -91,7 +92,10 @@
 					<ActivityRangeSelector 
 						on:click={ async (e) => {
 							loadingActivities = true;
-							await loadActivitiesStore(e.detail.value);
+							const statsRangeSelected = e.detail.value
+							setting.statsRangeSelected = statsRangeSelected;
+							await saveSettings(setting);
+							await loadActivitiesStore(setting);
 							loadingActivities = false;
 						}}
 					/>

@@ -1,4 +1,3 @@
-* Make activity selector work
 * make copy
 * clean menu page
 * clean activity page
