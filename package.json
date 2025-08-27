@@ -2,6 +2,7 @@
   "name": "Fitlogs",
   "private": true,
   "version": "0.0.1",
+  "package-lock": false,
   "type": "module",
   "scripts": {
     "dev": "vite",

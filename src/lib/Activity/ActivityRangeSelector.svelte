@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { settings } from "../../shared/store/settingsStore";
-	import type { Setting } from "../../shared/class/Settings";
+		import { settings } from "../../shared/store/settingsStore";
+		import type { Setting } from "../../shared/class/Settings";
   	import ActivityRangeSelectorButton from "./ActivityRangeSelectorButton.svelte";
   	import { ActivityRangeSelectorData } from "../../shared/class/Activity/ActivityRangeSelectorData";
   	import { createEventDispatcher } from "svelte";
@@ -39,7 +39,7 @@
 	});
 
 	function dispatchSelection(e): void {
-		console.log(e.detail);
+		console.log("dispatchSelection ranger selector", e.detail);
 		dispatch("click", { input: e.detail.input, value: e.detail.value});
 	}
 </script>
@@ -61,4 +61,4 @@
 		<span class="text-3xl text-secondary">Averages on Last {nbDays} Days</span>
 	</div> -->
 </div>
-	
+

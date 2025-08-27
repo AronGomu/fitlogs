@@ -305,7 +305,7 @@ export function assert(condition: any, message: string) {
 
 /** x (inclusive) and y (exclusive) | swap values if x is greater than y */
 export function getRandomNumber(x, y) {
-    if (x > y) [x, y] = [y, x]; 
+    if (x > y) [x, y] = [y, x];
     const rn = Math.random() * (y - x) + x;
 	return truncateNumber(rn, 0);
 }
@@ -314,15 +314,15 @@ export function generateRandomWeight(startingWeight: number, n: number, maxInter
 	const weights: number[] = [];
 	for (let i = 0; i < n; i++) {
 
-		
+
 	}
 }
 
 export /**
  * Returns the number of days in a given month of a specified year.
- * 
+ *
  * @param year - The year for which to determine the number of days in the month.
- * @param month - The month (1-12) for which to determine the number of days. 
+ * @param month - The month (1-12) for which to determine the number of days.
  *                Note: January is 1 and December is 12.
  * @returns The number of days in the specified month of the specified year.
  * @throws Error if the month is not between 1 and 12.
@@ -360,4 +360,8 @@ export function sortActivities(activities): Activity[] {
 	});
 
 	return activities;
+}
+
+function convertWeightIntoCalories(weight: number): number {
+	return weight * 7700;
 }

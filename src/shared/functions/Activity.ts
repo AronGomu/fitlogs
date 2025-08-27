@@ -3,12 +3,10 @@ import { getActivitiesFromDatabase } from "./Database";
 import { downloadAsJson, truncateNumber } from "./Utilitary";
 
 
-export function setAverageActivities(activities: Activity[], nbDays: number): Activity[] {
+export function buildAverageActivityList(activities: Activity[], nbDays: number): Activity[] {
 	let r: Activity[] = [];
 
-	if (nbDays > activities.length) {
-		nbDays = activities.length;
-	}
+	if (nbDays > activities.length) nbDays = activities.length;
 
 	let averageCalories: number;
 	let averageWeight: number;
@@ -17,27 +15,11 @@ export function setAverageActivities(activities: Activity[], nbDays: number): Ac
 	for (let i = 0; i < nbDays; i++) {
 		const a = activities[i];
 
-		averageCalories = truncateNumber(
-			getAverage(activities, nbDays, "calories", i),
-			0,
-		);
-		averageWeight = truncateNumber(
-			getAverage(activities, nbDays, "weight", i),
-			1,
-		);
-		averageSteps = truncateNumber(
-			getAverage(activities, nbDays, "steps", i),
-			0,
-		);
+		averageCalories = truncateNumber(getAverage(activities, nbDays, "calories", i), 0,);
+		averageWeight = truncateNumber(getAverage(activities, nbDays, "weight", i), 1,);
+		averageSteps = truncateNumber(getAverage(activities, nbDays, "steps", i), 0,);
 
-		const newA = new Activity(
-			a.year,
-			a.month,
-			a.day,
-			averageWeight,
-			averageCalories,
-			averageSteps,
-		);
+		const newA = new Activity( a.year, a.month, a.day, averageWeight, averageCalories, averageSteps);
 		r.push(newA);
 	}
 
@@ -71,22 +53,13 @@ export function getAverage(
 		nbElements += 1;
 	}
 
-	// if (propertyName === "weight") {
-	// 	console.log(`nbDaysBefore: `, nbDaysBefore);
-	// 	console.log(`startingDay: `, startingDay);
-	// 	console.log(`len: `, len);
-	// 	console.log(`total : `, total);
-	// 	console.log(`nbElements: `, nbElements);
-	// 	console.log(`total / nbElements: `, total / nbElements);
-	// }
-
 	return total / nbElements;
 }
 
 export async function exportActivities() {
 	const activities = await getActivitiesFromDatabase();
 
-	const averageActivities = setAverageActivities(activities, activities.length - 1);
+	const averageActivities = buildAverageActivityList(activities, activities.length - 1);
 
 	downloadAsJson(activities, "activities");
 	downloadAsJson(averageActivities, "averageActivities");

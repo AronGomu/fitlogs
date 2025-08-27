@@ -3,82 +3,92 @@
   import StatLabel from "../lib/Activity/StatLabel.svelte";
   import type { Activity } from "../shared/class/Activity/Activity";
   import type { Setting } from "../shared/class/Settings";
-  import { setAverageActivities } from "../shared/functions/Activity";
+  import { buildAverageActivityList, setAverageActivities } from "../shared/functions/Activity";
   import { truncateNumber } from "../shared/functions/Utilitary";
   import { settings } from "../shared/store/settingsStore";
+
+	let nbDays: number | null = 7;
 
 	let si: Setting;
 	settings.subscribe((s) => (si = s));
 
-	export let activities: Activity[] = null;
+  let activityList;
+  let averagesData = new AveragesData();
 
-	// parameters
+	settings.subscribe((al) => {
+// should be done only once //
+    activityList = al;
+    const averageActivityList = averageActivityList(buildAverageActivityList(activityList));
+    averagesData.build(averageActivityList);
+// should be done only once //
+    setNbDays(nbDays)
+  }));
 
-	let nbDays: number | null = 7;
-	const nbDaysChoice = {
-		oneWeek: { label: "1 Week", value: 7, class: "" },
-		twoWeeks: { label: "2 Weeks", value: 15, class: "" },
-		oneMonth: { label: "1 Month", value: 30, class: "" },
-		twoMonth: { label: "2 Month", value: 60, class: "" },
-		threeMonth: { label: "3 Month", value: 90, class: "" },
-		sixMonth: { label: "6 Month", value: 180, class: "" },
-		oneYear: {label: "1 Year",value: 365, class: "" },
-		twoYears: { label: "2 Year", value: 730, class: "" },
-		threeYears: { label: "3 Year", value: 1045, class: "" },
-		all: { label: "All", value: null, class: "" },
-	};
-
-	// info to show
-	let averageCalories: number;
-	let averageWeight: number;
-	let averageSteps: number;
-	let averageActivities: Activity[];
-	let averageCaloriesBurned: number;
-	let averageTDEE: number;
-
-	let totalAverageCaloriesBurned: number;
-	let totalAverageWeightLoss: number;
-	let totalAverageSteps: number;
-
-	init();
-
-	function init() {
-		setNbDays(nbDays);
+function setNbDays(nbDays: number): void {
+		nbDays = nb;
+		console.log(nbDays, Object.keys(nbDaysChoice));
+		for (const key of Object.keys(nbDaysChoice)) {
+			console.log('key', nbDaysChoice[key]);
+			nbDaysChoice[key].class = "";
+			if (nbDaysChoice[key].value == nb) {
+				nbDaysChoice[key].class = "btn-primary";
+			}
+		}
 	}
 
-	function calculateValues() {
-		averageActivities = setAverageActivities(activities, nbDays);
 
-		if (averageActivities.length < 1) return;
 
-		averageCalories = averageActivities[0].calories;
-		averageWeight = averageActivities[0].weight;
-		averageSteps = averageActivities[0].steps;
+	<!-- const nbDaysSelectorsData = { -->
+	<!-- 	oneWeek: { label: "1 Week", value: 7, class: "" }, -->
+	<!-- 	twoWeeks: { label: "2 Weeks", value: 15, class: "" }, -->
+	<!-- 	oneMonth: { label: "1 Month", value: 30, class: "" }, -->
+	<!-- 	twoMonth: { label: "2 Month", value: 60, class: "" }, -->
+	<!-- 	threeMonth: { label: "3 Month", value: 90, class: "" }, -->
+	<!-- 	sixMonth: { label: "6 Month", value: 180, class: "" }, -->
+	<!-- 	oneYear: {label: "1 Year",value: 365, class: "" }, -->
+	<!-- 	twoYears: { label: "2 Year", value: 730, class: "" }, -->
+	<!-- 	threeYears: { label: "3 Year", value: 1045, class: "" }, -->
+	<!-- 	all: { label: "All", value: null, class: "" }, -->
+	<!-- }; -->
 
-		totalAverageWeightLoss =
-			averageActivities[nbDays - 1].weight -
-			averageActivities[0].weight;
-		totalAverageWeightLoss = Number(
-			totalAverageWeightLoss.toFixed(1),
-		);
 
-		totalAverageCaloriesBurned = truncateNumber(
-			convertWeightIntoCalories(totalAverageWeightLoss),
-			0,
-		);
 
-		totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0);
 
-		averageCaloriesBurned = truncateNumber(
-			totalAverageCaloriesBurned / nbDays,
-			0,
-		);
 
-		averageTDEE = truncateNumber(
-			averageCalories + averageCaloriesBurned,
-			0,
-		);
-	}
+
+	<!-- function calculateStatsValues(activities: Activity[], nbDays: number): { -->
+	<!-- 	console.log(activities, nbDays); -->
+	<!---->
+	<!---->
+	<!---->
+	<!-- 	averageCalories = averageActivities[0].calories; -->
+	<!-- 	averageWeight = averageActivities[0].weight; -->
+	<!-- 	averageSteps = averageActivities[0].steps; -->
+	<!---->
+	<!-- 	totalAverageWeightLoss = -->
+	<!-- 		averageActivities[nbDays - 1].weight - -->
+	<!-- 		averageActivities[0].weight; -->
+	<!-- 	totalAverageWeightLoss = Number( -->
+	<!-- 		totalAverageWeightLoss.toFixed(1), -->
+	<!-- 	); -->
+	<!---->
+	<!-- 	totalAverageCaloriesBurned = truncateNumber( -->
+	<!-- 		convertWeightIntoCalories(totalAverageWeightLoss), -->
+	<!-- 		0, -->
+	<!-- 	); -->
+	<!---->
+	<!-- 	totalAverageSteps = truncateNumber(getTotalAverageSteps(), 0); -->
+	<!---->
+	<!-- 	averageCaloriesBurned = truncateNumber( -->
+	<!-- 		totalAverageCaloriesBurned / nbDays, -->
+	<!-- 		0, -->
+	<!-- 	); -->
+	<!---->
+	<!-- 	averageTDEE = truncateNumber( -->
+	<!-- 		averageCalories + averageCaloriesBurned, -->
+	<!-- 		0, -->
+	<!-- 	); -->
+	<!-- } -->
 
 	function getTotalAverageSteps(): number {
 		let total = 0;
@@ -89,17 +99,7 @@
 		return total;
 	}
 
-	function setNbDays(nb: number): void {
-		nbDays = nb;
-		for (const key of Object.keys(nbDaysChoice)) {
-			nbDaysChoice[key].class = "";
-			if (nbDaysChoice[key].value == nb) {
-				nbDaysChoice[key].class = "btn-primary";
-			}
-		}
 
-		calculateValues();
-	}
 
 	// function getAverageWeightLoss(): number {
 	// 	const nbDaysAverageWeight = getAverage("weight", nbDays);
@@ -109,9 +109,7 @@
 	// 	return nbDaysAverageWeight - todayAverageWeight;
 	// }
 
-	function convertWeightIntoCalories(weight: number): number {
-		return weight * 7700;
-	}
+
 
 	function determineWeightLossLabel(): string {
 		if (!totalAverageWeightLoss) return "";
@@ -120,14 +118,14 @@
 		else return "";
 	}
 
-	function test(e) {
-		console.log(e);
+	function onClickRange(e) {
+		console.log("onClickRange", e);
 	}
 </script>
 
 <div class="h-full w-full">
 	<div class="flex flex-row overflow-x-auto content-center">
-		<ActivityRangeSelector on:click={(e) => test(e)}/>
+		<ActivityRangeSelector on:click={(e) => onClickRange(e)}/>
 	</div>
 
 	<div class="w-full flex flex-row items-center mt-6 mb-4">
