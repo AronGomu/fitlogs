@@ -1,3 +1,9 @@
+1. Calculer les averages directement au chargement des stores (mais du coup il faut comprendre comment charger les settings avant)
+
+
+
+
+
 1. Repliquer ce qui a etait fait sur ActivityList sur ActivityStats
     1. updater le range selector avec celui du component
     2. faire une liste des selectors stocke en dur

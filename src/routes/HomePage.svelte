@@ -7,7 +7,7 @@
 	<button class="btn btn-lg btn-primary"
 		on:click={() => { navigate(`/fitlogs/activity`) }}
 	>
-		Activities
+		ActivityList
 	</button>
 
 	<!-- <button

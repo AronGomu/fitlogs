@@ -341,8 +341,8 @@ function getDaysInMonth(year: number, month: number): number {
 }
 
 
-export function sortActivities(activities): Activity[] {
-	activities.sort((a: Activity, b: Activity) => {
+export function sortActivityList(ActivityList): Activity[] {
+	ActivityList.sort((a: Activity, b: Activity) => {
 	if (!a && b) return -1;
 	if (a && !b) return 1;
 	if (!a && !b) return 0;
@@ -359,7 +359,7 @@ export function sortActivities(activities): Activity[] {
 	return -total;
 	});
 
-	return activities;
+	return ActivityList;
 }
 
 function convertWeightIntoCalories(weight: number): number {

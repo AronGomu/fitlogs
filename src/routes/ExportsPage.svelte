@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { exportActivities } from "../shared/functions/Activity";
+	import { exportActivityList } from "../shared/functions/Activity";
 	import { downloadAsJson } from "../shared/functions/Utilitary";
 	import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
 	import { navigate } from "svelte-routing";
@@ -18,8 +18,8 @@
 	<button
 		class="btn btn-primary w-40 mt-4"
 		on:click={() => {
-			exportActivities();
-		}}>Export Activities Data</button
+			exportActivityList();
+		}}>Export ActivityList Data</button
 	>
 </div>
 

@@ -1,276 +1,276 @@
 <script lang="ts">
-	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
-	import { Workout } from "../shared/class/Workout/Workout";
-	import { Setting } from "../shared/class/Settings";
-	import { fetchSettings } from "../shared/functions/Database";
-	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
-	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
-	import { putLiftInDatabase } from "../shared/functions/database/lift";
-	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
-	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
-	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-	import type { Exercice } from "../shared/class/Workout/Exercice";
-	import Modal from "../lib/Generic/Modal.svelte";
-	import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
-	import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
-	import { Serie } from "../shared/class/Workout/Serie";
-	import { Weight } from "../shared/class/Workout/Weight";
-	import { navigate } from "svelte-routing";
-	import Loading from "../lib/Generic/Loading.svelte";
+  import {
+    formatDateWithSpelledOutMonth,
+    last,
+  } from "../shared/functions/Utilitary";
+  import { Workout } from "../shared/class/Workout/Workout";
+  import { Settings } from "../shared/class/Settings";
+  import { fetchSettings } from "../shared/functions/Database";
+  import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
+  import {
+    getWorkoutFromDatabase,
+    putWorkoutInDatabase,
+  } from "../shared/functions/database/workout";
+  import { putLiftInDatabase } from "../shared/functions/database/lift";
+  import LiftInput from "../lib/LiftForm/LiftInput.svelte";
+  import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
+  import LiftForm from "../lib/LiftForm/LiftForm.svelte";
+  import type { Exercice } from "../shared/class/Workout/Exercice";
+  import Modal from "../lib/Generic/Modal.svelte";
+  import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
+  import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
+  import { Serie } from "../shared/class/Workout/Serie";
+  import { Weight } from "../shared/class/Workout/Weight";
+  import { navigate } from "svelte-routing";
+  import Loading from "../lib/Generic/Loading.svelte";
 
-	export let urlWorkoutDate: string = null;
-	let settings: Setting = new Setting();
+  export let urlWorkoutDate: string = null;
+  let settings: Settings = new Settings();
 
-	let workout: Workout;
+  let workout: Workout;
 
-	let isWorkoutLoaded: boolean = false;
+  let isWorkoutLoaded: boolean = false;
 
-	let showLiftSelector: boolean = false;
+  let showLiftSelector: boolean = false;
 
-	/** Exercice containing the lift to sent to the DB for update or adding. */
-	let liftSelectorExercice: Exercice = null;
+  /** Exercice containing the lift to sent to the DB for update or adding. */
+  let liftSelectorExercice: Exercice = null;
 
-	let showLiftForm: boolean = false;
+  let showLiftForm: boolean = false;
 
+  init();
 
-	init()
+  async function init() {
+    fetchSettings().then((fs) => (settings = fs));
 
-	async function init() {
+    const emptyWorkout = parseURLWorkoutDate();
+    workout = await fetchWorkout(emptyWorkout);
 
-		fetchSettings().then((fs) => (settings = fs));
+    // if the workout does not exist, we create it
+    if (!workout) {
+      workout = await putWorkoutInDatabase(emptyWorkout);
+    }
 
-		const emptyWorkout = parseURLWorkoutDate()
-		workout = await fetchWorkout(emptyWorkout);
+    isWorkoutLoaded = true;
+  }
 
-		// if the workout does not exist, we create it
-		if (!workout) {
-			workout = await putWorkoutInDatabase(emptyWorkout)
-		}
+  // Init Functions
+  function parseURLWorkoutDate(): Workout {
+    const urlWorkoutDateSplitted = urlWorkoutDate.split("-");
+    if (urlWorkoutDateSplitted.length < 3) {
+      throw new Error("urlWorkoutDateSplitted is not right");
+    }
 
-		isWorkoutLoaded = true;
-	}
+    const year = Number(urlWorkoutDateSplitted[0]);
+    const month = Number(urlWorkoutDateSplitted[1]);
+    const day = Number(urlWorkoutDateSplitted[2]);
 
-	// Init Functions
-	function parseURLWorkoutDate(): Workout {
-		const urlWorkoutDateSplitted = urlWorkoutDate.split('-');
-		if (urlWorkoutDateSplitted.length < 3) {
-			throw new Error("urlWorkoutDateSplitted is not right")
-		}
+    const wd = new WorkoutDate(year, month, day);
 
-		const year = Number(urlWorkoutDateSplitted[0]);
-		const month = Number(urlWorkoutDateSplitted[1]);
-		const day = Number(urlWorkoutDateSplitted[2]);
+    return new Workout(wd, []);
+  }
 
-		const wd = new WorkoutDate(year, month, day);
-		
-		return new Workout(wd, []);
-	}
+  async function fetchWorkout(w: Workout): Promise<Workout> {
+    return await getWorkoutFromDatabase(w.createdAt);
+  }
 
-	async function fetchWorkout(w: Workout): Promise<Workout> {
-		return await getWorkoutFromDatabase(w.createdAt);
-	}
+  // Events functions
 
-	// Events functions
+  function onClickAddExercice() {
+    workout.addNewExercice();
+    updateWorkout();
+  }
 
-	function onClickAddExercice() {
-		workout.addNewExercice();
-		updateWorkout();
-	}
+  function deleteExercice(e: Exercice) {
+    for (let i = 0; i < workout.el.length; i++) {
+      if (e === workout.el[i]) workout.el.splice(i, 1);
+    }
+    updateWorkout();
+  }
 
-	function deleteExercice(e: Exercice) {
-		for (let i = 0; i < workout.el.length; i++) {
-			if (e === workout.el[i]) workout.el.splice(i, 1);
-		}
-		updateWorkout();
-	}
+  function onClickAddSet(e: Exercice): void {
+    console.log(`onClickAddSet`, e);
 
-	function onClickAddSet(e: Exercice): void {
-		console.log(`onClickAddSet`, e)
+    liftSelectorExercice = e;
 
-		liftSelectorExercice = e;
+    if (!e.series) e.series = [];
 
-		if (!e.series) e.series = []
+    let newSerieWeight: Weight = new Weight(0, settings.wm);
+    let newSerieReps: number = 0;
+    let newSerieRank: number = 1;
 
-		let newSerieWeight: Weight = new Weight(0, settings.wm); 
-		let newSerieReps: number = 0;
-		let newSerieRank: number = 1;
+    if (e.series.length > 0) {
+      const lastSerie = last(e.series);
+      newSerieWeight = lastSerie.weight;
+      newSerieRank = e.series.length;
+    }
 
-		if (e.series.length > 0) {
-			const lastSerie = last(e.series);
-			newSerieWeight = lastSerie.weight;
-			newSerieRank = e.series.length;
-		}
+    e.series.push(new Serie(newSerieRank, newSerieReps, newSerieWeight));
 
-		e.series.push(
-			new Serie(newSerieRank, newSerieReps, newSerieWeight)
-		);
+    updateWorkout();
+  }
 
-		updateWorkout()
-	}
+  async function updateWeight(
+    exercice: Exercice,
+    serie: Serie,
+    event: any
+  ): Promise<void> {
+    console.log("updateWeight");
+    console.log("exercice", exercice);
+    console.log("event.detail", event.detail);
+    console.log(`${serie.weight.weight} =? ${event.detail.value}`);
 
-	async function updateWeight(exercice: Exercice, serie: Serie, event: any): Promise<void> {
-		console.log("updateWeight")
-		console.log("exercice", exercice)
-		console.log("event.detail", event.detail)
-		console.log(`${serie.weight.weight} =? ${event.detail.value}`)
+    liftSelectorExercice = exercice;
+    serie.weight.weight = Number(event.detail.value);
+    console.log(workout);
 
-		liftSelectorExercice = exercice;
-		serie.weight.weight = Number(event.detail.value)
-		console.log(workout)
+    updateWorkout();
 
-		updateWorkout()
+    for (const s of exercice.series) {
+      console.log(s == serie);
+      console.log(s.weight.weight);
+    }
+  }
 
-		for (const s of exercice.series) {
-			console.log(s == serie)
-			console.log(s.weight.weight)
-		}
+  async function updateReps(
+    exercice: Exercice,
+    serie: Serie,
+    event: any
+  ): Promise<void> {
+    console.log("updateReps");
+    console.log("exercice", exercice);
+    console.log("event.detail", event.detail);
+    console.log(`${serie.reps} =? ${event.detail.value}`);
 
-	}
+    liftSelectorExercice = exercice;
+    serie.reps = Number(event.detail.value);
+    console.log(workout);
 
-	async function updateReps(exercice: Exercice, serie: Serie, event: any): Promise<void> {
-		console.log("updateReps")
-		console.log("exercice", exercice)
-		console.log("event.detail", event.detail)
-		console.log(`${serie.reps} =? ${event.detail.value}`)
+    updateWorkout();
 
-		liftSelectorExercice = exercice;
-		serie.reps = Number(event.detail.value)
-		console.log(workout)
+    for (const s of exercice.series) {
+      console.log(s == serie);
+      console.log(s.reps);
+    }
+  }
 
-		updateWorkout()
+  function onSetLift(event): void {
+    liftSelectorExercice.lift = event.detail;
+    updateWorkout();
+    resetUI();
+  }
 
-		for (const s of exercice.series) {
-			console.log(s == serie)
-			console.log(s.reps)
-		}
+  function onOpenLiftForm(event): void {
+    showLiftSelector = false;
+    showLiftForm = true;
+  }
 
-	}
-	
+  async function onAddLift(event): Promise<void> {
+    const liftToAddToDB = event.detail;
+    const liftAdded = await putLiftInDatabase(liftToAddToDB);
+    if (!liftAdded) {
+      console.error(
+        "Something went wrong adding the lift to the DB from WorkoutPage!"
+      );
+      return;
+    }
+    liftSelectorExercice.lift = liftAdded;
+    updateWorkout();
+    resetUI();
+  }
 
-	function onSetLift(event): void {
-		liftSelectorExercice.lift = event.detail
-		updateWorkout()
-		resetUI()
-	}
+  // Global functions
+  async function updateWorkout() {
+    const fetchedWorkout = await putWorkoutInDatabase(workout);
 
-	function onOpenLiftForm(event): void {
-		showLiftSelector = false;
-		showLiftForm = true;
-	}
+    if (!fetchedWorkout) {
+      throw new Error("Updated workout is null in database ?");
+    }
 
-	async function onAddLift(event): Promise<void> {
-		const liftToAddToDB = event.detail;
-		const liftAdded = await putLiftInDatabase(liftToAddToDB);
-		if (!liftAdded) {
-			console.error("Something went wrong adding the lift to the DB from WorkoutPage!");
-			return;
-		}
-		liftSelectorExercice.lift = liftAdded;
-		updateWorkout()
-		resetUI()
-	}
+    workout = fetchedWorkout;
+    workout.el = workout.el;
+  }
 
+  function resetUI(): void {
+    showLiftSelector = false;
+    showLiftForm = false;
+    liftSelectorExercice = null;
+  }
 
-	// Global functions
-	async function updateWorkout() {
-		const fetchedWorkout = await putWorkoutInDatabase(workout);
-
-		if (!fetchedWorkout) {
-			throw new Error("Updated workout is null in database ?")
-		}
-
-		workout = fetchedWorkout;
-		workout.el = workout.el;
-	}
-
-	function resetUI(): void {
-		showLiftSelector = false
-		showLiftForm = false;
-		liftSelectorExercice = null
-	}
-
-	function gotoWorkouts(): void {
-		navigate("/fitlogs/workouts");
-	}
+  function gotoWorkouts(): void {
+    navigate("/fitlogs/workouts");
+  }
 </script>
 
 {#if !isWorkoutLoaded}
-	<Loading/>
+  <Loading />
 {:else}
-	<div id="workout" class="flex flex-grow flex-col items-center">
-		<h1 class="text-xl mb-4">
-			{formatDateWithSpelledOutMonth(
-				workout.createdAt.getDate(),
-			)}
-		</h1>
+  <div id="workout" class="flex flex-grow flex-col items-center">
+    <h1 class="text-xl mb-4">
+      {formatDateWithSpelledOutMonth(workout.createdAt.getDate())}
+    </h1>
 
-		{#each workout.el as exercice}
-			<LiftInput 
-				lift={exercice.lift} 
-				value={exercice.lift.getFullName()}
-				on:openLiftSelector={
-					() => {
-						liftSelectorExercice = exercice;
-						showLiftSelector = true;
-					} 
-				}>
-			</LiftInput>
+    {#each workout.el as exercice}
+      <LiftInput
+        lift={exercice.lift}
+        value={exercice.lift.getFullName()}
+        on:openLiftSelector={() => {
+          liftSelectorExercice = exercice;
+          showLiftSelector = true;
+        }}
+      ></LiftInput>
 
-			{#each exercice.series as serie, index}
-				<div class="flex space-x-4 mt-4">
-					<div>Set {index+1}</div>
-					<InputNumber 
-						placeholder="Weight" 
-						metric={settings.wm} 
-						value={serie.weight.weight} 
-						on:input={
-							(e) => updateWeight(exercice, serie, e)
-						}
-						className="input-lg w-20"
-						>
-					</InputNumber>
-					<div class="ml-4 mr-4">X</div>
-					<InputNumber 
-						placeholder="Repetitions" 
-						value={serie.reps}
-						on:input={
-							(e) => updateReps(exercice, serie, e)
-						}
-						className="input-lg w-10"
-						>
-					</InputNumber>
-				</div>
-			{/each}
-			<button class="btn btn-primary w-30 mt-2 mb-12" on:click={() => onClickAddSet(exercice)}>Add set</button>
-		{/each}
+      {#each exercice.series as serie, index}
+        <div class="flex space-x-4 mt-4">
+          <div>Set {index + 1}</div>
+          <InputNumber
+            placeholder="Weight"
+            metric={settings.wm}
+            value={serie.weight.weight}
+            on:input={(e) => updateWeight(exercice, serie, e)}
+            className="input-lg w-20"
+          ></InputNumber>
+          <div class="ml-4 mr-4">X</div>
+          <InputNumber
+            placeholder="Repetitions"
+            value={serie.reps}
+            on:input={(e) => updateReps(exercice, serie, e)}
+            className="input-lg w-10"
+          ></InputNumber>
+        </div>
+      {/each}
+      <button
+        class="btn btn-primary w-30 mt-2 mb-12"
+        on:click={() => onClickAddSet(exercice)}>Add set</button
+      >
+    {/each}
 
+    <button
+      class="btn btn-secondary w-30 mt-14"
+      on:click={() => onClickAddExercice()}>Add Exercice</button
+    >
+  </div>
 
-		<button class="btn btn-secondary w-30 mt-14" on:click={() => onClickAddExercice()}>Add Exercice</button>
-	</div>
-
-	<div class="flex justify-center">
-		<button class="btn btn-warning w-30 m-10" on:click={() => gotoWorkouts()}>GOTO WORKOUTS</button>
-	</div>
-
+  <div class="flex justify-center">
+    <button class="btn btn-warning w-30 m-10" on:click={() => gotoWorkouts()}
+      >GOTO WORKOUTS</button
+    >
+  </div>
 {/if}
 
-<Modal 
-	component={LiftSelector} 
-	events={LiftSelectorEvents} 
-	bind:show={showLiftSelector}  
-	on:setLift={(event) => onSetLift(event)}
-	on:openLiftForm={(event) => {
-		onOpenLiftForm(event)}
-	}
->
-</Modal>
+<Modal
+  component={LiftSelector}
+  events={LiftSelectorEvents}
+  bind:show={showLiftSelector}
+  on:setLift={(event) => onSetLift(event)}
+  on:openLiftForm={(event) => {
+    onOpenLiftForm(event);
+  }}
+></Modal>
 
-
-<Modal 
-	component={LiftForm} 
-	events={LiftFormEvents} 
-	bind:show={showLiftForm}  
-	on:addLift={(event) => onAddLift(event)}
->
-</Modal>
-
+<Modal
+  component={LiftForm}
+  events={LiftFormEvents}
+  bind:show={showLiftForm}
+  on:addLift={(event) => onAddLift(event)}
+></Modal>

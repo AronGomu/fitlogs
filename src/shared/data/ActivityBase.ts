@@ -9,30 +9,30 @@ let weightGoal: number;
 let lastWeightGained: number;
 let daysLeft: number;
 
-export function generateMonthEmptyRandomActivities(year: number, month: number, day: number): Activity[] {
-	const activities = [];
+export function generateMonthEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
+	const ActivityList = [];
 	for (let d = 1; d <= day; d++) {
 		const a = new Activity(year, month, d, null, null, null);
-		activities.push(a);
+		ActivityList.push(a);
 	}
-	return activities;
+	return ActivityList;
 }
 
-export function generateYearEmptyRandomActivities(year: number, month: number, day: number): Activity[] {
-	const activities = [];
+export function generateYearEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
+	const ActivityList = [];
 	for (let m = 1; m <= month; m++) {
-		let mActivities = [];
+		let mActivityList = [];
 		if (m !== month) {
 			const dNumber = getDaysInMonth(year, m);
-			mActivities = generateMonthEmptyRandomActivities(year, m,  dNumber);
-			activities.push(...mActivities);
+			mActivityList = generateMonthEmptyRandomActivityList(year, m,  dNumber);
+			ActivityList.push(...mActivityList);
 		} else {
-			mActivities = generateMonthEmptyRandomActivities(year, m,  day);
-			activities.push(...mActivities);
+			mActivityList = generateMonthEmptyRandomActivityList(year, m,  day);
+			ActivityList.push(...mActivityList);
 			break;
 		}
 	}
-	return activities;
+	return ActivityList;
 }
 
 export function fillActivity(a: Activity): void {
@@ -77,20 +77,20 @@ export function setNewGoal(i: number) {
 }
 
 
-/** Generate semi-realistic random activities for the last n years of a lifter. */
-export function generateRandomActivities(n: number, startingWeight: number): Activity[] {
+/** Generate semi-realistic random ActivityList for the last n years of a lifter. */
+export function generateRandomActivityList(n: number, startingWeight: number): Activity[] {
 	const today = new Date();
 	const year = today.getFullYear();
 	const month = today.getMonth() + 1;
 	const day = today.getDate();
 
-	const activities = [];
+	const ActivityList = [];
 
 	for (let i = n; i >= 0; i--) {
 		const yearToGenerate = year - i;
-		if (yearToGenerate === year) activities.push(...generateYearEmptyRandomActivities(year, month, day));
-		else activities.push(
-			...generateYearEmptyRandomActivities(
+		if (yearToGenerate === year) ActivityList.push(...generateYearEmptyRandomActivityList(year, month, day));
+		else ActivityList.push(
+			...generateYearEmptyRandomActivityList(
 				yearToGenerate, 12, getDaysInMonth(yearToGenerate, 12)
 			)
 		);
@@ -102,8 +102,8 @@ export function generateRandomActivities(n: number, startingWeight: number): Act
 	lastWeightGained = 5;
 	daysLeft = 7;
 
-	for (let i = 0; i < activities.length; i++) {
-		const a = activities[i];
+	for (let i = 0; i < ActivityList.length; i++) {
+		const a = ActivityList[i];
 
 		if ((isEndBulking()) || (isEndCutting()) || (isEndMaintening())) setNewGoal(i);
 
@@ -112,10 +112,10 @@ export function generateRandomActivities(n: number, startingWeight: number): Act
 
 	}
 
-	console.log(activities);
+	console.log(ActivityList);
 	
 
-	return activities;
+	return ActivityList;
 
 	function isEndBulking(): boolean { return p === 'Bulk' && currentWeight > weightGoal; }
 	function isEndCutting(): boolean { return p === 'Cut' && currentWeight < weightGoal; }
@@ -135,7 +135,7 @@ export function generateRandomActivities(n: number, startingWeight: number): Act
 
 
 
-// export const baseActivities: Activity[] = [
+// export const baseActivityList: Activity[] = [
 // 	new Activity(2024, 1, 11, 86.3, 2600, 17041),
 // 	new Activity(2024, 1, 12, 85.4, 2500, 19975),
 // 	new Activity(2024, 1, 13, 85.4, 4000, 15424),

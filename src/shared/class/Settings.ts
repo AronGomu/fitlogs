@@ -1,14 +1,17 @@
 import { WeightMetric } from "../enum/WeightMetrics";
 
 /** Contains all the settings of the application and functions related to it.  */
-export class Setting {
-    constructor(
-        /** Unit for the weight used. Kilos by default. */
-        public wm: WeightMetric = WeightMetric.Kilos) { }
+export class Settings {
+  constructor(
+    /** Unit for the weight used. Kilos by default. */
+    public wm: WeightMetric = WeightMetric.Kilos,
+    public nbDaysToShow: number = null,
+    public averageOfActivityToUse: number = 7,
+  ) {}
 }
 
-export function getRealSettings(s: Setting): Setting {
-    let realSettings: Setting = new Setting();
-    realSettings.wm = s.wm;
-    return realSettings;
+export function getRealSettings(s: Settings): Settings {
+  let realSettings: Settings = new Settings();
+  realSettings.wm = s.wm;
+  return realSettings;
 }

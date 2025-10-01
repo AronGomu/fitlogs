@@ -2,7 +2,7 @@ import { buildAverageActivityList } from "../../functions/Activity";
 import type { Activity } from "../Activity/Activity";
 
 export class AveragesData {
-  public averageActivities: Activity[];
+  public averageActivityList: Activity[];
 	public averageCaloriesBurned: number;
 	public averageTDEE: number;
 
@@ -18,18 +18,18 @@ export class AveragesData {
 
   }
 
-  build(activities: Activity[], nbDays: number) {
-		console.log(activities, nbDays);
+  build(ActivityList: Activity[], nbDays: number) {
+		console.log(ActivityList, nbDays);
 
-    this.averageActivities = buildAverageActivityList(activities, nbDays);
+    this.averageActivityList = buildAverageActivityList(ActivityList, nbDays);
 
-		if (this.averageActivities.length < 1) return;
+		if (this.averageActivityList.length < 1) return;
 
-		this.averageCalories = this.averageActivities[0].calories;
-		this.averageWeight = this.averageActivities[0].weight;
-		this.averageSteps = this.averageActivities[0].steps;
+		this.averageCalories = this.averageActivityList[0].calories;
+		this.averageWeight = this.averageActivityList[0].weight;
+		this.averageSteps = this.averageActivityList[0].steps;
 
-		this.totalAverageWeightLoss = this.averageActivities[nbDays - 1].weight - this.averageActivities[0].weight;
+		this.totalAverageWeightLoss = this.averageActivityList[nbDays - 1].weight - this.averageActivityList[0].weight;
 		this.totalAverageWeightLoss = Number(this.totalAverageWeightLoss.toFixed(1));
 
 		totalAverageCaloriesBurned = truncateNumber(convertWeightIntoCalories(this.totalAverageWeightLoss), 0);

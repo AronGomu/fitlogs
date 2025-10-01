@@ -14,7 +14,7 @@
 </script>
 
 
-<button class="btn {rs.className}" on:click={ (e) => setRange(e, rs.nbDays) } >
+<button class="btn {rs.className}" on:click={ (e) => setRange(e, rs.nbDaysToShow) } >
 	{ rs.label }
 </button>
 

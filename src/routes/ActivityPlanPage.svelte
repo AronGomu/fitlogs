@@ -7,7 +7,7 @@
 
 
 
-	export let activities: Activity[];
+	export let ActivityList: Activity[];
 	let plan: Plan;
 
 	const today = new Date();
@@ -46,7 +46,7 @@
 		let totalStepsWeek = plan.targetWeeklyAverageSteps * 7;
 
 		for (let i = 0; i < todayDay + 1; i++) {
-			const a = activities[i];
+			const a = ActivityList[i];
 
 			// skip today
 			if (a && a.day === today.getDate()) continue;
