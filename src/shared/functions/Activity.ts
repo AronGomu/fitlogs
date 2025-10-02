@@ -1,61 +1,57 @@
 import { Activity } from "../class/Activity/Activity";
-import { getActivityListFromDatabase } from "./Database";
+import { getActivityListFromDB } from "./Database";
 import { downloadAsJson, truncateNumber } from "./Utilitary";
 
 
-export function buildAverageActivityList(activityList: Activity[], nbDaysUsedForAverage = 7): Activity[] {
+export function buildAverageActivityList(
+	nbDaysUsedForAverage = 7,
+	activityList: Activity[]
+): Activity[] {
+
 	let activityAverageList: Activity[] = [];
 
-	if (nbDaysUsedForAverage > activityList.length) nbDaysUsedForAverage = activityList.length;
-
-	let averageCalories: number; let averageWeight: number; let averageSteps: number;
-
-	for (let i = 0; i < nbDaysUsedForAverage; i++) {
+	for (let i = 0; i < activityList.length; i++) {
 		const a = activityList[i];
-
-		averageCalories = truncateNumber(getAverage(activityList, nbDaysUsedForAverage, "calories", i), 0,);
-		averageWeight = truncateNumber(getAverage(activityList, nbDaysUsedForAverage, "weight", i), 1,);
-		averageSteps = truncateNumber(getAverage(activityList, nbDaysUsedForAverage, "steps", i), 0,);
-
-		const newA = new Activity(a.year, a.month, a.day, averageWeight, averageCalories, averageSteps);
-		activityAverageList.push(newA);
+		activityAverageList.push(getAverageActivity(activityList, nbDaysUsedForAverage, i));
 	}
 
 	return activityAverageList;
 }
 
 export type AverageProperty = "calories" | "weight" | "steps";
-export function getAverage(activityList: Activity[], nbDaysUsedForAverage: number,
-	propertyName: AverageProperty, nbDaysUsedForAverageBefore: number
-): number {
 
-	if (!activityList || activityList.length < 1) return 0;
 
-	let total: number = 0;
-	let nbElements: number = 0;
+export function getAverageActivity(
+	activityList: Activity[],
+	nbDaysUsedForAverage: number,
+	i: number,
+): Activity {
 
-	let startingDay = 0 + nbDaysUsedForAverageBefore;
-	let len = nbDaysUsedForAverage + nbDaysUsedForAverageBefore;
+	let activityToAverage = activityList[i];
+	let totalCalories; let totalWeight; let totalSteps;
+	let nbElementCalories = 0; let nbElementWeight = 0; let nbElementSteps = 0;
 
-	if (startingDay > activityList.length) return 0;
-	if (len > activityList.length) len = activityList.length;
-
-	for (let i = startingDay; i < len; i++) {
-		const a = activityList[i];
-		if (!a) continue;
-		if (!a[propertyName]) continue;
-
-		total += a[propertyName];
-		nbElements += 1;
+	for (let j = 0; j < nbDaysUsedForAverage; j++) {
+		if (!activityList[i-j]) break;
+		totalCalories += activityList[i-j].calories;
+		totalWeight+= activityList[i-j].weight;
+		totalSteps += activityList[i-j].steps;
 	}
 
-	return total / nbElements;
+	return new Activity(
+		activityToAverage.year,
+		activityToAverage.month,
+		activityToAverage.day,
+		truncateNumber(totalWeight/nbElementWeight, 0),
+		truncateNumber(totalCalories/nbElementCalories, 1),
+		truncateNumber(totalSteps/nbElementSteps, 0),
+	)
 }
 
-export async function exportActivityList() {
-	const ActivityList = await getActivityListFromDatabase();
+export async function exportActivityList(nbDaysUsedForAverage) {
+	const ActivityList = await getActivityListFromDB();
 
-	const averageActivityList = buildAverageActivityList(ActivityList, ActivityList.length - 1);
+	const averageActivityList = buildAverageActivityList(nbDaysUsedForAverage, ActivityList);
 
 	downloadAsJson(ActivityList, "ActivityList");
 	downloadAsJson(averageActivityList, "averageActivityList");

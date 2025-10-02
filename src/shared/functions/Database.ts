@@ -229,12 +229,13 @@ export async function saveSettings(s: Settings): Promise<Settings> {
 }
 
 // SPECIFIC DATABASE FUNCTIONS - ACTIVITY
-export async function getActivityListFromDatabase(
+export async function getActivityListFromDB(
   /** How many to load */
   maxNumberOfActivitiesToGet: number | null = null,
   /** asc : From older to newer,  desc : from newer to older */
   sort: "asc" | "desc" = "desc"
 ): Promise<Activity[]> {
+  
   const db = await openDatabase();
   if (!db) return null;
 

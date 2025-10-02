@@ -6,7 +6,8 @@ export class Settings {
     /** Unit for the weight used. Kilos by default. */
     public wm: WeightMetric = WeightMetric.Kilos,
     public nbDaysToShow: number = null,
-    public averageOfActivityToUse: number = 7,
+    public sortActivityList:  "asc" | "desc" = "asc",
+    public nbDaysUsedForAverage: number = 7,
   ) {}
 }
 
