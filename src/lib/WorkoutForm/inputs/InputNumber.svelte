@@ -4,7 +4,7 @@
     getReducedStringMetric,
     type WeightMetric,
   } from "../../../shared/enum/WeightMetrics";
-  import { selectWholeTextOnFocus } from "../../../shared/functions/Utilitary";
+  import { selectWholeTextOnFocus } from "../../../shared/functions/Utils";
 
   const dispatch = createEventDispatcher();
 

@@ -1,5 +1,5 @@
 import { Activity } from "../class/Activity/Activity"
-import { getDaysInMonth, getRandomNumber, truncateNumber } from "../functions/Utilitary";
+import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/Utils";
 
 export type Progression = 'Bulk' | 'Cut' | 'Maintenance';
 
@@ -46,9 +46,10 @@ export function fillActivity(a: Activity): void {
 	const baselineSteps = 20000;
 	currentWeight = currentWeight + wFluctuation;
 	currentWeight = truncateNumber(currentWeight, 1);
-	a.weight = currentWeight;
-	a.calories = baselineCalories + (wFluctuation * 770);
-	a.steps = baselineSteps;
+
+	if (randomBoolean(30)) a.weight = currentWeight;
+	if (randomBoolean(30)) a.calories = baselineCalories + (wFluctuation * 770);
+	if (randomBoolean(30)) a.steps = baselineSteps;
 }
 
 export function setNewGoal(i: number) {
@@ -121,18 +122,6 @@ export function generateRandomActivityList(n: number, startingWeight: number): A
 	function isEndCutting(): boolean { return p === 'Cut' && currentWeight < weightGoal; }
 	function isEndMaintening(): boolean { return p === 'Maintenance' && daysLeft === 0; }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // export const baseActivityList: Activity[] = [

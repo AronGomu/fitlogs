@@ -1,6 +1,6 @@
 import { Activity } from "../class/Activity/Activity";
 import { getActivityListFromDB } from "./Database";
-import { downloadAsJson, truncateNumber } from "./Utilitary";
+import { downloadAsJson, truncateNumber } from "./Utils";
 
 
 export function buildAverageActivityList(

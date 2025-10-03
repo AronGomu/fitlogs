@@ -365,3 +365,20 @@ export function sortActivityList(ActivityList): Activity[] {
 function convertWeightIntoCalories(weight: number): number {
 	return weight * 7700;
 }
+
+/**
+ * Returns true or false depending on the probability of false.
+ * 
+ * @param falseChance - The chance (0–100) in percent that the result will be false.
+ * @returns boolean - true or false based on the given probability.
+ */
+export function randomBoolean(falseChance: number): boolean {
+  if (falseChance < 0 || falseChance > 100) {
+    throw new Error("falseChance must be between 0 and 100");
+  }
+
+  const roll = Math.random() * 100;
+  return roll >= falseChance;
+}
+
+// Example usage:

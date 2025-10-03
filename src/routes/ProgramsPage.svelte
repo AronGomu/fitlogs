@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { FiltersProgram } from "./../shared/class/Program/FiltersProgram.ts";
 	import { programs } from "../shared/store/programStore.ts";
-	import { isStringNotEmpty } from "../shared/functions/Utilitary.ts";
+	import { isStringNotEmpty } from "../shared/functions/Utils.js";
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
 	import magnifyIcon from "@iconify/icons-mdi/magnify";
-	import { selectWholeTextOnFocus } from "../shared/functions/Utilitary.ts";
+	import { selectWholeTextOnFocus } from "../shared/functions/Utils.js";
 	import type { Program } from "../shared/class/Program/Program.ts";
 	import { menuPath } from "../shared/store/menuPath.ts";
 

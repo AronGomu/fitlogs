@@ -1,5 +1,5 @@
 import { Muscle } from "../../enum/Muscle";
-import { enumToList, getAllEnums } from "../../functions/Utilitary";
+import { enumToList, getAllEnums } from "../../functions/Utils";
 import { CheckboxFilter } from "../Form/CheckboxFilter";
 
 export class FiltersLift {

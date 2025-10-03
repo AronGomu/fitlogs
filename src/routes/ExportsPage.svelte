@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Settings } from "../shared/class/Settings";
 	import { exportActivityList } from "../shared/functions/Activity";
-	import { downloadAsJson } from "../shared/functions/Utilitary";
+	import { downloadAsJson } from "../shared/functions/Utils";
 	import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
 	import { navigate } from "svelte-routing";
   import { settingsWritable } from "../shared/store/settingsStore";

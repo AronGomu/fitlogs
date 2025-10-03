@@ -16,7 +16,7 @@
   import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
   import type { Weight } from "../../shared/class/Workout/Weight";
   import { createEventDispatcher } from "svelte";
-  import { formatDateWithSpelledOutMonth } from "../../shared/functions/Utilitary";
+  import { formatDateWithSpelledOutMonth } from "../../shared/functions/Utils";
   import Workouts from "../../routes/Workouts.svelte";
 
   const dispatch = createEventDispatcher();
