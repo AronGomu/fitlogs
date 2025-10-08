@@ -1,6 +1,6 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
-import { getRealWorkout, type Workout } from "../../class/Workout/Workout";
-import type { WorkoutDate } from "../../class/Workout/WorkoutDate";
+import { getRealWorkout, type Workout } from "../class/Workout/Workout";
+import type { WorkoutDate } from "../class/Workout/WorkoutDate";
 
 const DB_NAME = "db_workout";
 

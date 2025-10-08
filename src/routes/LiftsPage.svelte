@@ -2,9 +2,9 @@
 	import { Lift } from '../shared/class/Lift/Lift';
 	import {
 		isStringNotEmpty,
-	} from '../shared/functions/Utils';
+	} from '../shared/functions/utils';
 	import { FiltersLift } from '../shared/class/Lift/FiltersLift';
-    import { getLiftsFromDatabase } from '../shared/functions/database/lift';
+    import { getLiftsFromDatabase } from '../shared/database/lift';
 
 	/** All the filters for the lift list. */
 	const filtersLift: FiltersLift = new FiltersLift();
@@ -32,7 +32,7 @@
 
 
 	/** Apply the filters from filtersLift to llFiltered */
-	function applyFilters(): void {
+	function applyFilters() {
 		llFiltered = ll;
 		// TODO apply the filter taking the ll to llFiltered
 		if (isStringNotEmpty(filtersLift.name)) {
@@ -56,7 +56,7 @@
 		}
 	}
 
-	function showLift(lift: Lift): void {
+	function showLift(lift: Lift) {
 		console.log(`showLift`, lift);
 	}
 </script>

@@ -1,5 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
-import { getRealPlan, type Plan } from "../../class/Plan/Plan";
+import { getRealPlan, type Plan } from "../class/Plan/Plan";
 
 
 const DB_NAME = "db_plan";

@@ -7,12 +7,12 @@
 	let mp: string = null;
 	menuPath.subscribe((newMenuPath) => (mp = newMenuPath));
 
-	function goto(path: string): void {
+	function goto(path: string) {
 		navigate(path);
 		toggleMenu();
 	}
 
-	function toggleMenu(): void {
+	function toggleMenu() {
 		showMenu = !showMenu;
 	}
 </script>

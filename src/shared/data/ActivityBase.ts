@@ -1,5 +1,5 @@
 import { Activity } from "../class/Activity/Activity"
-import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/Utils";
+import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/utils";
 
 export type Progression = 'Bulk' | 'Cut' | 'Maintenance';
 
@@ -35,7 +35,7 @@ export function generateYearEmptyRandomActivityList(year: number, month: number,
 	return ActivityList;
 }
 
-export function fillActivity(a: Activity): void {
+export function fillActivity(a: Activity) {
 	let wFluctuation: number;
 	if (p === 'Bulk') wFluctuation = getRandomNumber(-2, 4);
 	else if (p === 'Cut') wFluctuation = getRandomNumber(-8, 2);

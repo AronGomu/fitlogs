@@ -1,7 +1,7 @@
 <script lang="ts">
     import Fuse from "fuse.js";
     import { Lift } from "../../shared/class/Lift/Lift";
-    import { getLiftsFromDatabase } from "../../shared/functions/database/lift";
+    import { getLiftsFromDatabase } from "../../shared/database/lift";
     import TextInput from "../WorkoutForm/inputs/TextInput.svelte";
     import LiftTable from "./LiftTable.svelte";
     
@@ -50,7 +50,7 @@
 	fuse = new Fuse(lifts, fuseOptions);
     }
 
-    function setLift(lift: Lift): void {
+    function setLift(lift: Lift) {
 	if (lift) {
 	    selectedLift = lift;
 	    dispatchPossiblyModalEvent(dispatch, isInModal, LiftSelectorEvents.setLift, lift)
@@ -65,7 +65,7 @@
 	}
     }
 
-    function openLiftForm(): void {
+    function openLiftForm() {
 	    dispatchPossiblyModalEvent(dispatch, isInModal, LiftSelectorEvents.openLiftForm, null)
     }
 

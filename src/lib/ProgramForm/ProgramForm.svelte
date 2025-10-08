@@ -4,7 +4,7 @@
 	import { Program, getRealProgram } from "../../shared/class/Program/Program";
 	import { Superset } from "../../shared/class/Program/Superset";
 	import { getObjectByIdInDatabase } from "../../shared/functions/Database";
-	import { isPositive } from "../../shared/functions/Utils";
+	import { isPositive } from "../../shared/functions/utils";
 	import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
 
 	// Store variables

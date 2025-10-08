@@ -2,16 +2,15 @@
   import {
     formatDateWithSpelledOutMonth,
     last,
-  } from "../shared/functions/Utils";
+  } from "../shared/functions/utils";
   import { Workout } from "../shared/class/Workout/Workout";
   import { Settings } from "../shared/class/Settings";
-  import { fetchSettings } from "../shared/functions/Database";
   import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
   import {
     getWorkoutFromDatabase,
     putWorkoutInDatabase,
-  } from "../shared/functions/database/workout";
-  import { putLiftInDatabase } from "../shared/functions/database/lift";
+  } from "../shared/database/workout";
+  import { putLiftInDatabase } from "../shared/database/lift";
   import LiftInput from "../lib/LiftForm/LiftInput.svelte";
   import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
   import LiftForm from "../lib/LiftForm/LiftForm.svelte";
@@ -88,7 +87,7 @@
     updateWorkout();
   }
 
-  function onClickAddSet(e: Exercice): void {
+  function onClickAddSet(e: Exercice) {
     console.log(`onClickAddSet`, e);
 
     liftSelectorExercice = e;
@@ -154,13 +153,13 @@
     }
   }
 
-  function onSetLift(event): void {
+  function onSetLift(event) {
     liftSelectorExercice.lift = event.detail;
     updateWorkout();
     resetUI();
   }
 
-  function onOpenLiftForm(event): void {
+  function onOpenLiftForm(event) {
     showLiftSelector = false;
     showLiftForm = true;
   }
@@ -191,13 +190,13 @@
     workout.el = workout.el;
   }
 
-  function resetUI(): void {
+  function resetUI() {
     showLiftSelector = false;
     showLiftForm = false;
     liftSelectorExercice = null;
   }
 
-  function gotoWorkouts(): void {
+  function gotoWorkouts() {
     navigate("/fitlogs/workouts");
   }
 </script>

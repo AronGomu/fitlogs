@@ -1,5 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase, deleteDB } from "idb";
-import { getRealLift, type Lift } from "../../class/Lift/Lift";
+import { getRealLift, type Lift } from "../class/Lift/Lift";
 
 const DB_NAME = "db_lift";
 

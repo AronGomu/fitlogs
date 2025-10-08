@@ -9,7 +9,7 @@
 
 	let date: Date = new Date();
 
-	function submitDate(): void {
+	function submitDate() {
 		console.log(NewWorkoutDateFormEvents.submitTodayDate, "comment faire remonter")
 
 		const wd = new WorkoutDate (

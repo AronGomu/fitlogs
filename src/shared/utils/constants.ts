@@ -1,0 +1,1 @@
+export const ACTIVITY_LIST_KEY = "activityList";

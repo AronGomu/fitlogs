@@ -8,7 +8,7 @@
 	import {
 		enumToList,
 		selectWholeTextOnFocus,
-	} from "../../shared/functions/Utils";
+	} from "../../shared/functions/utils";
 	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
 	import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
 	import { LiftFormEvents } from "../../shared/enum/Events";
@@ -28,7 +28,7 @@
 		if (isInModal === null) console.error("You must give isInModal parameter !");
 	}
 
-	function setExerciceIsValid(): void {
+	function setExerciceIsValid() {
 		if (!lift) {
 			console.error("Lift if null");
 			exerciceIsValid = false;

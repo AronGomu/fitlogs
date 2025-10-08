@@ -1,5 +1,5 @@
 import type { WeightMetric } from "../../enum/WeightMetrics";
-import { isArrayWithElements, last } from "../../functions/Utils";
+import { isArrayWithElements, last } from "../../functions/utils";
 import { Lift, getRealLift } from "../Lift/Lift";
 import { getRealRepRange, type RepRange } from "../Program/RepRange";
 import { Serie, getRealSerie } from "./Serie";

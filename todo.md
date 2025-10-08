@@ -1,14 +1,7 @@
-1. Calculer les averages directement au chargement des stores (mais du coup il faut comprendre comment charger les settings avant)
+1. Probleme avec les calculs de moyennes avec les jours sur les listes
+    1. S'assurer que la liste des activites s'enregistre toujours complete sans jour manquant (plus simple, plus obvious ?)
+    2. Faire une giga fonction qui se base sur les dates pour faire le calcul des moyennes
 
+2. Sur la sauvegarde d'une nouvelle activite, il faut updater la variable pour recharger le tableau
 
-
-
-
-1. Repliquer ce qui a etait fait sur ActivityList sur ActivityStats
-    1. updater le range selector avec celui du component
-    2. faire une liste des selectors stocke en dur
-2. Faire que le calcul des averages se fasse au lancement de l'app en background
-3. Juste charger directement les averages une fois calculer du coup (le faire dans le store ?)
-4. Faire que les stats fonctionne
-5. Pareil pour la page de Graph qui a du peter
-
+3. FAIRE LES STATS + GRAPHS

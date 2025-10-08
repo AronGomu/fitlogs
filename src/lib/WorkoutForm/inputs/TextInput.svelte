@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
-    import { selectWholeTextOnFocus } from "../../../shared/functions/Utils";
+    import { selectWholeTextOnFocus } from "../../../shared/functions/utils";
 
     const dispatch = createEventDispatcher();
 

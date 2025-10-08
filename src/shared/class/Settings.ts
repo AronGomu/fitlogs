@@ -5,14 +5,18 @@ export class Settings {
   constructor(
     /** Unit for the weight used. Kilos by default. */
     public wm: WeightMetric = WeightMetric.Kilos,
-    public nbDaysToShow: number = null,
+    public nbDayShow: number = null,
     public sortActivityList:  "asc" | "desc" = "asc",
-    public nbDaysUsedForAverage: number = 7,
+    public nbDayAverage: number = 7,
+    public typeActivityList: 'normal' | 'average' = 'normal',
   ) {}
 }
 
 export function getRealSettings(s: Settings): Settings {
   let realSettings: Settings = new Settings();
-  realSettings.wm = s.wm;
+  realSettings.nbDayShow = s.nbDayShow;
+  realSettings.sortActivityList = s.sortActivityList;
+  realSettings.nbDayAverage = s.nbDayAverage;
+  realSettings.typeActivityList = s.typeActivityList;
   return realSettings;
 }

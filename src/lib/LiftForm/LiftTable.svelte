@@ -5,7 +5,7 @@
 
 
 	export let lifts: Lift[];
-	function clickExercice(lift: Lift): void {
+	function clickExercice(lift: Lift) {
 		dispatch("clickExercice", lift)
 	}
 </script>

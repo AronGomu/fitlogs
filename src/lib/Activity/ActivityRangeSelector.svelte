@@ -34,7 +34,7 @@
     if (!isRangeSelected) nbDaysChoice.all.setAsSelected(true);
     // init //
 
-    function dispatchSelection(e): void {
+    function dispatchSelection(e) {
         console.log("dispatchSelection ranger selector", e.detail);
         dispatch("click", { input: e.detail.input, value: e.detail.value });
     }

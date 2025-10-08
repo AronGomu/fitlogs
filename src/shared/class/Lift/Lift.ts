@@ -1,4 +1,4 @@
-import { isStringNotEmpty } from "../../functions/Utils";
+import { isStringNotEmpty } from "../../functions/utils";
 import { MuscleWork, getRealMuscleWork } from "./MuscleWork";
 
 /** Exercice suggestions that pops out when filling out a auto complete form of the exercice name.  */

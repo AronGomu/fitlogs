@@ -1,4 +1,4 @@
-export function dispatchPossiblyModalEvent(dispatch: Function, isInModal: boolean, type: string, detail: any): void {
+export function dispatchPossiblyModalEvent(dispatch: Function, isInModal: boolean, type: string, detail: any) {
 	if (isInModal) {
 		dispatch(
 		    "bubbleToModal", 

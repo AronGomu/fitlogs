@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utils";
+	import { formatDateWithSpelledOutMonth } from "../shared/functions/utils";
 	import { Workout, compareWorkouts } from "../shared/class/Workout/Workout";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";
-	import { getWorkoutsFromDatabase } from "../shared/functions/database/workout";
+	import { getWorkoutsFromDatabase } from "../shared/database/workout";
 	import Modal from "../lib/Generic/Modal.svelte";
 	import NewWorkoutDateForm from "../lib/WorkoutForm/NewWorkoutDateForm.svelte";
 	import { NewWorkoutDateFormEvents } from "../shared/enum/Events";
