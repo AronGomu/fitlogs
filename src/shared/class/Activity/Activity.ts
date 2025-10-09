@@ -1,5 +1,6 @@
 import { getActivityListFromDB } from "../../database/ActivityDatabase";
 import { downloadAsJson, truncateNumber } from "../../functions/utils";
+import { formatDateToYYYYMMDDNumber } from "../../functions/utilsDate";
 
 export class Activity {
     constructor(
@@ -9,19 +10,36 @@ export class Activity {
         public steps: number = 0
     ) { }
 
-    public getDate(): Date { return new Date(this.date) }
+    public getDate() { return new Date(this.date) }
 
-    public printDate(): string {
-        const d = this.getDate();
-        const year = d.getFullYear();
-        const month = d.getMonth()-1;
-        const day = d.getDay();
-        return `${year}-${month}-${day}`;
+    public printDateSlash() {
+        const dateString = String(this.date);
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${day}/${month}/${year}`;
+    }
+
+    public printDateDash(): string {
+        const dateString = String(this.date);
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${day}-${month}-${year}`;
     }
 }
 
+export function buildActivityWithDate(date: Date, weight = 0, calories = 0, steps = 0) {
+    return new Activity(formatDateToYYYYMMDDNumber(date), weight, calories, steps)
+}
+
 export function getRealActivity(activity: Activity): Activity {
-    return new Activity(activity.date, activity.weight, activity.calories, activity.steps);
+    return new Activity(
+        Number(activity.date), 
+        Number(activity.weight), 
+        Number(activity.calories), 
+        Number(activity.steps)
+    );
 }
 
 

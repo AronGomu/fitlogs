@@ -23,11 +23,4 @@
 	}
 </script>
 
-<input
-	type="date"
-	class="input"
-	bind:value={internal}
-	on:input={(event) => {
-		handleInput(event);
-	}}
-/>
+<input type="date" class="input" bind:value={internal} on:input={e =>  handleInput(e) } />

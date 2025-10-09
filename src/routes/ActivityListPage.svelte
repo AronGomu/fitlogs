@@ -11,7 +11,7 @@
     import ActivityRangeSelector from '../lib/Activity/ActivityRangeSelector.svelte';
     import type { Settings as Settings } from '../shared/class/Settings';
     import { saveSettings, settingsWritable } from '../shared/store/settingsStore';
-    import { formatDateToYYYYMMDDNumber } from '../shared/functions/utils';
+    import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/utilsDate';
 
     let settings: Settings;
 
@@ -20,6 +20,7 @@
     let activityNormalListLoaded: Activity[] = [];
     let activityAverageListLoaded: Activity[] = [];
     let activityListToShow: Activity[] = [];
+    let dateSelected: Date = null;
 
     const today = formatDateToYYYYMMDDNumber(new Date());
     const yesterday = formatDateToYYYYMMDDNumber(new Date(new Date().getDate() - 1));
@@ -52,6 +53,8 @@
         if (settings.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
         // if (settings.typeActivityList === 'normal') activityListToShow = activityAverageListLoaded;
         else if (settings.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
+        console.log("activityListToShow : ", activityListToShow);
+        
     }
 
     async function updateActivityListShowed(nbDaysToShow: number) {
@@ -64,12 +67,15 @@
 
     // UI Stuff //
     let activityFormDialog: HTMLElement;
-    function showActivityFormDialog(date, asModal = true) {
-        try {
-            activityFormDialog[asModal ? 'showModal' : 'show']();
-        } catch (e) {
-            throw new Error(e);
-        }
+    function showActivityFormDialog(yyyymmdd: number, asModal = true) {
+        dateSelected = getDateFromYYYYMMDDNumber(yyyymmdd);
+        console.log("dateSelected", dateSelected);
+        try { activityFormDialog[asModal ? 'showModal' : 'hide'](); } 
+        catch (e) { throw new Error(e); }
+    }
+    function hideActivityFormDialog() {
+        try { activityFormDialog.close(); } 
+        catch (e) { console.error("Failed to close dialog:", e); }
     }
 </script>
 
@@ -108,7 +114,7 @@
                         <tbody>
                             {#each activityListToShow as a}
                                 <tr class="cursor-pointer" on:click={() => showActivityFormDialog(a.date)}>
-                                    <td>{a.printDate()}</td>
+                                    <td>{a.printDateSlash()}</td>
                                     <td>{a.weight}</td>
                                     <td>{a.calories}</td>
                                     <td>{a.steps}</td>
@@ -130,7 +136,9 @@
 
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
     <form method="dialog" class="modal-box">
-        <ActivityForm activityList={activityListToShow} {settings} />
+        <ActivityForm dateForm={dateSelected} activityList={activityListToShow} {settings} 
+            on:close={() => hideActivityFormDialog()}
+        />
     </form>
     <form method="dialog" class="modal-backdrop">
         <button>close</button>
