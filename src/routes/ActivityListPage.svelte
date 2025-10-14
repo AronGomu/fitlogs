@@ -65,6 +65,14 @@
         isLoadingActivityNormalList = false;
     }
 
+    function swapToAverageActivityList() {
+        activityListToShow = activityAverageListLoaded;
+    }
+
+    function swapToNormalActivityList() {
+        activityListToShow = activityNormalListLoaded;
+    }
+
     // UI Stuff //
     let activityFormDialog: HTMLElement;
     function showActivityFormDialog(yyyymmdd: number, asModal = true) {
@@ -78,6 +86,8 @@
         // try { activityFormDialog.hidden = true; } 
         catch (e) { console.error("Failed to close dialog:", e); }
     }
+
+    
 </script>
 
 <div class="h-full w-full flex flex-col justify-between">
@@ -124,24 +134,30 @@
         </div>
     </div>
 
-    <div class="flex justify-center">
-        <button class="btn btn-warning w-30 m-4" on:click={() => { navigate("/fitlogs/") }}>
+    <div class="flex justify-center m-4 justify-between">
+        <button class="btn btn-warning w-30" on:click={() => { navigate("/fitlogs/") }}>
             <i class="fi fi-rr-arrow-small-left"></i>
         </button>
+        <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
+                Log Activity
+        </button>
+        {#if activityListToShow == activityNormalListLoaded}
+             <button class="btn btn-secondary" on:click={() => swapToAverageActivityList()}>
+                Show Average
+             </button>
+        {:else }
+            <button class="btn btn-secondary" on:click={() => swapToNormalActivityList()}>
+                Show Normal
+             </button>
+        {/if}
     </div>
 
-    <div class="w-full flex items-center justify-center mb-2">
-            <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
-                Log activity
-            </button>
-        </div>
-
-    <!-- <ActivityFooter /> -->
+    
 </div>
 
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
     <form method="dialog" class="modal-box">
-        <ActivityForm dateForm={dateSelected} activityList={activityListToShow} {settings} 
+        <ActivityForm dateForm={dateSelected} activityList={activityNormalListLoaded} {settings} 
             on:close={() => hideActivityFormDialog()}
         />
     </form>
