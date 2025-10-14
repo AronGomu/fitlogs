@@ -5,7 +5,7 @@ export class Settings {
   constructor(
     /** Unit for the weight used. Kilos by default. */
     public wm: WeightMetric = WeightMetric.Kilos,
-    public nbDayShow: number = null,
+    public nbDayShow: number = 30,
     public sortActivityList:  "asc" | "desc" = "asc",
     public nbDayAverage: number = 7,
     public typeActivityList: 'normal' | 'average' = 'normal',

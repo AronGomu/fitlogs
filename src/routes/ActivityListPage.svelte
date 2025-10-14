@@ -1,7 +1,5 @@
 <script lang="ts">
     import ActivityForm from '../lib/Activity/ActivityForm.svelte';
-    import ActivityHeader from '../lib/Activity/ActivityHeader.svelte';
-    import ActivityFooter from '../lib/Activity/ActivityFooter.svelte';
     import type { Activity } from '../shared/class/Activity/Activity';
     import {
         activityAverageListWritable,
@@ -12,6 +10,8 @@
     import type { Settings as Settings } from '../shared/class/Settings';
     import { saveSettings, settingsWritable } from '../shared/store/settingsStore';
     import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/utilsDate';
+    import { navigate } from 'svelte-routing';
+
 
     let settings: Settings;
 
@@ -85,15 +85,7 @@
     <div class="flex-1 w-full flex flex-col">
 
         <div class="h-full overflow-y-auto">
-            <div class="w-full flex items-center justify-center mb-2">
-                <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
-                    Log Today's weigth
-                </button>
-
-                <button class="btn btn-secondary" on:click={() => showActivityFormDialog(yesterday)}>
-                    Log Yesterday's Activity
-                </button>
-            </div>
+            
 
             {#if !isLoadingActivityNormalList && activityNormalListLoaded}
                 <ActivityRangeSelector
@@ -132,7 +124,19 @@
         </div>
     </div>
 
-    <ActivityFooter />
+    <div class="flex justify-center">
+        <button class="btn btn-warning w-30 m-4" on:click={() => { navigate("/fitlogs/") }}>
+            <i class="fi fi-rr-arrow-small-left"></i>
+        </button>
+    </div>
+
+    <div class="w-full flex items-center justify-center mb-2">
+            <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
+                Log activity
+            </button>
+        </div>
+
+    <!-- <ActivityFooter /> -->
 </div>
 
 <dialog id="modal" class="modal" bind:this={activityFormDialog}>
