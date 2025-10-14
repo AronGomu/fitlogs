@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
-    import { selectWholeTextOnFocus } from "../../../shared/functions/utils";
+    import { selectWholeText } from "../../../shared/functions/utils";
 
     const dispatch = createEventDispatcher();
 
@@ -25,7 +25,7 @@
   
 
     function handleFocus(event) {
-	    selectWholeTextOnFocus(event);
+	    selectWholeText(event);
     }
 
     function handleKeyPress(event) {
@@ -33,19 +33,15 @@
             console.log("ENTER");
         }
 
-      // Handle paste
       if (event.type === "paste") key = event.clipboardData.getData("text/plain");
       else {
-        // Handle key press
         var key = event.keyCode || event.which;
         key = String.fromCharCode(key);
       }
     }
 
     
-    // On input trigger the input event for this component.
     function handleInput(event: any) {
-        // todo : check why reseting value then inputing again prevent new characters to be inputed
         dispatch("input", { input: event.data, value: event.target.value });
     }
 </script>

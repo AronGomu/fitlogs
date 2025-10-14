@@ -3,7 +3,7 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from 'svelte';
     import { getReducedStringMetric, type WeightMetric } from '../../../shared/enum/WeightMetrics';
-    import { selectWholeTextOnFocus } from '../../../shared/functions/utils';
+    import { selectWholeText } from '../../../shared/functions/utils';
 
     const dispatch = createEventDispatcher();
 
@@ -16,32 +16,19 @@
     export let metric: WeightMetric = null;
     /** Initial value of the input. */
     export let value: number;
-    export let isFocused: boolean = false;
 
     let inputHTMLElement: HTMLInputElement;
 
-    onMount(() => {
-        console.log("MOUNTING INPUT NUMBAG", label);
-        console.log(isFocused);
-        console.log(inputHTMLElement);
-        
-        if (isFocused && inputHTMLElement) {
-            console.log("YOU NEED TO FOCUS");
-            inputHTMLElement.focus();
-        }
-    });
-
-    function handleFocus(event) {
-        selectWholeTextOnFocus(event);
+    function handleFocus(e) {
+        console.log(e)
+        selectWholeText(e);
     }
 
     function handleKeyPress(e) {
         if (e.key === 'Enter') dispatch('enterKey');
 
-        // Handle paste
         if (e.type === 'paste') key = e.clipboardData.getData('text/plain');
         else {
-            // Handle key press
             var key = e.keyCode || e.which;
             key = String.fromCharCode(key);
         }
@@ -54,7 +41,6 @@
         }
     }
 
-    // On input trigger the input event for this component.
     function handleInput(e: any) {
         // todo : check why reseting value then inputing again prevent new characters to be inputed
         console.log(`handleInput`, e, e.data, e.target.value);
@@ -84,6 +70,7 @@
                 {placeholder}
                 class={className}
                 bind:value
+                bind:this={inputHTMLElement}
                 on:focus={handleFocus}
                 on:keypress={handleKeyPress}
                 on:input={handleInput}

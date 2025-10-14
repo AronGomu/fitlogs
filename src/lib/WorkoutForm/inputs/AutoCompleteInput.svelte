@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { Lift } from "../../../shared/class/Lift/Lift";
-	import { selectWholeTextOnFocus } from "../../../shared/functions/utils";
+	import { selectWholeText } from "../../../shared/functions/utils";
 
 	const dispatch = createEventDispatcher();
 
@@ -64,7 +64,7 @@
 	}
 
 	function handleFocus(event) {
-		selectWholeTextOnFocus(event);
+		selectWholeText(event);
 		isFocused = true;
 	}
 

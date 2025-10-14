@@ -7,7 +7,7 @@
 	import { isPercentage, minLength } from "../../shared/functions/Form";
 	import {
 		enumToList,
-		selectWholeTextOnFocus,
+		selectWholeText,
 	} from "../../shared/functions/utils";
 	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
 	import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
@@ -107,7 +107,7 @@
 		type="text"
 		class="m-2 input input-bordered input-primary"
 		bind:value={lift.name}
-		on:focus={(e) => selectWholeTextOnFocus(e)}
+		on:focus={(e) => selectWholeText(e)}
 		on:input={() => setExerciceIsValid()}
 		placeholder="Main name of the lift..."
 	/>
@@ -117,7 +117,7 @@
 		type="text"
 		class="m-2 input input-bordered input-secondary"
 		bind:value={lift.variation}
-		on:focus={(e) => selectWholeTextOnFocus(e)}
+		on:focus={(e) => selectWholeText(e)}
 		on:input={() => setExerciceIsValid()}
 		placeholder="Name of the variation of lift..."
 	/>
@@ -142,14 +142,12 @@
 					class="input input-bordered w-full"
 					bind:value={t.work}
 					on:focus={(e) =>
-						selectWholeTextOnFocus(
+						selectWholeText(
 							e,
 						)}
 					on:input={() => setExerciceIsValid()}
 				/>
-				<div
-					class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
-				>
+				<div class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center" >
 					%
 				</div>
 			</div>

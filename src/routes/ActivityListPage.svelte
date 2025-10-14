@@ -69,14 +69,13 @@
     let activityFormDialog: HTMLElement;
     function showActivityFormDialog(yyyymmdd: number, asModal = true) {
         dateSelected = getDateFromYYYYMMDDNumber(yyyymmdd);
-        console.log("dateSelected", dateSelected);
         try { activityFormDialog[asModal ? 'showModal' : 'hide'](); } 
         catch (e) { throw new Error(e); }
     }
-    function hideActivityFormDialog() {
-        try { activityFormDialog.close(); } 
-        catch (e) { console.error("Failed to close dialog:", e); }
-    }
+    // function hideActivityFormDialog() {
+    //     try { activityFormDialog.close(); } 
+    //     catch (e) { console.error("Failed to close dialog:", e); }
+    // }
 </script>
 
 <div class="h-full w-full flex flex-col justify-between">

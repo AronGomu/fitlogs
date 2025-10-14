@@ -5,7 +5,7 @@
 	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
 	import Icon from "@iconify/svelte";
 	import magnifyIcon from "@iconify/icons-mdi/magnify";
-	import { selectWholeTextOnFocus } from "../shared/functions/utils.js";
+	import { selectWholeText } from "../shared/functions/utils.js";
 	import type { Program } from "../shared/class/Program/Program.ts";
 	import { menuPath } from "../shared/store/menuPath.ts";
 
@@ -128,7 +128,7 @@
 					class="input input-bordered"
 					bind:value={filters.name}
 					on:focus={(e) =>
-						selectWholeTextOnFocus(e)}
+						selectWholeText(e)}
 				/>
 
 				<div class="label">
@@ -141,7 +141,7 @@
 					placeholder="Filter by description"
 					class="input input-bordered"
 					on:focus={(e) =>
-						selectWholeTextOnFocus(e)}
+						selectWholeText(e)}
 				/>
 
 				<span class="mt-2 font-bold">Types</span>

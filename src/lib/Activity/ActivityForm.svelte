@@ -66,10 +66,10 @@
 <div class="flex flex-col items-center">
     <DateInput bind:date={dateForm} on:input={ e => updateDateForm(activityList, e.detail, activityForm) } />
 
-    {#if activityForm}
+    {#if activityForm && dateForm}
         <div class="mt-2">
             <InputNumber label="Weight" placeholder="Weight" className="input w-24  text-left"
-                value={activityForm.weight} metric={settings.wm} isFocused={true}
+                value={activityForm.weight} metric={settings.wm}
                 on:input={e =>  activityForm.weight = e.detail.value}
                 on:enterKey={() => saveActivity(activityForm)}
             />

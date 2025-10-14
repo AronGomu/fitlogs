@@ -1,7 +1,7 @@
 import type { Activity } from "../class/Activity/Activity";
 
-/** When clicking on some characters of an text input, this will automatically select the whole text */
-export function selectWholeTextOnFocus(e) {
+/** Select the whole text from html element from html element event. */
+export function selectWholeText(e) {
 	e.target.select();
 }
 
