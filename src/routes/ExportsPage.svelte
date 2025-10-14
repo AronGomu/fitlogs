@@ -23,8 +23,5 @@
 <div class="flex justify-center">
     <button
         class="btn btn-warning w-30 m-10"
-        on:click={() => {
-            navigate('/fitlogs/');
-        }}>Back To Menu</button
-    >
+        on:click={() => { navigate('/fitlogs/'); }}>Back To Menu</button>
 </div>

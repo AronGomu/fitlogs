@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { FiltersProgram } from "./../shared/class/Program/FiltersProgram.ts";
-	import { programs } from "../shared/store/programStore.ts";
-	import { isStringNotEmpty } from "../shared/functions/utils.js";
-	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
-	import Icon from "@iconify/svelte";
-	import magnifyIcon from "@iconify/icons-mdi/magnify";
-	import { selectWholeText } from "../shared/functions/utils.js";
-	import type { Program } from "../shared/class/Program/Program.ts";
-	import { menuPath } from "../shared/store/menuPath.ts";
+    import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
+    import Icon from "@iconify/svelte";
+    import { FiltersProgram } from "../shared/class/Program/FiltersProgram";
+    import type { Program } from "../shared/class/Program/Program";
+    import { isStringNotEmpty, selectWholeText } from "../shared/functions/utils";
+    import { menuPath } from "../shared/store/menuPath";
+    import { programs } from "../shared/store/programStore";
 
 	menuPath.set("Programs");
 
@@ -80,13 +78,13 @@
 								);
 							}}
 						>
-							<Icon
+							<!-- <Icon
 								icon={magnifyIcon}
 								color="white"
 								width="15"
 								height="15"
 								class="cursor-pointer"
-							/>
+							/> -->
 						</button>
 					</th>
 				</tr>
@@ -173,7 +171,5 @@
 		<button>close</button>
 	</form>
 
-	<button class="mt-2 btn btn-primary" on:click={gotoNewProgram}
-		>New Program</button
-	>
+	<button class="mt-2 btn btn-primary" on:click={gotoNewProgram}>New Program</button>
 </dialog>

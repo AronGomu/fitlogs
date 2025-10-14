@@ -2,7 +2,6 @@
 	import { Route, Router } from "svelte-routing";
 	import HamburgerMenu from "./lib/HamburgerMenu.svelte";
 	import ProgramForm from "./lib/ProgramForm/ProgramForm.svelte";
-	import SettingsPage from "./routes/SettingsPage.svelte";
 	import ExportsPage from "./routes/ExportsPage.svelte";
 	import ImportsPage from "./routes/ImportsPage.svelte";
 	import AdminPage from "./routes/AdminPage.svelte";
@@ -24,7 +23,6 @@
 		
 	<Router>
 		<Route path="/fitlogs/about" component={AboutPage} />
-		<Route path="/fitlogs/settings" component={SettingsPage} />
 		<Route path="/fitlogs/exports" component={ExportsPage} />
 		<Route path="/fitlogs/imports" component={ImportsPage} />
 		<Route path="/fitlogs/admin" component={AdminPage} />

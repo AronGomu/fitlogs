@@ -1,48 +1,50 @@
 <script lang="ts">
-	import { Lift } from "../../shared/class/Lift/Lift";
-	import { Day } from "../../shared/class/Program/Day";
-	import { Program, getRealProgram } from "../../shared/class/Program/Program";
-	import { Superset } from "../../shared/class/Program/Superset";
-	import { getObjectByIdInDatabase } from "../../shared/functions/Database";
-	import { isPositive } from "../../shared/functions/utils";
-	import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
+	// import { Lift } from "../../shared/class/Lift/Lift";
+	// import { Day } from "../../shared/class/Program/Day";
+	// import { Program, getRealProgram } from "../../shared/class/Program/Program";
+    // import type { RepRange } from "../../shared/class/Program/RepRange";
+	// import { Superset } from "../../shared/class/Program/Superset";
+    // import type { Exercice } from "../../shared/class/Workout/Exercice";
+	// import { getObjectByIdInDatabase } from "../../shared/functions/Database";
+	// import { isPositive } from "../../shared/functions/utils";
+	// import AutoCompleteInput from "../WorkoutForm/inputs/AutoCompleteInput.svelte";
 
-	// Store variables
-	/** All the exercices stored that can be shown as suggestions. */
-	let ll: Lift[] = [];
-	lifts.subscribe((exerciceSuggestions) => {
-		ll = exerciceSuggestions;
-	});
+	// // Store variables
+	// /** All the exercices stored that can be shown as suggestions. */
+	// let ll: Lift[] = [];
+	// lifts.subscribe((exerciceSuggestions) => {
+	// 	ll = exerciceSuggestions;
+	// });
 
-	export var p: Program = null;
+	// export var p: Program = null;
 
-	export var id: number = null;
+	// export var id: number = null;
 
-	// If no program has been given and we receive an id from the url, we go fetch the program and instanciate it for the form
-	if (!p && isPositive(id)) {
-		getObjectByIdInDatabase<Program>("program-store", id).then(
-			(pFetched) => {
-				p = getRealProgram(pFetched);
-			},
-		);
-	} else {
-		p = new Program(null, "", null, null, null);
-	}
+	// // If no program has been given and we receive an id from the url, we go fetch the program and instanciate it for the form
+	// if (!p && isPositive(id)) {
+	// 	getObjectByIdInDatabase<Program>("program-store", id).then(
+	// 		(pFetched) => {
+	// 			p = getRealProgram(pFetched);
+	// 		},
+	// 	);
+	// } else {
+	// 	p = new Program(null, "", null, null, null);
+	// }
 
-	// !! MOCK
-	p.days.push(new Day("", []));
-	p.days = p.days;
+	// // !! MOCK
+	// p.days.push(new Day("", []));
+	// p.days = p.days;
 
-	p.days[0].supersets.push(
-		new Superset([
-			new Exercice(new Lift(), null, "", new RepRange(6, 10)),
-		]),
-	);
-	p.days = p.days;
-	// !! MOCK
+	// p.days[0].supersets.push(
+	// 	new Superset([
+	// 		new Exercice(new Lift(), null, "", new RepRange(6, 10)),
+	// 	]),
+	// );
+	// p.days = p.days;
+	// // !! MOCK
 </script>
 
-<div class="flex flex-col">
+<!-- <div class="flex flex-col">
 	<input
 		type="text"
 		class="input input-bordered"
@@ -59,7 +61,6 @@
 			/>
 		</div>
 		{#each day.supersets as s, i}
-			<!-- <span>Set {i + 1}</span> -->
 			{#each s.exercices as e}
 				<AutoCompleteInput
 					type="text"
@@ -120,4 +121,4 @@
 			console.log(p.days);
 		}}>Add New Day</button
 	>
-</div>
+</div> -->
