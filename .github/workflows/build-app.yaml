@@ -1,21 +1,16 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages Fitlogs
+name: Deploy Fitlogs
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ['main']
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
 concurrency:
   group: 'pages'
   cancel-in-progress: true
@@ -23,7 +18,8 @@ concurrency:
 jobs:
   deploy:
     environment:
-      name: github-pages
+      name: fitlogs
+      url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
 
@@ -37,23 +33,10 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build
-      #   run: npm run build
-
-      # - name: List directory contents
-      #   run: ls -al ./dist
-
-
-
       - name: Install tree for debugging
-        # Installs the utility to show directory structure
         run: sudo apt-get install tree
 
       - name: Show Source Tree (src)
-        # Check source tree to fix Rollup path issue
         run: tree ./src
 
       - name: Install dependencies
@@ -67,8 +50,6 @@ jobs:
         
       - name: Show Build Output Tree (dist)
         run: tree ./dist
-
-
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
