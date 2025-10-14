@@ -3,7 +3,7 @@
     import Icon from "@iconify/svelte";
     import { FiltersProgram } from "../shared/class/Program/FiltersProgram";
     import type { Program } from "../shared/class/Program/Program";
-    import { isStringNotEmpty, selectWholeText } from "../shared/functions/utils";
+    import { isStringNotEmpty, selectWholeText } from "../shared/functions/Utils";
     import { menuPath } from "../shared/store/menuPath";
     import { programs } from "../shared/store/programStore";
 

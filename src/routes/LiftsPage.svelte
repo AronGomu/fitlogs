@@ -2,7 +2,7 @@
 	import { Lift } from '../shared/class/Lift/Lift';
 	import {
 		isStringNotEmpty,
-	} from '../shared/functions/utils';
+	} from '../shared/functions/Utils';
 	import { FiltersLift } from '../shared/class/Lift/FiltersLift';
     import { getLiftsFromDatabase } from '../shared/database/lift';
 

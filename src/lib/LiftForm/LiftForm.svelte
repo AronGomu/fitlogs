@@ -8,7 +8,7 @@
 	import {
 		enumToList,
 		selectWholeText,
-	} from "../../shared/functions/utils";
+	} from "../../shared/functions/Utils";
 	import { MuscleWork } from "../../shared/class/Lift/MuscleWork";
 	import { dispatchPossiblyModalEvent } from "../../shared/functions/Modal";
 	import { LiftFormEvents } from "../../shared/enum/Events";

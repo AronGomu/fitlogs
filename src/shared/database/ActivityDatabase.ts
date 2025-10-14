@@ -1,6 +1,6 @@
 import { Activity, getRealActivity } from "../class/Activity/Activity";
 import { openDatabase } from "../functions/Database";
-import { getPreviousDayYYYYMMDD } from "../functions/utilsDate";
+import { getPreviousDayYYYYMMDD } from "../functions/UtilsDate";
 
 type SortDirection = "asc" | "desc";
 export async function getActivityListFromDB(

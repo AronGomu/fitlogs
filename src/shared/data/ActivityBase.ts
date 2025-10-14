@@ -1,5 +1,5 @@
 import { Activity } from "../class/Activity/Activity"
-import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/utils";
+import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/Utils";
 
 export type Progression = 'Bulk' | 'Cut' | 'Maintenance';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
-    import { selectWholeText } from "../../../shared/functions/utils";
+    import { selectWholeText } from "../../../shared/functions/Utils";
 
     const dispatch = createEventDispatcher();
 

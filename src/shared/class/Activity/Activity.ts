@@ -1,6 +1,6 @@
 import { getActivityListFromDB } from "../../database/ActivityDatabase";
-import { downloadAsJson, truncateNumber } from "../../functions/utils";
-import { formatDateToYYYYMMDDNumber } from "../../functions/utilsDate";
+import { downloadAsJson, truncateNumber } from "../../functions/Utils";
+import { formatDateToYYYYMMDDNumber } from "../../functions/UtilsDate";
 
 export class Activity {
     constructor(

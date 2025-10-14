@@ -3,7 +3,7 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from 'svelte';
     import { getReducedStringMetric, type WeightMetric } from '../../../shared/enum/WeightMetrics';
-    import { selectWholeText } from '../../../shared/functions/utils';
+    import { selectWholeText } from '../../../shared/functions/Utils';
 
     const dispatch = createEventDispatcher();
 

@@ -5,7 +5,7 @@
     import { deleteActivityFromDatabase, insertOrUpdateActivityInDatabase } from '../../shared/database/ActivityDatabase';
     import type { Settings } from '../../shared/class/Settings';
     import { updateActivityListWritable } from '../../shared/store/activityStore';
-    import { formatDateToYYYYMMDDNumber, getYesterday } from '../../shared/functions/utilsDate';
+    import { formatDateToYYYYMMDDNumber, getYesterday } from '../../shared/functions/UtilsDate';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher()

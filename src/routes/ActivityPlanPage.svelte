@@ -3,7 +3,7 @@
   import type { Activity } from "../shared/class/Activity/Activity";
   import { Plan } from "../shared/class/Plan/Plan";
   import { getPlanFromDatabase, updatePlanInDatabase } from "../shared/database/plan";
-  import { truncateNumber } from "../shared/functions/utils";
+  import { truncateNumber } from "../shared/functions/Utils";
 
 
 

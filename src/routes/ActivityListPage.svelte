@@ -9,7 +9,7 @@
     import ActivityRangeSelector from '../lib/Activity/ActivityRangeSelector.svelte';
     import type { Settings as Settings } from '../shared/class/Settings';
     import { saveSettings, settingsWritable } from '../shared/store/settingsStore';
-    import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/utilsDate';
+    import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/UtilsDate';
     import { navigate } from 'svelte-routing';
 
 

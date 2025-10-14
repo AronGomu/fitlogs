@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatDateWithSpelledOutMonth } from "../shared/functions/utils";
+	import { formatDateWithSpelledOutMonth } from "../shared/functions/Utils";
 	import { Workout, compareWorkouts } from "../shared/class/Workout/Workout";
 	import { menuPath } from "../shared/store/menuPath";
 	import { navigate } from "svelte-routing";

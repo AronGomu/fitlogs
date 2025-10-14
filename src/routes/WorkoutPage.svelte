@@ -2,7 +2,7 @@
   import {
     formatDateWithSpelledOutMonth,
     last,
-  } from "../shared/functions/utils";
+  } from "../shared/functions/Utils";
   import { Workout } from "../shared/class/Workout/Workout";
   import { Settings } from "../shared/class/Settings";
   import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
