@@ -134,10 +134,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center m-4 justify-between">
-        <button class="btn btn-warning w-30" on:click={() => { navigate("/fitlogs/") }}>
-            <i class="fi fi-rr-arrow-small-left"></i>
-        </button>
+    <div class="flex justify-center m-4 justify-around">
         <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
                 Log Activity
         </button>

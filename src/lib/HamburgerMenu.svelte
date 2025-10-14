@@ -46,7 +46,7 @@
 
 	<li>
 		<button class="btn" on:click={ () => { goto("/fitlogs/activity") }} >
-			<span>Activity</span>
+			<span>Activity List</span>
 		</button>
 	</li>
 
