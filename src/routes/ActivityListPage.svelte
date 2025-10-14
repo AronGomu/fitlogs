@@ -10,7 +10,6 @@
     import type { Settings as Settings } from '../shared/class/Settings';
     import { saveSettings, settingsWritable } from '../shared/store/settingsStore';
     import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/UtilsDate';
-    import { navigate } from 'svelte-routing';
 
 
     let settings: Settings;

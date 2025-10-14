@@ -14,6 +14,8 @@
 	import ActivityList from "./routes/ActivityListPage.svelte";
 	import ActivityPlanPage from "./routes/ActivityPlanPage.svelte";
 	import ActivityStatsPage from "./routes/ActivityStatsPage.svelte";
+	import ActivityListPage from "./routes/ActivityListPage.svelte";
+	import ActivityChartsPage from "./routes/ActivityChartsPage.svelte";
 </script>
 
 <div class="h-screen flex flex-col">
@@ -23,14 +25,12 @@
 		
 	<Router>
 		<Route path="/fitlogs/about" component={AboutPage} />
+		<Route path="/fitlogs/setting" component={SettingsPage} />
 		<Route path="/fitlogs/exports" component={ExportsPage} />
 		<Route path="/fitlogs/imports" component={ImportsPage} />
 		<Route path="/fitlogs/admin" component={AdminPage} />
-
-		<Route path="/fitlogs/activity/plan" component={ActivityPlanPage} />
-		<Route path="/fitlogs/activity/stats" component={ActivityStatsPage} />
-		<Route path="/fitlogs/activity/list" component={ActivityList} />
-		<Route path="/fitlogs/activity/**" component={ActivityList} />
+		<Route path="/fitlogs/stats" component={ActivityStatsPage} />
+		<Route path="/fitlogs/activity" component={ActivityListPage} />
 		<Route path="/fitlogs/globalPrograms" component={ProgramsPage} />
 		<Route path="/fitlogs/globalLifts" component={LiftsPage} />
 		<Route path="/fitlogs/program/:id" component={ProgramForm} let:params >

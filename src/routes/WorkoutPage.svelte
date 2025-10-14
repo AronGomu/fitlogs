@@ -1,30 +1,25 @@
 <script lang="ts">
-  import {
-    formatDateWithSpelledOutMonth,
-    last,
-  } from "../shared/functions/Utils";
-  import { Workout } from "../shared/class/Workout/Workout";
-  import { Settings } from "../shared/class/Settings";
-  import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
-  import {
-    getWorkoutFromDatabase,
-    putWorkoutInDatabase,
-  } from "../shared/database/workout";
-  import { putLiftInDatabase } from "../shared/database/lift";
-  import LiftInput from "../lib/LiftForm/LiftInput.svelte";
-  import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
-  import LiftForm from "../lib/LiftForm/LiftForm.svelte";
-  import type { Exercice } from "../shared/class/Workout/Exercice";
-  import Modal from "../lib/Generic/Modal.svelte";
-  import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
-  import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
-  import { Serie } from "../shared/class/Workout/Serie";
-  import { Weight } from "../shared/class/Workout/Weight";
-  import { navigate } from "svelte-routing";
-  import Loading from "../lib/Generic/Loading.svelte";
+	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
+	import { Workout } from "../shared/class/Workout/Workout";
+	import { Setting } from "../shared/class/Settings";
+	import { WorkoutDate } from "../shared/class/Workout/WorkoutDate";
+	import { getWorkoutFromDatabase, putWorkoutInDatabase } from "../shared/functions/database/workout";
+	import { putLiftInDatabase } from "../shared/functions/database/lift";
+	import LiftInput from "../lib/LiftForm/LiftInput.svelte";
+	import LiftSelector from "../lib/LiftForm/LiftSelector.svelte";
+	import LiftForm from "../lib/LiftForm/LiftForm.svelte";
+	import type { Exercice } from "../shared/class/Workout/Exercice";
+	import Modal from "../lib/Generic/Modal.svelte";
+	import { LiftFormEvents, LiftSelectorEvents } from "../shared/enum/Events";
+	import InputNumber from "../lib/WorkoutForm/inputs/InputNumber.svelte";
+	import { Serie } from "../shared/class/Workout/Serie";
+	import { Weight } from "../shared/class/Workout/Weight";
+	import { navigate } from "svelte-routing";
+	import Loading from "../lib/Generic/Loading.svelte";
+  import { getSettingFromDatabase } from "../shared/functions/database/settingDatabase";
 
-  export let urlWorkoutDate: string = null;
-  let settings: Settings = new Settings();
+	export let urlWorkoutDate: string = null;
+	let setting: Setting = new Setting();
 
   let workout: Workout;
 
@@ -45,10 +40,7 @@
     const emptyWorkout = parseURLWorkoutDate();
     workout = await fetchWorkout(emptyWorkout);
 
-    // if the workout does not exist, we create it
-    if (!workout) {
-      workout = await putWorkoutInDatabase(emptyWorkout);
-    }
+		getSettingFromDatabase().then((fs) => (setting = fs));
 
     isWorkoutLoaded = true;
   }
@@ -98,11 +90,9 @@
     let newSerieReps: number = 0;
     let newSerieRank: number = 1;
 
-    if (e.series.length > 0) {
-      const lastSerie = last(e.series);
-      newSerieWeight = lastSerie.weight;
-      newSerieRank = e.series.length;
-    }
+		let newSerieWeight: Weight = new Weight(0, setting.wm); 
+		let newSerieReps: number = 0;
+		let newSerieRank: number = 1;
 
     e.series.push(new Serie(newSerieRank, newSerieReps, newSerieWeight));
 
@@ -219,30 +209,33 @@
         }}
       ></LiftInput>
 
-      {#each exercice.series as serie, index}
-        <div class="flex space-x-4 mt-4">
-          <div>Set {index + 1}</div>
-          <InputNumber
-            placeholder="Weight"
-            metric={settings.wm}
-            value={serie.weight.weight}
-            on:input={(e) => updateWeight(exercice, serie, e)}
-            className="input-lg w-20"
-          ></InputNumber>
-          <div class="ml-4 mr-4">X</div>
-          <InputNumber
-            placeholder="Repetitions"
-            value={serie.reps}
-            on:input={(e) => updateReps(exercice, serie, e)}
-            className="input-lg w-10"
-          ></InputNumber>
-        </div>
-      {/each}
-      <button
-        class="btn btn-primary w-30 mt-2 mb-12"
-        on:click={() => onClickAddSet(exercice)}>Add set</button
-      >
-    {/each}
+			{#each exercice.series as serie, index}
+				<div class="flex space-x-4 mt-4">
+					<div>Set {index+1}</div>
+					<InputNumber 
+						placeholder="Weight" 
+						metric={setting.wm} 
+						value={serie.weight.weight} 
+						on:input={
+							(e) => updateWeight(exercice, serie, e)
+						}
+						className="input-lg w-20"
+						>
+					</InputNumber>
+					<div class="ml-4 mr-4">X</div>
+					<InputNumber 
+						placeholder="Repetitions" 
+						value={serie.reps}
+						on:input={
+							(e) => updateReps(exercice, serie, e)
+						}
+						className="input-lg w-10"
+						>
+					</InputNumber>
+				</div>
+			{/each}
+			<button class="btn btn-primary w-30 mt-2 mb-12" on:click={() => onClickAddSet(exercice)}>Add set</button>
+		{/each}
 
     <button
       class="btn btn-secondary w-30 mt-14"

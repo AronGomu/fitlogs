@@ -291,6 +291,24 @@ export function getNbDaysLeftInWeek(d: Date) {
 }
 
 
+export function getTomorrow(d: Date) {
+	d.setDate(d.getDate()+1);
+	return d;
+}
+
+export function getYesterday(d: Date) {
+	d.setDate(d.getDate()-1);
+	return d;
+}
+
+export function getDateFromXDays(d: Date, x: number): Date {
+	let dateToReturn = new Date(d);
+	for (let i = 0; i < x - 1; i++) {
+		dateToReturn = getYesterday(dateToReturn);
+	}
+	return dateToReturn;
+}
+
 export function assert(condition: any, message: string) {
     if (!condition) throw new Error(message || "Assertion failed");
     

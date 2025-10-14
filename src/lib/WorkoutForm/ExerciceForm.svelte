@@ -1,15 +1,15 @@
 <script lang="ts">
-  import plusIcon from "@iconify/icons-mdi/plus";
-  import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
-  import Icon from "@iconify/svelte";
-  import { createEventDispatcher, onMount } from "svelte";
-  import type { Settings } from "../../shared/class/Settings";
-  import { settingsWritable } from "../../shared/store/settingsStore";
-  import InputNumber from "./inputs/InputNumber.svelte";
-  import type { Serie } from "../../shared/class/Workout/Serie";
-  import type { Exercice } from "../../shared/class/Workout/Exercice";
-  import { getRealLift, Lift } from "../../shared/class/Lift/Lift";
-  import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
+	import plusIcon from "@iconify/icons-mdi/plus";
+	import trashCanOutline from "@iconify/icons-mdi/trash-can-outline";
+	import Icon from "@iconify/svelte";
+	import { createEventDispatcher, onMount } from "svelte";
+	import type { Setting } from "../../shared/class/Settings";
+	import { settingStore } from "../../shared/store/settingStore";
+	import InputNumber from "./inputs/InputNumber.svelte";
+	import type { Serie } from "../../shared/class/Workout/Serie";
+	import type { Exercice } from "../../shared/class/Workout/Exercice";
+	import { getRealLift, Lift } from "../../shared/class/Lift/Lift";
+	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
 
   const dispatch = createEventDispatcher();
 

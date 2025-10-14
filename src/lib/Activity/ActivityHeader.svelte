@@ -18,16 +18,17 @@
     // init //
 </script>
 
-<div role="tablist" class="tabs tabs-boxed mb-2">
-    <button role="tab" class="tab {tabs.list.class}" on:click={() => navigate("/fitlogs/activity/list")}>
-        List
-    </button>
+<div role="tablist" class="w-full tabs tabs-lift tabs-xl">
+  <button role="tab" class="tab {tabs.list.class}" on:click={() => navigate("/fitlogs/activity/list")}>
+    List
+  </button>
 
     <button role="tab" class="tab {tabs.stats.class}" on:click={() => navigate("/fitlogs/activity/stats")}>
         Stats
     </button>
 
-    <button role="tab" class="tab {tabs.plan.class}" on:click={() => navigate("/fitlogs/activity/plan")}>
-        Plan
-    </button>
+  <!-- Paying option -->
+  <!-- <button role="tab" class="tab {tabs.plan.class}" on:click={() => navigate("/fitlogs/activity/plan")}>
+    Plan
+  </button> -->
 </div>

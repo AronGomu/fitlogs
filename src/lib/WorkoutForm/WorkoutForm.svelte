@@ -1,29 +1,32 @@
 <script lang="ts">
-  import minusIcon from "@iconify/icons-mdi/minus";
-  import plusIcon from "@iconify/icons-mdi/plus";
-  import Icon from "@iconify/svelte";
-  import { Settings } from "../../shared/class/Settings";
-  import { Exercice } from "../../shared/class/Workout/Exercice";
-  import { Workout, getRealWorkout } from "../../shared/class/Workout/Workout";
-  import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
-  import {
-    StoreName,
-    fetchSettings,
-    getObjectByIdInDatabase,
-    updateInDatabase,
-  } from "../../shared/functions/Database";
-  import ExerciceForm from "./ExerciceForm.svelte";
-  import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
-  import type { Weight } from "../../shared/class/Workout/Weight";
-  import { createEventDispatcher } from "svelte";
-  import { formatDateWithSpelledOutMonth } from "../../shared/functions/Utils";
-  import Workouts from "../../routes/Workouts.svelte";
+	import minusIcon from "@iconify/icons-mdi/minus";
+	import plusIcon from "@iconify/icons-mdi/plus";
+	import Icon from "@iconify/svelte";
+	import { Setting } from "../../shared/class/Settings";
+	import { Exercice } from "../../shared/class/Workout/Exercice";
+	import {
+		Workout,
+		getRealWorkout,
+	} from "../../shared/class/Workout/Workout";
+	import { getReducedStringMetric } from "../../shared/enum/WeightMetrics";
+	import {
+		StoreName,
+		getSettingFromDatabase,
+		getObjectByIdInDatabase,
+		updateInDatabase,
+	} from "../../shared/functions/Database";
+	import ExerciceForm from "./ExerciceForm.svelte";
+	import AutoCompleteInput from "./inputs/AutoCompleteInput.svelte";
+	import type { Weight } from "../../shared/class/Workout/Weight";
+	import { createEventDispatcher } from "svelte";
+	import { formatDateWithSpelledOutMonth } from "../../shared/functions/Utilitary";
+	import Workouts from "../../routes/Workouts.svelte";
 
   const dispatch = createEventDispatcher();
   export let id: number = null;
 
-  let settings: Settings = new Settings();
-  fetchSettings().then((fs) => (settings = fs));
+	let setting: Setting = new Setting();
+	getSettingFromDatabase().then((fs) => (setting = fs));
 
   let isWorkoutLoaded: boolean = false;
   let doesWorkoutExist: boolean = true;
@@ -115,44 +118,44 @@
         on:update={(event) => updateExercice(e, event)}
       />
 
-      <!-- 	<div -->
-      <!-- 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title" -->
-      <!-- 	> -->
-      <!-- 		<div -->
-      <!-- 			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName" -->
-      <!-- 		> -->
-      <!-- 			<AutoCompleteInput -->
-      <!-- 				type="text" -->
-      <!-- 				value={e.lift.name} -->
-      <!-- 				placeholder="Exercice Name" -->
-      <!-- 				class="bg-base-500 input input-ghost input-lg text-primary z-10" -->
-      <!-- 				on:update={(event) => -->
-      <!-- 					updateExerciceName( -->
-      <!-- 						event, -->
-      <!-- 						e, -->
-      <!-- 					)} -->
-      <!-- 			/> -->
-      <!-- 		</div> -->
-      <!-- 		{#if !e.isSelfOpen} -->
-      <!-- 			<span -->
-      <!-- 				class="text-secondary text-sm" -->
-      <!-- 				>{`${e.series.length} Sets`} -->
-      <!-- 			</span> -->
-      <!-- 			{#if e.getMaxWeight(settings.wm)} -->
-      <!-- 				<span -->
-      <!-- 					class="text-secondary text-sm" -->
-      <!-- 					>{` - Max : ${e.getMaxWeight( -->
-      <!-- 						settings.wm, -->
-      <!-- 					)}${getReducedStringMetric( -->
-      <!-- 						settings.wm, -->
-      <!-- 					)}`} -->
-      <!-- 					{e.isSelfOpen} -->
-      <!-- 					{e.isExtraOpen} -->
-      <!-- 				</span> -->
-      <!-- 			{/if} -->
-      <!-- 		{/if} -->
-      <!-- 	</div> -->
-      <!---->
+			<!-- 	<div -->
+			<!-- 		class="collapse-title text-xl font-medium text-primary w-full mx-2 override-collapse-title" -->
+			<!-- 	> -->
+			<!-- 		<div -->
+			<!-- 			class="flex flex-row justify-between w-full overflow-visible override-input-exerciceName" -->
+			<!-- 		> -->
+			<!-- 			<AutoCompleteInput -->
+			<!-- 				type="text" -->
+			<!-- 				value={e.lift.name} -->
+			<!-- 				placeholder="Exercice Name" -->
+			<!-- 				class="bg-base-500 input input-ghost input-lg text-primary z-10" -->
+			<!-- 				on:update={(event) => -->
+			<!-- 					updateExerciceName( -->
+			<!-- 						event, -->
+			<!-- 						e, -->
+			<!-- 					)} -->
+			<!-- 			/> -->
+			<!-- 		</div> -->
+			<!-- 		{#if !e.isSelfOpen} -->
+			<!-- 			<span -->
+			<!-- 				class="text-secondary text-sm" -->
+			<!-- 				>{`${e.series.length} Sets`} -->
+			<!-- 			</span> -->
+			<!-- 			{#if e.getMaxWeight(setting.wm)} -->
+			<!-- 				<span -->
+			<!-- 					class="text-secondary text-sm" -->
+			<!-- 					>{` - Max : ${e.getMaxWeight( -->
+			<!-- 						setting.wm, -->
+			<!-- 					)}${getReducedStringMetric( -->
+			<!-- 						setting.wm, -->
+			<!-- 					)}`} -->
+			<!-- 					{e.isSelfOpen} -->
+			<!-- 					{e.isExtraOpen} -->
+			<!-- 				</span> -->
+			<!-- 			{/if} -->
+			<!-- 		{/if} -->
+			<!-- 	</div> -->
+			<!---->
 
       <!-- 	{#if e.isSelfOpen} -->
       <!-- 		<div class="collapse-content"> -->

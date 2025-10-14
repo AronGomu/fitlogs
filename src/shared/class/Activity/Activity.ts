@@ -27,6 +27,14 @@ export class Activity {
         const day = dateString.substring(6, 8);
         return `${day}-${month}-${year}`;
     }
+
+    public getDate(): Date {
+        return new Date(this.printDate());
+    }
+
+    public getActivityDate(): ActivityDate {
+        return createActivityDateFromDate(this.getDate());
+    }
 }
 
 export function buildActivityWithDate(date: Date, weight = 0, calories = 0, steps = 0) {
