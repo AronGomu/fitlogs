@@ -72,15 +72,17 @@
         try { activityFormDialog[asModal ? 'showModal' : 'hide'](); } 
         catch (e) { throw new Error(e); }
     }
-    // function hideActivityFormDialog() {
-    //     try { activityFormDialog.close(); } 
-    //     catch (e) { console.error("Failed to close dialog:", e); }
-    // }
+    function hideActivityFormDialog() {
+        /* @ts-ignore */
+        try { activityFormDialog.close(); } 
+        // try { activityFormDialog.hidden = true; } 
+        catch (e) { console.error("Failed to close dialog:", e); }
+    }
 </script>
 
 <div class="h-full w-full flex flex-col justify-between">
+
     <div class="flex-1 w-full flex flex-col">
-        <ActivityHeader selectedTab="list" />
 
         <div class="h-full overflow-y-auto">
             <div class="w-full flex items-center justify-center mb-2">
