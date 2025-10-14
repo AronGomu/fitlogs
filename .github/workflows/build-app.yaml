@@ -37,6 +37,25 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      # - name: Install dependencies
+      #   run: npm install
+
+      # - name: Build
+      #   run: npm run build
+
+      # - name: List directory contents
+      #   run: ls -al ./dist
+
+
+
+      - name: Install tree for debugging
+        # Installs the utility to show directory structure
+        run: sudo apt-get install tree
+
+      - name: Show Source Tree (src)
+        # Check source tree to fix Rollup path issue
+        run: tree ./src
+
       - name: Install dependencies
         run: npm install
 
@@ -45,6 +64,11 @@ jobs:
 
       - name: List directory contents
         run: ls -al ./dist
+        
+      - name: Show Build Output Tree (dist)
+        run: tree ./dist
+
+
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
