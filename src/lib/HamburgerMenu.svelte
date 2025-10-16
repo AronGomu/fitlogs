@@ -56,27 +56,11 @@
 		</button>
 	</li>
 
-	<!-- <li>
-		<button class="btn" on:click={() => { goto("/fitlogs/workouts") }}>
-			<span>Workouts</span>
-		</button>
-	</li> -->
-	
-	<!-- <li>
-		<button class="btn" on:click={ () => { goto("/fitlogs/lifts") }} >
-			<span>Lifts</span>
-		</button>
-	</li> -->
-	<!-- <li>
-		<button class="btn" on:click={ () => { goto("/fitlogs/programs") }} >
-			<span>Programs</span>
-		</button>
-	</li> -->
-	<!-- <li>
-		<button class="btn" on:click={ () => { goto("/fitlogs/setting") }} >
+	<li>
+		<button class="btn btn-xl" on:click={ () => { goto("/fitlogs/stats") }} >
 			<span>Settings</span>
 		</button>
-	</li> -->
+	</li>
 </ul>
 
 <style>

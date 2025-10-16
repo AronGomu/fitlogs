@@ -3,8 +3,8 @@
     import { downloadAsJson } from '../shared/functions/Utils';
     import { getWorkoutsFromDatabase } from '../shared/database/workout';
     import { navigate } from 'svelte-routing';
-    import { settingsWritable } from '../shared/store/settingsStore';
     import { exportActivityList } from '../shared/class/Activity/Activity';
+    import { settingsWritable } from '../shared/store/settingStore';
 
     let settings: Settings = new Settings();
     settingsWritable.subscribe((s) => (settings = s));
@@ -23,5 +23,6 @@
 <div class="flex justify-center">
     <button
         class="btn btn-warning w-30 m-10"
-        on:click={() => { navigate('/fitlogs/'); }}>Back To Menu</button>
+        on:click={() => { navigate('/fitlogs/') }}
+    >Back To Menu</button>
 </div>

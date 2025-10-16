@@ -1,28 +1,33 @@
 <script lang="ts">
 	import ActivityHeader from "../lib/Activity/ActivityHeader.svelte";
-	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
 	import type { Activity } from "../shared/class/Activity/Activity";
-	import { averageActivitiesStore, activitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
 	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
 	import ActivityCharts from "./ActivityCharts.svelte";
   	import type Chart from "chart.js/auto";
 	import { onMount } from "svelte";
 	import type { ChartItem } from "chart.js/auto";
-  import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
-  import type { GraphType } from "../shared/enum/types";
+  	import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
+  	import type { GraphType } from "../shared/enum/types";
+    import { activityAverageListWritable, activityNormalListWritable, updateActivityListWritable } from "../shared/store/activityStore";
+    import type { Settings } from "../shared/class/Settings";
+    import { settingsWritable } from "../shared/store/settingStore";
 
 	let loadingActivities: boolean = true;
 	let loadingActivitiesChart: boolean = true;
 	let isMountingChart: boolean = true;
 	let lineChart: Chart = undefined;
 	let chartItem: ChartItem = undefined;
+
+	let settings: Settings;
 	let activitiesShowed: Activity[];
 	let aaListShowed: Activity[];
 
 	let gtTab: GraphType = 'average';
 
 	function loadData() {
-		activitiesStore.subscribe((activities) => {
+		settingsWritable.subscribe(s => settings = s);
+
+		activityNormalListWritable.subscribe((activities) => {
 			if (!activities) return;
 			if (activities.length < 1) return;
 			loadingActivities = true;
@@ -30,7 +35,7 @@
 			loadingActivities = false;
 		});
 
-		averageActivitiesStore.subscribe((aaList) => {
+		activityAverageListWritable.subscribe((aaList) => {
 			if (!aaList) return;
 			if (aaList.length < 1) return;
 			loadingActivities = true;
@@ -52,7 +57,7 @@
 		<div class="h-full overflow-y-auto">
 
 			{#if !loadingActivities && activitiesShowed}
-				<ActivityRangeSelector 
+				<ActivityRangeSelector nbDayShow={settings.nbDayShow} 
 					on:click={ async (e) => {
 						if (lineChart) lineChart.destroy();
 						isMountingChart = true;
@@ -60,7 +65,7 @@
 						loadingActivities = true;
 						activitiesShowed = undefined;
 						aaListShowed = undefined
-						loadActivitiesStore(e.detail.value);
+						updateActivityListWritable(e.detail.value);
 					}}
 				/>
 				{#if gtTab === 'normal'}
@@ -82,7 +87,5 @@
 		if (e.detail.value === 'normal') gtTab = 'normal';
 		if (e.detail.value === 'average') gtTab = 'average';
 	}} />
-
-	<ActivityFooter/>
 
 </div>

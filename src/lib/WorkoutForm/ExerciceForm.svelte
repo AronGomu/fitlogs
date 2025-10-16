@@ -5,7 +5,7 @@
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { Setting } from "../../shared/class/Settings";
 	import { settingStore } from "../../shared/store/settingStore";
-	import InputNumber from "./inputs/InputNumber.svelte";
+settingsWritabletNumber from "./inputs/InputNumber.svelte";
 	import type { Serie } from "../../shared/class/Workout/Serie";
 	import type { Exercice } from "../../shared/class/Workout/Exercice";
 	import { getRealLift, Lift } from "../../shared/class/Lift/Lift";

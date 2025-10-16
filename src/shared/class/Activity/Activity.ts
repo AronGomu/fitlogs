@@ -1,6 +1,8 @@
+import type { ChartItem } from "chart.js";
 import { getActivityListFromDB } from "../../database/ActivityDatabase";
+import { ChartParameter } from "../../functions/Chart";
 import { downloadAsJson, truncateNumber } from "../../functions/Utils";
-import { formatDateToYYYYMMDDNumber } from "../../functions/UtilsDate";
+import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from "../../functions/UtilsDate";
 
 export class Activity {
     constructor(
@@ -10,7 +12,7 @@ export class Activity {
         public steps: number = 0
     ) { }
 
-    public getDate() { return new Date(this.date) }
+    public getDate() { return getDateFromYYYYMMDDNumber(this.date) }
 
     public printDateSlash() {
         const dateString = String(this.date);
@@ -26,14 +28,6 @@ export class Activity {
         const month = dateString.substring(4, 6);
         const day = dateString.substring(6, 8);
         return `${day}-${month}-${year}`;
-    }
-
-    public getDate(): Date {
-        return new Date(this.printDate());
-    }
-
-    public getActivityDate(): ActivityDate {
-        return createActivityDateFromDate(this.getDate());
     }
 }
 
@@ -105,4 +99,49 @@ export async function exportActivityList(nbDaysUsedForAverage) {
 
 	downloadAsJson(ActivityList, "ActivityList");
 	downloadAsJson(averageActivityList, "averageActivityList");
+}
+
+
+
+/** Create the labels and all data arrays for charts. */
+export function createAxesForChart(chartItem: ChartItem, activities: Activity[]): ChartParameter {
+    const lList: string[] = [];
+    const wList: number[] = [];
+    const cList: number[] = [];
+    const sList: number[] = [];
+
+    let minWeight: number = Number.MAX_SAFE_INTEGER;
+    let maxWeight: number = Number.MIN_SAFE_INTEGER;
+    let minCalories: number = Number.MAX_SAFE_INTEGER;
+    let maxCalories: number = Number.MIN_SAFE_INTEGER;
+    let minSteps: number = Number.MAX_SAFE_INTEGER;
+    let maxSteps: number = Number.MIN_SAFE_INTEGER;
+    
+    for (let i = 0; i < activities.length; i++) {
+        const a = activities[i];
+        lList.push(a.printDateDash());
+        wList.push(a.weight);
+        cList.push(a.calories);
+        sList.push(a.steps);
+
+        if (a.weight > maxWeight) maxWeight = a.weight;
+        if (a.weight < minWeight) minWeight = a.weight;
+        if (a.calories > maxCalories) maxCalories = a.calories;
+        if (a.calories < minCalories) minCalories = a.calories;
+        if (a.steps > maxSteps) maxSteps = a.steps;
+        if (a.steps < minSteps) minSteps = a.steps;
+    }
+
+    minWeight -= 2;
+    maxWeight += 2;
+    minCalories -= 300;
+    maxCalories += 300;
+    minSteps -= 3000;
+    maxSteps += 3000;
+
+    return new ChartParameter(
+        chartItem,
+        lList, wList, cList, sList,
+        minWeight, maxWeight, minCalories, maxCalories, minSteps, maxSteps,
+    )
 }

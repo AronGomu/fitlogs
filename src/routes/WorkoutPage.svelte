@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { formatDateWithSpelledOutMonth, last } from "../shared/functions/Utilitary";
 	import { Workout } from "../shared/class/Workout/Workout";
 	import { Setting } from "../shared/class/Settings";
@@ -265,4 +265,4 @@
   events={LiftFormEvents}
   bind:show={showLiftForm}
   on:addLift={(event) => onAddLift(event)}
-></Modal>
+></Modal> -->

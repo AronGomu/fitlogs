@@ -3,7 +3,7 @@
     import DateInput from '../DateInput.svelte';
     import { Activity, buildActivityWithDate } from '../../shared/class/Activity/Activity';
     import { deleteActivityFromDatabase, insertOrUpdateActivityInDatabase } from '../../shared/database/ActivityDatabase';
-    import type { Settings } from '../../shared/class/Settings';
+    import { Settings } from '../../shared/class/Settings';
     import { updateActivityListWritable } from '../../shared/store/activityStore';
     import { formatDateToYYYYMMDDNumber, getYesterday } from '../../shared/functions/UtilsDate';
     import { createEventDispatcher } from 'svelte';
@@ -11,7 +11,7 @@
     const dispatch = createEventDispatcher()
     
     export let activityList: Activity[] = [];
-    export let settings: Settings;
+    export let settings: Settings = new Settings();
     export let dateForm: Date = new Date();
     let activityForm: Activity;
 

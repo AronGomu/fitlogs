@@ -3,7 +3,7 @@
     import { ActivityRangeSelectorData } from "../../shared/class/Activity/ActivityRangeSelectorData";
     import { createEventDispatcher } from "svelte";
 
-    export let nbDaysToShow: number;
+    export let nbDayShow: number;
     const dispatch = createEventDispatcher();
 
     const nbDaysChoice = {
@@ -15,7 +15,7 @@
     // init //
     let isRangeSelected: boolean = false;
     for (const key of Object.keys(nbDaysChoice)) {
-        if (nbDaysToShow === nbDaysChoice[key].nbDaysToShow) {
+        if (nbDayShow === nbDaysChoice[key].nbDaysToShow) {
             nbDaysChoice[key].setAsSelected(true);
             isRangeSelected = true;
             break;

@@ -5,15 +5,15 @@ import { getActivityListFromDB } from "../database/ActivityDatabase";
 
 let activityList: Activity[] = [];
 let activityAverageList: Activity[] = [];
-export let activityListWritable: Writable<Activity[]> = writable([]);
-activityListWritable.subscribe(aList => activityList = aList);
+export let activityNormalListWritable: Writable<Activity[]> = writable([]);
+activityNormalListWritable.subscribe(aList => activityList = aList);
 
 export let activityAverageListWritable: Writable<Activity[]> = writable([]);
 activityAverageListWritable.subscribe(aaList => activityAverageList = aaList);
 
 export async function updateActivityListWritable(settings: Settings): Promise<void> {
   activityList = await getActivityListFromDB(settings.nbDayShow, settings.sortActivityList);
-  activityListWritable.set(activityList);
+  activityNormalListWritable.set(activityList);
   updateActivityAverageListWritable(settings.nbDayAverage, activityList)
 }
 

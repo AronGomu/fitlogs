@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
-	import type { Activity } from "../shared/class/Activity/Activity";
-	import type { Setting } from "../shared/class/Settings";
-	import { loadSetting, settingStore } from "../shared/store/settingStore";
-	import { menuPath } from "../shared/store/menuPath";
-	import { activitiesStore, averageActivitiesStore, loadActivitiesStore } from "../shared/store/activityStore";
-	import ActivityCharts from "./ActivityCharts.svelte";
-	import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
-	import ActivityFooter from "../lib/Activity/ActivityFooter.svelte";
-	import type { Chart, ChartItem } from "chart.js";
-	import type { GraphType } from "../shared/enum/types";
-  	import { saveSettings } from "../shared/functions/database/settingDatabase";
+    import type { Chart, ChartItem } from "chart.js";
+    import type { Settings } from "../shared/class/Settings";
+    import type { Activity } from "../shared/class/Activity/Activity";
+    import type { GraphType } from "../shared/enum/types";
+    import { activityAverageListWritable, activityNormalListWritable, updateActivityListWritable } from "../shared/store/activityStore";
+    import { onMount } from "svelte";
+    import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
+    import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
+    import { saveSettings } from "../shared/database/settingDatabase";
+    import { menuPath } from "../shared/store/menuPath";
+    import { loadSetting, settingsWritable } from "../shared/store/settingStore";
+    import ActivityCharts from "./ActivityCharts.svelte";
 
-	let setting: Setting;
+	let settings: Settings;
 
 	let loadingActivities: boolean = true;
 	let loadingActivitiesChart: boolean = true;
@@ -28,8 +27,8 @@
 
   let loadingActivityList: boolean = true;
   let ActivityListShowed: Activity[];
-  activityListWritable.subscribe((ActivityList) => {
-    ActivityListShowed = ActivityList;
+  activityNormalListWritable.subscribe((activityNormalList) => {
+    ActivityListShowed = activityNormalList;
     loadingActivityList = false;
   });
 
@@ -52,22 +51,21 @@
 	})
 
 	function loadData() {
-		activitiesStore.subscribe((storeValue) => {
+		activityNormalListWritable.subscribe((activityNormalList) => {
 			loadingActivities = true;
-			activitiesShowed = storeValue;
+			activitiesShowed = activityNormalList;
 			loadingActivities = false;
 		});
 
-		averageActivitiesStore.subscribe((storeValue) => {
+		activityAverageListWritable.subscribe((activityAverageList) => {
 			loadingActivities = true;
-			averageActivitiesShowed = storeValue;
+			averageActivitiesShowed = activityAverageList;
 			loadingActivities = false;
 		});
 
-		settingStore.subscribe((storeValue) => {
-			if (storeValue) setting = storeValue;
+		settingsWritable.subscribe((s) => {
+			if (s) settings = s;
 			else return;
-			loadActivitiesStore(setting);
 		});
 
 	}
@@ -90,12 +88,12 @@
 
 		<div class="h-full overflow-y-auto">
 
-			{#if !loadingActivities && activitiesShowed && setting?.statsRangeSelected}
-				<ActivityRangeSelector
+			{#if !loadingActivities && activitiesShowed && settings.nbDayShow}
+				<ActivityRangeSelector nbDayShow={settings.nbDayShow}
 					on:click={ async (e) => {
 						const statsRangeSelected = e.detail.value
-						setting.statsRangeSelected = statsRangeSelected;
-						await saveSettings(setting);
+						settings.nbDayShow = statsRangeSelected;
+						await saveSettings(settings);
 						
 						if (lineChart) lineChart.destroy();
 						isMountingChart = true;
@@ -103,7 +101,7 @@
 						loadingActivities = true;
 						activitiesShowed = undefined;
 						averageActivitiesShowed = undefined
-						loadActivitiesStore(setting);
+						await updateActivityListWritable(settings);
 					}}
 				/>
 				{#if gtTab === 'normal'}
@@ -125,14 +123,11 @@
 		if (e.detail.value === 'normal') gtTab = 'normal';
 		if (e.detail.value === 'average') gtTab = 'average';
 	}} />
-
-	<ActivityFooter/>
-
 </div>
-<!-- 
 
+<!-- <div>
 	<div class="flex flex-row overflow-x-auto content-center">
-		<ActivityRangeSelector on:click={(e) => test(e)}/>
+		<ActivityRangeSelector nbDayShow={settings.nbDayShow} on:click={(e) => test(e)}/>
 	</div>
 
   <div class="w-full flex flex-row items-center mt-6 mb-4">
@@ -216,7 +211,7 @@
 				</table>
 			</div>
 		</div>
-	{/if}
+	{/if} 
 
 	{#if !activities}
 		<div class="h-full w-full flex items-center justify-center">
@@ -227,3 +222,4 @@
 	{/if}
 </div> 
 -->
+

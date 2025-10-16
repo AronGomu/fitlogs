@@ -3,13 +3,14 @@
     import type { Activity } from '../shared/class/Activity/Activity';
     import {
         activityAverageListWritable,
-        activityListWritable as activityNormalListWritable,
+        activityNormalListWritable,
         updateActivityListWritable,
     } from '../shared/store/activityStore';
     import ActivityRangeSelector from '../lib/Activity/ActivityRangeSelector.svelte';
     import type { Settings as Settings } from '../shared/class/Settings';
-    import { saveSettings, settingsWritable } from '../shared/store/settingsStore';
     import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/UtilsDate';
+    import { settingsWritable } from '../shared/store/settingStore';
+    import { saveSettings } from '../shared/database/settingDatabase';
 
 
     let settings: Settings;
@@ -49,11 +50,10 @@
     }
 
     function setActivityListToShow() {
-        if (settings.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
+        // if (settings.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
         // if (settings.typeActivityList === 'normal') activityListToShow = activityAverageListLoaded;
-        else if (settings.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
-        console.log("activityListToShow : ", activityListToShow);
-        
+        // else if (settings.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
+        // console.log("activityListToShow : ", activityListToShow);
     }
 
     async function updateActivityListShowed(nbDaysToShow: number) {
@@ -95,10 +95,8 @@
 
         <div class="h-full overflow-y-auto">
             
-
-            {#if !isLoadingActivityNormalList && activityNormalListLoaded}
-                <ActivityRangeSelector
-                    nbDaysToShow={settings.nbDayShow}
+            {#if !isLoadingActivityNormalList && activityNormalListLoaded && settings}
+                <ActivityRangeSelector nbDayShow={settings.nbDayShow}
                     on:click={(e) => updateActivityListShowed(e.detail.value)}
                 />
 
