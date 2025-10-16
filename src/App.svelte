@@ -11,11 +11,8 @@
 	import WorkoutPage from "./routes/WorkoutPage.svelte";
 	import HomePage from "./routes/HomePage.svelte";
 	import AboutPage from "./routes/AboutPage.svelte";
-	import ActivityList from "./routes/ActivityListPage.svelte";
-	import ActivityPlanPage from "./routes/ActivityPlanPage.svelte";
 	import ActivityStatsPage from "./routes/ActivityStatsPage.svelte";
 	import ActivityListPage from "./routes/ActivityListPage.svelte";
-	import ActivityChartsPage from "./routes/ActivityChartsPage.svelte";
 </script>
 
 <div class="h-screen flex flex-col">
