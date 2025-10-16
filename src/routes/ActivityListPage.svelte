@@ -11,6 +11,7 @@
     import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/UtilsDate';
     import { settingsWritable } from '../shared/store/settingStore';
     import { saveSettings } from '../shared/database/settingDatabase';
+    import { pageTitleWritable } from '../shared/store/pageTitleStore';
 
 
     let settings: Settings;
@@ -24,6 +25,8 @@
 
     const today = formatDateToYYYYMMDDNumber(new Date());
     const yesterday = formatDateToYYYYMMDDNumber(new Date(new Date().getDate() - 1));
+
+    pageTitleWritable.set("HomePage");
 
     // init //
     settingsWritable.subscribe((s) => {
