@@ -23,4 +23,4 @@
 	}
 </script>
 
-<input type="date" class="input" bind:value={internal} on:input={e =>  handleInput(e) } />
+<input type="date" class="input text-center" bind:value={internal} on:input={e =>  handleInput(e) } />

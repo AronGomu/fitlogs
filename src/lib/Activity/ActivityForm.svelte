@@ -66,24 +66,28 @@
     <DateInput bind:date={dateForm} on:input={ e => updateDateForm(activityList, e.detail, activityForm) } />
 
     {#if activityForm && dateForm}
-        <div class="mt-2">
-            <InputNumber label="Weight" placeholder="Weight" className="input w-24  text-left"
-                value={activityForm.weight} metric={settings.wm}
+        <div class="mt-6 w-full">
+            <InputNumber 
+                label={"Weight (" + settings.wm + ")"}
+                placeholder={"Weight (" + settings.wm + ")"}
+                value={activityForm.weight}
                 on:input={e =>  activityForm.weight = e.detail.value}
                 on:enterKey={() => saveActivity(activityForm)}
-            />
+            /> 
         </div>
         
-        <div class="mt-2">
-            <InputNumber label="Calories" placeholder="Calories" className="input w-24 mt-2 text-left"
-            value={activityForm.calories}
+        <div class="mt-2 w-full">
+            <InputNumber label="Calories" 
+                placeholder="Calories" 
+                value={activityForm.calories}
                 on:input={e => activityForm.calories = e.detail.value}
                 on:enterKey={() => saveActivity(activityForm)}
             />
         </div>
 
-        <div class="mt-2">
-            <InputNumber label="Steps" placeholder="Steps" className="input w-24 mt-2 text-left" 
+        <div class="mt-2 w-full">
+            <InputNumber label="Steps" 
+                placeholder="Steps" 
                 value={activityForm.steps}
                 on:input={e => activityForm.steps = e.detail.value}
                 on:enterKey={() => saveActivity(activityForm)}

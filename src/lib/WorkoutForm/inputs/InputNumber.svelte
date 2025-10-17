@@ -2,23 +2,19 @@
 
 <script lang="ts">
     import { createEventDispatcher, onMount } from 'svelte';
-    import { getReducedStringMetric, type WeightMetric } from '../../../shared/enum/WeightMetrics';
+    import { getReducedStringMetric, WeightMetric } from '../../../shared/enum/WeightMetrics';
     import { selectWholeText } from '../../../shared/functions/Utils';
 
     const dispatch = createEventDispatcher();
 
     export let label: string = null;
     export let placeholder: string = '';
-    export let className: string = '';
-    export let metric: WeightMetric = null;
     export let value: number;
+    $: if (value) if (value === 0) value = null;
 
     let inputHTMLElement: HTMLInputElement;
 
-    function handleFocus(e) {
-        console.log(e)
-        selectWholeText(e);
-    }
+    function handleFocus(e) { selectWholeText(e); }
 
     function handleKeyPress(e) {
         if (e.key === 'Enter') dispatch('enterKey');
@@ -44,11 +40,24 @@
     }
 </script>
 
-<div class="form-control">
-    {#if label}
-        <span class="label-text">{label}</span>
-    {/if}
-    {#if !metric}
+<div class="w-full flex flex-row justify-between items-center">
+    {#if label} <div class="badge badge-primary w-3/4 mr-4">{label}</div> {/if}
+    <div>
+        <input type="text" class="input text-center"
+            {placeholder}
+            bind:value
+            bind:this={inputHTMLElement}
+            on:focus={handleFocus}
+            on:keypress={handleKeyPress}
+            on:input={handleInput}
+        />
+    </div>
+</div>
+
+
+
+
+    <!-- {#if !metric}
         <input
             type="text"
             {placeholder}
@@ -70,23 +79,13 @@
                 on:focus={handleFocus}
                 on:keypress={handleKeyPress}
                 on:input={handleInput}
-            />
-            {#if value || value == 0}
+            /> -->
+            <!-- {#if value || value == 0}
                 <div
                     class="absolute top-0 right-0 bottom-0 left-1/2 bg-base-200 ml-0 rounded-r-lg px-2 flex items-center"
                 >
                     {getReducedStringMetric(metric)}
                 </div>
-            {/if}
-        </div>
-    {/if}
-</div>
-
-<style>
-    /** Style to add for the base input. */
-    .base-override {
-        height: 2rem;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-</style>
+            {/if} -->
+        <!-- </div> -->
+    <!-- {/if} -->

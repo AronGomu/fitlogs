@@ -136,7 +136,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center m-4 justify-around">
+    <div class="flex  m-4 justify-around">
         <button class="btn btn-primary" on:click={() => showActivityFormDialog(today)}>
                 Log Activity
         </button>
