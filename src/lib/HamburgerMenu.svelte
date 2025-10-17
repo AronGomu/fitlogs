@@ -53,7 +53,13 @@
 >
 	<li>
 		<button class="btn btn-xl" on:click={ () => { goto("/fitlogs/activity") }} >
-			<span>Activity List</span>
+			<span>Activities List</span>
+		</button>
+	</li>
+
+	<li>
+		<button class="btn btn-xl" on:click={ () => { goto("/fitlogs/stats") }} >
+			<span>Activities Statistics</span>
 		</button>
 	</li>
 

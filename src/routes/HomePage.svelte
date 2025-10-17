@@ -9,7 +9,11 @@
 
 	<button class="btn btn-xl btn-primary mt-4"
 		on:click={() => { navigate(`/fitlogs/activity`) }}
-	> ActivityList </button>
+	> Activity List </button>
+
+	<button class="btn btn-xl btn-primary mt-4"
+		on:click={() => { navigate(`/fitlogs/stats`) }}
+	> Activity Statistics </button>
 
 	<button class="btn btn-xl btn-primary mt-4"
 		on:click={() => { navigate(`/fitlogs/settings`) }}

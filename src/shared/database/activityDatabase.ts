@@ -100,24 +100,24 @@ export async function deleteActivityFromDatabase(date: number) {
 	return null;
 }
 
-// export async function loadActivityList(ActivityList: Activity[], resetDB: boolean): Promise<void> {
-// 	const db = await openDatabase();
-// 	const tx = db.transaction("activity-store", "readwrite");
-// 	const store = tx.objectStore("activity-store");
+export async function loadActivityList(ActivityList: Activity[], resetDB: boolean): Promise<void> {
+	const db = await openDatabase();
+	const tx = db.transaction("activity-store", "readwrite");
+	const store = tx.objectStore("activity-store");
 
-// 	if (resetDB) {
-// 		let cursor = await store.openCursor();
-// 		while (cursor) {
-// 			cursor.delete();
-// 			cursor = await cursor.continue();
-// 		}
-// 	}
+	if (resetDB) {
+		let cursor = await store.openCursor();
+		while (cursor) {
+			cursor.delete();
+			cursor = await cursor.continue();
+		}
+	}
 
-// 	for (let i = 0; i < ActivityList.length; i++) {
-// 		const a = ActivityList[i];
-// 		store.add(a);
-// 	}
-// }
+	for (let i = 0; i < ActivityList.length; i++) {
+		const a = ActivityList[i];
+		store.add(a);
+	}
+}
 
 export async function getActivityFromDatabase(date: number) {
   const db = await openDatabase();

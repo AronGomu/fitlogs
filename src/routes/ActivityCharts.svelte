@@ -5,7 +5,7 @@
   	import type Chart from "chart.js/auto";
   	import type { ChartItem } from "chart.js/auto";
 
-	export let activitiesShowed: Activity[] = null;
+	export let activityListShowed: Activity[] = null;
 	export let loadingActivitiesChart: boolean = true;
 	export let isMountingChart: boolean = true;
 	export let lineChart: Chart = undefined;
@@ -18,7 +18,7 @@
 
 	function loadData() {
 		if (!chartItem) chartItem = document.getElementById('myChart').getContext('2d');
-		const cp = createAxesForChart(chartItem, activitiesShowed);
+		const cp = createAxesForChart(chartItem, activityListShowed);
 		lineChart = buildLineChart(cp);
 		loadingActivitiesChart = false;
 	}
@@ -27,7 +27,7 @@
 
 <canvas id="myChart"></canvas>
 
-{#if isMountingChart || loadingActivitiesChart || !activitiesShowed}
+{#if isMountingChart || loadingActivitiesChart || !activityListShowed}
 	<div class="flex items-center justify-center">
 		<span class="loading loading-spinner loading-xl"></span>
 	</div>

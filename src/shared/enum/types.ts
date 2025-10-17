@@ -1,1 +1,1 @@
-export type GraphType = 'normal' | 'average';
+export type ActivityType = 'normal' | 'average';

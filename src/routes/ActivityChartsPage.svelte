@@ -69,9 +69,9 @@
 					}}
 				/>
 				{#if gtTab === 'normal'}
-					<ActivityCharts {activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+					<ActivityCharts {activityListShowed: activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
 				{:else if gtTab === 'average'}
-					<ActivityCharts activitiesShowed={aaListShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
+					<ActivityCharts activityListShowed={aaListShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
 				{/if}
 
 			{:else}

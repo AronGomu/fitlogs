@@ -1,5 +1,6 @@
 import { Activity } from "../class/Activity/Activity"
 import { getDaysInMonth, getRandomNumber, randomBoolean, truncateNumber } from "../functions/Utils";
+import { formatDateToYYYYMMDDNumber } from "../functions/UtilsDate";
 
 export type Progression = 'Bulk' | 'Cut' | 'Maintenance';
 
@@ -9,33 +10,34 @@ let weightGoal: number;
 let lastWeightGained: number;
 let daysLeft: number;
 
-// export function generateMonthEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
-// 	const ActivityList = [];
-// 	for (let d = 1; d <= day; d++) {
-// 		if (Math.random() < 0.5) {
-// 			const a = new Activity(d, null, null, null);
-// 			activities.push(a);
-// 		}
-// 	}
-// 	return ActivityList;
-// }
+export function generateMonthEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
+	const ActivityList = [];
+	for (let d = 1; d <= day; d++) {
+		if (Math.random() < 0.5) {
+			const date = new Date(year, month, d)
+			const a = new Activity(formatDateToYYYYMMDDNumber(date), null, null, null);
+			ActivityList.push(a);
+		}
+	}
+	return ActivityList;
+}
 
-// export function generateYearEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
-// 	const ActivityList = [];
-// 	for (let m = 1; m <= month; m++) {
-// 		let mActivityList = [];
-// 		if (m !== month) {
-// 			const dNumber = getDaysInMonth(year, m);
-// 			mActivityList = generateMonthEmptyRandomActivityList(year, m,  dNumber);
-// 			ActivityList.push(...mActivityList);
-// 		} else {
-// 			mActivityList = generateMonthEmptyRandomActivityList(year, m,  day);
-// 			ActivityList.push(...mActivityList);
-// 			break;
-// 		}
-// 	}
-// 	return ActivityList;
-// }
+export function generateYearEmptyRandomActivityList(year: number, month: number, day: number): Activity[] {
+	const ActivityList = [];
+	for (let m = 1; m <= month; m++) {
+		let mActivityList = [];
+		if (m !== month) {
+			const dNumber = getDaysInMonth(year, m);
+			mActivityList = generateMonthEmptyRandomActivityList(year, m,  dNumber);
+			ActivityList.push(...mActivityList);
+		} else {
+			mActivityList = generateMonthEmptyRandomActivityList(year, m,  day);
+			ActivityList.push(...mActivityList);
+			break;
+		}
+	}
+	return ActivityList;
+}
 
 export function fillActivity(a: Activity) {
 	let wFluctuation: number;
@@ -81,50 +83,50 @@ export function setNewGoal(i: number) {
 
 
 /** Generate semi-realistic random ActivityList for the last n years of a lifter. */
-// export function generateRandomActivityList(n: number, startingWeight: number): Activity[] {
-// 	const today = new Date();
-// 	const year = today.getFullYear();
-// 	const month = today.getMonth() + 1;
-// 	const day = today.getDate();
+export function generateRandomActivityList(n: number, startingWeight: number): Activity[] {
+	const today = new Date();
+	const year = today.getFullYear();
+	const month = today.getMonth() + 1;
+	const day = today.getDate();
 
-// 	const ActivityList = [];
+	const ActivityList = [];
 
-// 	// generate empty activities
-// 	for (let i = n; i >= 0; i--) {
-// 		const yearToGenerate = year - i;
-// 		if (yearToGenerate === year) ActivityList.push(...generateYearEmptyRandomActivityList(year, month, day));
-// 		else ActivityList.push(
-// 			...generateYearEmptyRandomActivityList(
-// 				yearToGenerate, 12, getDaysInMonth(yearToGenerate, 12)
-// 			)
-// 		);
-// 	}
+	// generate empty activities
+	for (let i = n; i >= 0; i--) {
+		const yearToGenerate = year - i;
+		if (yearToGenerate === year) ActivityList.push(...generateYearEmptyRandomActivityList(year, month, day));
+		else ActivityList.push(
+			...generateYearEmptyRandomActivityList(
+				yearToGenerate, 12, getDaysInMonth(yearToGenerate, 12)
+			)
+		);
+	}
 
-// 	p = 'Maintenance';
-// 	currentWeight = startingWeight;
-// 	weightGoal = currentWeight;
-// 	lastWeightGained = 5;
-// 	daysLeft = 7;
+	p = 'Maintenance';
+	currentWeight = startingWeight;
+	weightGoal = currentWeight;
+	lastWeightGained = 5;
+	daysLeft = 7;
 
-// 	for (let i = 0; i < ActivityList.length; i++) {
-// 		const a = ActivityList[i];
+	for (let i = 0; i < ActivityList.length; i++) {
+		const a = ActivityList[i];
 
-// 		if ((isEndBulking()) || (isEndCutting()) || (isEndMaintening())) setNewGoal(i);
+		if ((isEndBulking()) || (isEndCutting()) || (isEndMaintening())) setNewGoal(i);
 
-// 		fillActivity(a);
-// 		daysLeft--;
+		fillActivity(a);
+		daysLeft--;
 
-// 	}
+	}
 
-// 	console.log(ActivityList);
+	console.log(ActivityList);
 	
 
-// 	return ActivityList;
+	return ActivityList;
 
-// 	function isEndBulking(): boolean { return p === 'Bulk' && currentWeight > weightGoal; }
-// 	function isEndCutting(): boolean { return p === 'Cut' && currentWeight < weightGoal; }
-// 	function isEndMaintening(): boolean { return p === 'Maintenance' && daysLeft === 0; }
-// }
+	function isEndBulking(): boolean { return p === 'Bulk' && currentWeight > weightGoal; }
+	function isEndCutting(): boolean { return p === 'Cut' && currentWeight < weightGoal; }
+	function isEndMaintening(): boolean { return p === 'Maintenance' && daysLeft === 0; }
+}
 
 
 // export const baseActivityList: Activity[] = [

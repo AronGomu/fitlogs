@@ -25,7 +25,6 @@
     const today = formatDateToYYYYMMDDNumber(new Date());
     const yesterday = formatDateToYYYYMMDDNumber(new Date(new Date().getDate() - 1));
 
-
     // init //
     pageTitleWritable.set("Activity List");
     settingsWritable.subscribe((s: Settings) => {
@@ -53,14 +52,14 @@
     }
 
     function setActivityListToShow(s: Settings) {
-        if (s.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
-        else if (s.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
+        if (s.typeActivityStats === 'normal') activityListToShow = activityNormalListLoaded;
+        else if (s.typeActivityStats === 'average') activityListToShow = activityAverageListLoaded;
     }
 
     async function updateActivityListShowed(s: Settings, nbDaysToShow: number) {
         s.nbDayShow = nbDaysToShow;
         saveSettings(s);
-        isLoadingActivityNormalList = false;
+        isLoadingActivityNormalList = true;
         await updateActivityListWritable(s);
         isLoadingActivityNormalList = false;
     }

@@ -1,16 +1,17 @@
 <script lang="ts">
-    import { deleteDatabase } from '../shared/functions/Database';
+    import { generateRandomActivityList } from '../shared/data/ActivityBase';
+    import { loadActivityList } from '../shared/database/ActivityDatabase';
 </script>
 
 <div class="flex flex-col items-center">
-    <button
+    <!-- <button
         class="btn btn-error m-4 w-40"
         on:click={() => { deleteDatabase(); location.reload(); }}
-    > DELETE ALL DBS </button>
+    > DELETE ALL DBS </button> -->
 
-    <!-- <button class="btn btn-warning m-4 w-40"
+    <button class="btn btn-warning m-4 w-40"
         on:click={() => loadActivityList(generateRandomActivityList(10, 80), true) }
-    > POPULATE ActivityList </button> -->
+    > POPULATE ActivityList </button>
 
     <!-- <button class="btn btn-warning m-4 w-40"
         on:click={async () => {

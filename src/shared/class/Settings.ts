@@ -1,3 +1,4 @@
+import type { ActivityType } from "../enum/types";
 import { WeightMetric } from "../enum/WeightMetrics";
 
 export class Settings {
@@ -6,7 +7,8 @@ export class Settings {
     public nbDayShow: number = 30,
     public sortActivityList:  "asc" | "desc" = "asc",
     public nbDayAverage: number = 7,
-    public typeActivityList: 'normal' | 'average' = 'normal',
+    public typeActivityList: ActivityType = 'normal',
+    public typeActivityStats: ActivityType = 'normal',
   ) {}
 }
 
@@ -19,5 +21,6 @@ export function getRealSettings(settings: Settings): Settings {
   realSettings.sortActivityList = settings.sortActivityList;
   realSettings.nbDayAverage = settings.nbDayAverage;
   realSettings.typeActivityList = settings.typeActivityList;
+
   return realSettings;
 }

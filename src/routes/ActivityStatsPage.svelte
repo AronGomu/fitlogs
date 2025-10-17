@@ -1,128 +1,132 @@
 <script lang="ts">
-    import type { Chart, ChartItem } from "chart.js";
-    import type { Settings } from "../shared/class/Settings";
-    import type { Activity } from "../shared/class/Activity/Activity";
-    import type { GraphType } from "../shared/enum/types";
-    import { activityAverageListWritable, activityNormalListWritable, updateActivityListWritable } from "../shared/store/activityStore";
-    import { onMount } from "svelte";
-    import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
-    import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
-    import { saveSettings } from "../shared/database/SettingsDatabase";
-    import { menuPath } from "../shared/store/menuPath";
-    import { loadSetting, settingsWritable } from "../shared/store/settingsStore";
-    import ActivityCharts from "./ActivityCharts.svelte";
+    import type { Chart, ChartItem } from 'chart.js';
+    import type { Settings } from '../shared/class/Settings';
+    import type { Activity } from '../shared/class/Activity/Activity';
+    import type { ActivityType } from '../shared/enum/types';
+    import {
+        activityAverageListWritable,
+        activityNormalListWritable,
+        updateActivityListWritable,
+    } from '../shared/store/activityStore';
+    import ActivityAverageSelector from '../lib/Activity/ActivityAverageSelector.svelte';
+    import ActivityRangeSelector from '../lib/Activity/ActivityRangeSelector.svelte';
+    import { saveSettings } from '../shared/database/SettingsDatabase';
+    import { settingsWritable } from '../shared/store/settingsStore';
+    import ActivityCharts from './ActivityCharts.svelte';
 
-	let settings: Settings;
+    let settings: Settings;
 
-	let loadingActivities: boolean = true;
-	let loadingActivitiesChart: boolean = true;
-	let isMountingChart: boolean = true;
-	let lineChart: Chart = undefined;
-	let chartItem: ChartItem = undefined;
-	let activitiesShowed: Activity[];
-	let averageActivitiesShowed: Activity[];
+    let loadingActivities: boolean = true;
+    let loadingActivitiesChart: boolean = true;
+    let isMountingChart: boolean = true;
+    let lineChart: Chart = undefined;
+    let chartItem: ChartItem = undefined;
+    let activityListShowed: Activity[];
+    let averageActivityListLoaded: Activity[];
 
-	let gtTab: GraphType = 'average';
+    let loadingActivityList: boolean = true;
+	let activityNormalList: Activity[] = []
+	let activityAverageList: Activity[] = []
+    let ActivityListShowed: Activity[];
+    activityNormalListWritable.subscribe((activityNormalList) => {
+        ActivityListShowed = activityNormalList;
+        loadingActivityList = false;
+    });
 
+    // init //
+    settingsWritable.subscribe(s => {
+        if (s) {
+            settings = s;
+            loadData(s);
+        }
+    });
+    // init //
 
-  let loadingActivityList: boolean = true;
-  let ActivityListShowed: Activity[];
-  activityNormalListWritable.subscribe((activityNormalList) => {
-    ActivityListShowed = activityNormalList;
-    loadingActivityList = false;
-  });
+    function loadData(s: Settings) {
+        activityNormalListWritable.subscribe(activityNormalList => {
+            loadingActivities = true;
+            activityNormalList  = activityNormalList;
+            loadingActivities = false;
+            setActivityListToShow(s, activityNormalList)
+        });
 
+        activityAverageListWritable.subscribe(activityAverageList => {
+            loadingActivities = true;
+            activityAverageList = activityAverageList;
+            loadingActivities = false;
+            setActivityListToShow(s, activityAverageList)
+        });
+    }
 
-	// info to show
-	let averageCalories: number;
-	let averageWeight: number;
-	let averageSteps: number;
-	let averageCaloriesBurned: number;
-	let averageTDEE: number;
+    function setActivityListToShow(s: Settings, activityList: Activity[]) {
+        console.log(s);
+        console.log(activityList);
+        
+        if (s.typeActivityList === 'normal') activityListShowed = activityList;
+        else if (s.typeActivityList === 'average') activityListShowed = activityAverageList;
+    }
 
-	let totalAverageCaloriesBurned: number;
-	let totalAverageWeightLoss: number;
-	let totalAverageSteps: number;
+    async function updateActivityListShowed(s: Settings, nbDaysToShow: number) {
+        s.nbDayShow = nbDaysToShow;
+        saveSettings(s);
+        loadingActivities = true;
+        await updateActivityListWritable(s);
+        loadingActivities = false;
+    }
 
-	onMount(async () => {
-		menuPath.set("Statistics")
-		loadData();
-		loadSetting();
-	})
+    function swapToNormalActivityList() {
+        activityListShowed = activityNormalList;
+    }
 
-	function loadData() {
-		activityNormalListWritable.subscribe((activityNormalList) => {
-			loadingActivities = true;
-			activitiesShowed = activityNormalList;
-			loadingActivities = false;
-		});
+    function swapToAverageActivityList() {
+        activityListShowed = activityAverageList;
+    }
 
-		activityAverageListWritable.subscribe((activityAverageList) => {
-			loadingActivities = true;
-			averageActivitiesShowed = activityAverageList;
-			loadingActivities = false;
-		});
-
-		settingsWritable.subscribe((s) => {
-			if (s) settings = s;
-			else return;
-		});
-
-	}
-
-	function convertWeightIntoCalories(weight: number): number {
-		return weight * 7700;
-	}
-
-	function determineWeightLossLabel(): string {
-		if (!totalAverageWeightLoss) return "";
-		if (totalAverageWeightLoss < 0) return "gained";
-		if (totalAverageWeightLoss > 0) return "losed";
-		else return "";
-	}
+    
 </script>
 
 <div class="h-full w-full flex flex-col justify-between">
+    <div class="flex-1 w-full flex flex-col">
+        <div class="h-full overflow-y-auto">
+            {#if !loadingActivities && activityListShowed && settings && settings.nbDayShow}
 
-	<div class="flex-1 w-full flex flex-col">
+                <ActivityRangeSelector nbDayShow={settings.nbDayShow}
+                    on:click={async (e) => {
+                        const statsRangeSelected = e.detail.value;
+                        settings.nbDayShow = statsRangeSelected;
+                        await saveSettings(settings);
 
-		<div class="h-full overflow-y-auto">
+                        if (lineChart) lineChart.destroy();
+                        isMountingChart = true;
+                        loadingActivitiesChart = true;
+                        loadingActivities = true;
+                        activityListShowed = undefined;
+                        averageActivityListLoaded = undefined;
+                        await updateActivityListWritable(settings);
+                    }}
+                />
 
-			{#if !loadingActivities && activitiesShowed && settings.nbDayShow}
-				<ActivityRangeSelector nbDayShow={settings.nbDayShow}
-					on:click={ async (e) => {
-						const statsRangeSelected = e.detail.value
-						settings.nbDayShow = statsRangeSelected;
-						await saveSettings(settings);
-						
-						if (lineChart) lineChart.destroy();
-						isMountingChart = true;
-						loadingActivitiesChart = true;
-						loadingActivities = true;
-						activitiesShowed = undefined;
-						averageActivitiesShowed = undefined
-						await updateActivityListWritable(settings);
-					}}
+				<ActivityCharts
+					activityListShowed={activityListShowed}
+					{loadingActivitiesChart}
+					{isMountingChart}
+					{lineChart}
+					{chartItem}
 				/>
-				{#if gtTab === 'normal'}
-					<ActivityCharts {activitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
-				{:else if gtTab === 'average'}
-					<ActivityCharts activitiesShowed={averageActivitiesShowed} {loadingActivitiesChart} {isMountingChart} {lineChart} {chartItem}/>
-				{/if}
+            {:else}
+                <div class="flex items-center justify-center">
+                    <span class="loading loading-spinner loading-xl"></span>
+                </div>
+            {/if}
+        </div>
+    </div>
 
-			{:else}
-				<div class="flex items-center justify-center">
-					<span class="loading loading-spinner loading-xl"></span>
-				</div>
-			{/if}
-
-		</div>
-	</div>
-
-	<ActivityAverageSelector on:graphSelect={(e) => {
-		if (e.detail.value === 'normal') gtTab = 'normal';
-		if (e.detail.value === 'average') gtTab = 'average';
-	}} />
+    <ActivityAverageSelector settings={settings}
+        on:graphSelect={(e) => {
+            if (e.detail.value === 'normal') swapToNormalActivityList() 
+            if (e.detail.value === 'average') swapToAverageActivityList() 
+        }}
+    />
 </div>
 
 <!-- <div>
@@ -223,3 +227,14 @@
 </div> 
 -->
 
+<!-- 
+let averageCalories: number;
+let averageWeight: number;
+let averageSteps: number;
+let averageCaloriesBurned: number;
+let averageTDEE: number;
+
+let totalAverageCaloriesBurned: number;
+let totalAverageWeightLoss: number;
+let totalAverageSteps: number; 
+-->
