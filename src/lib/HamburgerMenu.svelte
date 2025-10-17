@@ -6,13 +6,16 @@
 	let showMenu: boolean = false;
 
 	let mp: string = null;
-	menuPath.subscribe((newMenuPath) => (mp = newMenuPath));
 
 	let pageTitle: string = "HomePage";
+	
+
+	// init //
+	menuPath.subscribe((newMenuPath) => (mp = newMenuPath));
 	pageTitleWritable.subscribe(pt => {
-		console.log("pageTitleWritable");
 		pageTitle = pt;
 	});
+	// init //
 
 	function goto(path: string) {
 		navigate(path);
@@ -35,13 +38,13 @@
 
   <div class="flex">
     <a href="/" class="text-xl mr-2">FitLogs</a>
-	{#if mp}
+	{#if pageTitle}
 		<a class="text-xl mr-2">-</a>
-		<a class="text-xl">{mp}</a>
+		<a class="text-xl">{ pageTitle }</a>
 	{/if}
   </div>
 
-  <div class="text-xl ml-4">{ pageTitle }</div>
+  <div class="text-xl ml-4"></div>
 </div>
 
 

@@ -15,7 +15,6 @@
     export let dateForm: Date = new Date();
     let activityForm: Activity;
 
-    // UI Stuff
     let isOverridingExistingActivity: boolean = false;
     let isYesterdayFlag = false;
     let isActivityValid: boolean = false;

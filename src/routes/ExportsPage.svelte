@@ -4,7 +4,7 @@
     import { getWorkoutsFromDatabase } from '../shared/database/workout';
     import { navigate } from 'svelte-routing';
     import { exportActivityList } from '../shared/class/Activity/Activity';
-    import { settingsWritable } from '../shared/store/settingStore';
+    import { settingsWritable } from '../shared/store/settingsStore';
 
     let settings: Settings = new Settings();
     settingsWritable.subscribe((s) => (settings = s));

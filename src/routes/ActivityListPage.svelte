@@ -9,10 +9,9 @@
     import ActivityRangeSelector from '../lib/Activity/ActivityRangeSelector.svelte';
     import type { Settings as Settings } from '../shared/class/Settings';
     import { formatDateToYYYYMMDDNumber, getDateFromYYYYMMDDNumber } from '../shared/functions/UtilsDate';
-    import { settingsWritable } from '../shared/store/settingStore';
-    import { saveSettings } from '../shared/database/settingDatabase';
+    import { settingsWritable } from '../shared/store/settingsStore';
+    import { saveSettings } from '../shared/database/SettingsDatabase';
     import { pageTitleWritable } from '../shared/store/pageTitleStore';
-
 
     let settings: Settings;
 
@@ -26,44 +25,43 @@
     const today = formatDateToYYYYMMDDNumber(new Date());
     const yesterday = formatDateToYYYYMMDDNumber(new Date(new Date().getDate() - 1));
 
-    pageTitleWritable.set("HomePage");
 
     // init //
-    settingsWritable.subscribe((s) => {
+    pageTitleWritable.set("Activity List");
+    settingsWritable.subscribe((s: Settings) => {
+        if (!s) return;
         settings = s;
-        subscribeForActivityList();
-        subscribeForActivityAverageList();
+        subscribeForActivityList(s);
+        subscribeForActivityAverageList(s);
     });
     // init //
 
-    function subscribeForActivityList() {
+    function subscribeForActivityList(s: Settings) {
         activityNormalListWritable.subscribe((activityNormalList) => {
             activityNormalListLoaded = activityNormalList;
-            setActivityListToShow();
+            setActivityListToShow(s);
             isLoadingActivityNormalList = false;
         });
     }
 
-    function subscribeForActivityAverageList() {
+    function subscribeForActivityAverageList(s: Settings) {
         activityAverageListWritable.subscribe((activityAverageList) => {
             activityAverageListLoaded = activityAverageList;
-            setActivityListToShow();
+            setActivityListToShow(s);
             isLoadingActivityAverageList = false;
         });
     }
 
-    function setActivityListToShow() {
-        // if (settings.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
-        // if (settings.typeActivityList === 'normal') activityListToShow = activityAverageListLoaded;
-        // else if (settings.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
-        // console.log("activityListToShow : ", activityListToShow);
+    function setActivityListToShow(s: Settings) {
+        if (s.typeActivityList === 'normal') activityListToShow = activityNormalListLoaded;
+        else if (s.typeActivityList === 'average') activityListToShow = activityAverageListLoaded;
     }
 
-    async function updateActivityListShowed(nbDaysToShow: number) {
-        settings.nbDayShow = nbDaysToShow;
-        saveSettings(settings);
+    async function updateActivityListShowed(s: Settings, nbDaysToShow: number) {
+        s.nbDayShow = nbDaysToShow;
+        saveSettings(s);
         isLoadingActivityNormalList = false;
-        await updateActivityListWritable(settings);
+        await updateActivityListWritable(s);
         isLoadingActivityNormalList = false;
     }
 
@@ -98,9 +96,9 @@
 
         <div class="h-full overflow-y-auto">
             
-            {#if !isLoadingActivityNormalList && activityNormalListLoaded && settings}
+            {#if !isLoadingActivityNormalList && activityListToShow && activityListToShow.length > 0 && settings}
                 <ActivityRangeSelector nbDayShow={settings.nbDayShow}
-                    on:click={(e) => updateActivityListShowed(e.detail.value)}
+                    on:click={(e) => updateActivityListShowed(settings, e.detail.value)}
                 />
 
                 <div class="h-0 w-full flex flex-col">
@@ -126,10 +124,14 @@
                         </tbody>
                     </table>
                 </div>
-            {:else}
+            {:else if isLoadingActivityNormalList }
                 <div class="flex items-center justify-center">
-                    <span class="loading loading-spinner loading-xl"></span>
+                    <span class="h-full w-full loading loading-spinner loading-xl"></span>
                 </div>
+            {:else if !settings}
+                <div class="h-full w-full flex items-center justify-center">No Settings !</div>
+            {:else}
+                <div class="h-full w-full flex items-center justify-center">No Activities !</div>
             {/if}
         </div>
     </div>

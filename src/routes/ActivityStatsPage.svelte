@@ -7,9 +7,9 @@
     import { onMount } from "svelte";
     import ActivityAverageSelector from "../lib/Activity/ActivityAverageSelector.svelte";
     import ActivityRangeSelector from "../lib/Activity/ActivityRangeSelector.svelte";
-    import { saveSettings } from "../shared/database/settingDatabase";
+    import { saveSettings } from "../shared/database/SettingsDatabase";
     import { menuPath } from "../shared/store/menuPath";
-    import { loadSetting, settingsWritable } from "../shared/store/settingStore";
+    import { loadSetting, settingsWritable } from "../shared/store/settingsStore";
     import ActivityCharts from "./ActivityCharts.svelte";
 
 	let settings: Settings;

@@ -8,13 +8,9 @@
     const dispatch = createEventDispatcher();
 
     export let label: string = null;
-    /** Default placeholder of the input. */
     export let placeholder: string = '';
-    /** Add css class to the input. */
     export let className: string = '';
-    /** Text to put next to the number in the template. */
     export let metric: WeightMetric = null;
-    /** Initial value of the input. */
     export let value: number;
 
     let inputHTMLElement: HTMLInputElement;

@@ -10,7 +10,7 @@
   	import type { GraphType } from "../shared/enum/types";
     import { activityAverageListWritable, activityNormalListWritable, updateActivityListWritable } from "../shared/store/activityStore";
     import type { Settings } from "../shared/class/Settings";
-    import { settingsWritable } from "../shared/store/settingStore";
+    import { settingsWritable } from "../shared/store/settingsStore";
 
 	let loadingActivities: boolean = true;
 	let loadingActivitiesChart: boolean = true;

@@ -1,36 +1,19 @@
 import { deleteDB, openDB, type DBSchema, type IDBPDatabase } from "idb";
-import { Workout } from "../class/Workout/Workout";
-import type { Lift } from "../class/Lift/Lift";
-import type { Program } from "../class/Program/Program";
 import { Activity } from "../class/Activity/Activity";
 import type { Settings } from "../class/Settings";
 
 const DB_NAME = "db";
 
-export type StoreName =
-  | "workout-store"
-  | "lift-store"
-  | "program-store"
-  | "settings-store"
-  | "activity-store";
+export type All = Settings | Activity;
+export type StoreName = "settings-store" | "activity-store";
 
-export type databaseObject = Workout | Lift | Program | Activity;
+export type databaseObject = Activity;
 
-// Define the database schema
 export interface Database extends DBSchema {
-  "workout-store": { key: number; value: any };
-  "lift-store": { key: number; value: any };
-  "program-store": { key: number; value: any };
   "settings-store": { key: number; value: Settings};
   "activity-store": { key: number; value: Activity};
 }
 
-// GENERIC FUNCTIONS
-
-/**
- * Opens the IndexedDB database and returns a promise of the database instance.
- * @returns {Promise<IDBPDatabase<Database>>} - Promise of the IndexedDB database instance.
- */
 export async function openDatabase(): Promise<IDBPDatabase<Database>> {
   if (typeof indexedDB === "undefined") {
     console.error("indexedDB is UNDEFINED");
@@ -39,17 +22,6 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
 
   return openDB<Database>(DB_NAME, 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains("workout-store")) {
-        db.createObjectStore("workout-store", { autoIncrement: true });
-      }
-
-      if (!db.objectStoreNames.contains("lift-store")) {
-        db.createObjectStore("lift-store", { autoIncrement: true });
-      }
-
-      if (!db.objectStoreNames.contains("program-store")) {
-        db.createObjectStore("program-store", { autoIncrement: true });
-      }
 
       if (!db.objectStoreNames.contains("settings-store")) {
         db.createObjectStore("settings-store", { keyPath: "key" });
@@ -62,11 +34,11 @@ export async function openDatabase(): Promise<IDBPDatabase<Database>> {
   });
 }
 
-export async function addToDatabase<T>(
+export async function addToDatabase(
   storeName: StoreName,
-  value: T,
+  value: All,
   key?: number
-): Promise<T> {
+): Promise<All> {
   const db = await openDatabase();
   if (!db) return null;
   const tx = db.transaction(storeName, "readwrite");
@@ -82,62 +54,39 @@ export async function addToDatabase<T>(
   return store.get(id);
 }
 
-// export async function doesObjectExist<T>(storeName: StoreName, o: any): Promise<boolean> {
-// 	const db = await openDatabase();
-// 	const tx = db.transaction(storeName, "readonly");
-// 	const store = tx.objectStore(storeName);
-// 	const doesObjectExist = store.get(o)
-//
-// }
 
-/**
- * Retrieves all data from the IndexedDB database.
- * @returns {Promise<any[]>} - Promise that resolves with an array of all data.
- */
-export async function getAllFromDatabase<T>(
+export async function getAllFromDatabase(
   storeName: StoreName
-): Promise<T[]> {
+): Promise<All[]> {
   const db = await openDatabase();
   const tx = db.transaction(storeName, "readonly");
   const store = tx.objectStore(storeName);
   return store.getAll();
 }
 
-/**
- * Retrieves an object from the IndexedDB database based on its ID.
- * @param {number} id - The ID of the object to retrieve.
- * @returns {Promise<T>} - Promise that resolves with the retrieved object, or undefined if not found.
- */
-export async function getObjectByIdInDatabase<T>(
+
+export async function getObjectByIdInDatabase(
   storeName: StoreName,
   id: number
-): Promise<T> {
+): Promise<All> {
   const db = await openDatabase();
   if (!db) return null;
   const tx = db.transaction(storeName, "readonly");
   const store = tx.objectStore(storeName);
 
   let cursor = await store.openCursor();
-  while (cursor) {
-    cursor = await cursor.continue();
-  }
+  while (cursor) cursor = await cursor.continue();
 
   return store.get(id);
 }
 
-/**
- * Updates data in the IndexedDB database.
- * @param {any} updatedValue - The updated data.
- * @returns {Promise<void>} - Promise that resolves when the data is updated.
- */
-export async function updateInDatabase<T>(
+
+export async function updateInDatabase(
   storeName: StoreName,
   id: number,
-  updatedValue: T,
+  updatedValue: All,
   ifNotInDatabaseCreate: boolean
-): Promise<T> {
-  console.log("updatedValue");
-  console.log(updatedValue);
+): Promise<All> {
   const db = await openDatabase();
   const tx = db.transaction(storeName, "readwrite");
   const store = tx.objectStore(storeName);
@@ -163,11 +112,7 @@ export async function updateInDatabase<T>(
   return store.get(id);
 }
 
-/**
- * Deletes data from the IndexedDB database.
- * @param {number} key - The key of the data to be deleted.
- * @returns {Promise<void>} - Promise that resolves when the data is deleted.
- */
+
 export async function deleteFromDatabase(
   storeName: StoreName,
   id: number
@@ -179,12 +124,8 @@ export async function deleteFromDatabase(
   await tx.done;
 }
 
-/**
- * Flushes all values stored in a single store of the IndexedDB database.
- * @param {string} storeName - The name of the store to flush.
- * @returns {Promise<void>} - Promise that resolves once the store is flushed.
- */
-export async function flushStore(storeName: StoreName): Promise<void> {
+
+export async function flushStore(storeName: StoreName) {
   const db = await openDatabase();
   const tx = db.transaction(storeName, "readwrite");
   const store = tx.objectStore(storeName);
@@ -192,7 +133,7 @@ export async function flushStore(storeName: StoreName): Promise<void> {
   await tx.done;
 }
 
-export async function deleteDatabase(): Promise<void> {
+export async function deleteDatabase() {
   await deleteDB(DB_NAME);
   console.log(`Database '${DB_NAME}' deleted successfully.`);
 }
